@@ -3,6 +3,9 @@ package com.excilys.cdb.controller;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.cdb.dto.DtoComputer;
 import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
@@ -74,6 +77,8 @@ public class Controller {
 			ServiceComputer.getInstance().update(this.ui.createOrUpdate(), oldComputer);
 			
 		} catch (RequestFailedException e) {
+			Logger logger = LoggerFactory.getLogger(Controller.class);
+		    logger.info(e.getMessage());
 			System.out.println(e.getMessage());
 		}
 	}

@@ -4,6 +4,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.cdb.controller.Controller;
 import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
@@ -33,6 +36,8 @@ public class Cli {
 					
 				} catch (SQLException | ConnectionDBFailedException | RequestFailedException e) {
 					System.out.println(e.getMessage());
+					Logger logger = LoggerFactory.getLogger(Cli.class);
+				    logger.info(e.getMessage());
 					Cli.displayChoicesList();
 				}
 			}

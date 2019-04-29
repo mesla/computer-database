@@ -1,0 +1,3 @@
+2019-04-29_14:41:28.899 [main] INFO  com.excilys.cdb.main.Main - Mauvaise entrée. Veuillez saisir un nombre compris entre 1 et 7
+2019-04-29_14:44:33.602 [main] INFO  com.excilys.cdb.dao.DaoComputer - connexion à la DB échouée
+2019-04-29_14:44:33.616 [main] INFO  com.excilys.cdb.main.Main - Mauvaise entrée. Veuillez saisir un nombre compris entre 1 et 7

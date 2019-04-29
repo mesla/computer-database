@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
@@ -102,6 +105,8 @@ public class DaoComputer extends Dao{
 			preparedStatement.execute();
 		}
 		catch (ConnectionDBFailedException e) {
+			Logger logger = LoggerFactory.getLogger(DaoComputer.class);
+		    logger.info(e.getMessage());
 			System.out.println(e.getMessage());
 		}
 	}
@@ -117,6 +122,8 @@ public class DaoComputer extends Dao{
 			catch (SQLException e){throw new BadEntryException("Vous avez rentré un ID invalide");}
 		}
 		catch (ConnectionDBFailedException e) {
+			Logger logger = LoggerFactory.getLogger(DaoComputer.class);
+		    logger.info(e.getMessage());
 			System.out.println(e.getMessage());
 		}
 	}
@@ -146,7 +153,9 @@ public class DaoComputer extends Dao{
 			preparedStatement.execute();
 		} 
 		catch (ConnectionDBFailedException e) {
-				System.out.println(e.getMessage());
+			Logger logger = LoggerFactory.getLogger(DaoComputer.class);
+		    logger.info(e.getMessage());
+			System.out.println(e.getMessage());
 		}
 	}
 

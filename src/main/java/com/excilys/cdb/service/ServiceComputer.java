@@ -3,6 +3,9 @@ package com.excilys.cdb.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.cdb.dao.DaoCompany;
 import com.excilys.cdb.dao.DaoComputer;
 import com.excilys.cdb.dto.DtoCompany;
@@ -46,6 +49,8 @@ public class ServiceComputer {
 			DaoComputer.getInstance().delete(id);
 		} catch (SQLException | BadEntryException e) {
 			System.out.println(e.getMessage());
+			Logger logger = LoggerFactory.getLogger(ServiceComputer.class);
+		    logger.info(e.getMessage());
 		}
 	}
 	
@@ -67,6 +72,8 @@ public class ServiceComputer {
 			DaoComputer.getInstance().update(MapperComputer.getInstance().toModel(dtoComputer), MapperComputer.getInstance().toModel(dtoOldComputer));
 				
 		} catch (ConnectionDBFailedException | SQLException e) {
+			Logger logger = LoggerFactory.getLogger(ServiceComputer.class);
+		    logger.info(e.getMessage());
 			System.out.println(e.getMessage());
 		}
 	
@@ -90,6 +97,8 @@ public class ServiceComputer {
 				DaoComputer.getInstance().create(MapperComputer.getInstance().toModel(dtoComputer));
 				
 			} catch (SQLException | RequestFailedException | ConnectionDBFailedException e) {
+				Logger logger = LoggerFactory.getLogger(ServiceComputer.class);
+			    logger.info(e.getMessage());
 				System.out.println(e.getMessage());
 			}
 		
