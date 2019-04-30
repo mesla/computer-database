@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.model.ModelCompany;
@@ -45,11 +44,12 @@ public class DaoComputer extends Dao{
 				Connection connection = super.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_GETLIST);
 			) {
-			ArrayList<ModelComputer> listOfComputers = new ArrayList<ModelComputer>();
-			
+						
 			preparedStatement.setInt(1,limit);
 			preparedStatement.setInt(2,offset);
 			ResultSet r = preparedStatement.executeQuery();
+			
+			ArrayList<ModelComputer> listOfComputers = new ArrayList<ModelComputer>();
 			while(r.next()) {
 			listOfComputers.add(
 					new ModelComputer(
@@ -60,14 +60,16 @@ public class DaoComputer extends Dao{
 							new ModelCompany(r.getInt("company.id"), r.getString("company.name"))));
 			
 			}
-			return listOfComputers;
+			
+			if (listOfComputers.isEmpty()) throw new RequestFailedException("Aucun résultat");
+			else return listOfComputers;
 			
 		} catch (SQLException e) {
 			throw new RequestFailedException("Il y a un soucis au niveau de la requête SQL");
 		}
 	}
 	
-	public ModelComputer read(int id) throws SQLException, BadEntryException, ConnectionDBFailedException {
+	public ModelComputer read(int id) throws SQLException, ConnectionDBFailedException, RequestFailedException {
 		try(
 				Connection connection = super.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_GET);
@@ -83,11 +85,11 @@ public class DaoComputer extends Dao{
 							r.getTimestamp("computer.discontinued"),
 							new ModelCompany(r.getInt("company.id"), r.getString("company.name")));
 			}
-			else throw new BadEntryException("Vous avez rentré un ID invalide");
+			else throw new RequestFailedException("Vous avez rentré un ID invalide");
 		}
 	}
 	
-	public void create(ModelComputer modelComputer) throws BadEntryException, SQLException, RequestFailedException {
+	public void create(ModelComputer modelComputer) throws SQLException, RequestFailedException {
 		try(
 				Connection connection = super.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_CREATE);
@@ -100,26 +102,28 @@ public class DaoComputer extends Dao{
 			else if(!DaoCompany.getInstance().getMatch(modelComputer.getCompany_id()).isEmpty())
 				preparedStatement.setInt(4, modelComputer.getCompany_id());
 			else
-				throw new BadEntryException("Vous avez rentré un company_id invalide");
+				throw new RequestFailedException("Vous avez rentré un company_id invalide");
 				
-			preparedStatement.execute();
+			preparedStatement.executeUpdate();
 		}
 		catch (ConnectionDBFailedException e) {
 			Logger logger = LoggerFactory.getLogger(DaoComputer.class);
 		    logger.info(e.getMessage());
-			System.out.println(e.getMessage());
 		}
 	}
 	
-	public void delete(int id) throws SQLException, BadEntryException {
+	public void delete(int id) throws SQLException, RequestFailedException {
 		try(
 				Connection connection = super.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_DELETE);
 			) {
 			preparedStatement.setInt(1,id);
 			
-			try {preparedStatement.execute();}
-			catch (SQLException e){throw new BadEntryException("Vous avez rentré un ID invalide");}
+			try {
+				if (preparedStatement.executeUpdate() == 0)
+					throw new RequestFailedException("Vous avez rentré un ID invalide");
+			}
+			catch (SQLException e){throw new RequestFailedException("Vous avez rentré un ID invalide");}
 		}
 		catch (ConnectionDBFailedException e) {
 			Logger logger = LoggerFactory.getLogger(DaoComputer.class);
@@ -128,7 +132,7 @@ public class DaoComputer extends Dao{
 		}
 	}
 	
-	public void update(ModelComputer modelComputer, ModelComputer oldComputer) throws SQLException, BadEntryException, RequestFailedException, ConnectionDBFailedException {
+	public void update(ModelComputer modelComputer, ModelComputer oldComputer) throws SQLException, RequestFailedException, ConnectionDBFailedException {
 
 		String name = (modelComputer.getName() == null) ? oldComputer.getName() : modelComputer.getName();
 		Timestamp intro = (modelComputer.getIntroduced() == null) ? oldComputer.getIntroduced() : modelComputer.getIntroduced();
@@ -147,10 +151,10 @@ public class DaoComputer extends Dao{
 			else if(!DaoCompany.getInstance().getMatch(company_id).isEmpty())
 				preparedStatement.setInt(4, company_id);
 			else
-				throw new BadEntryException("Vous avez rentré un company_id invalide");
+				throw new RequestFailedException("Vous avez rentré un company_id invalide");
 			preparedStatement.setInt(5, oldComputer.getId());
 				
-			preparedStatement.execute();
+			preparedStatement.executeUpdate();
 		} 
 		catch (ConnectionDBFailedException e) {
 			Logger logger = LoggerFactory.getLogger(DaoComputer.class);

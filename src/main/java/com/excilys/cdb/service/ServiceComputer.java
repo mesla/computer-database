@@ -39,22 +39,26 @@ public class ServiceComputer {
 		return dtoComputerList;
 	}
 	
-	public DtoComputer read(int id) throws SQLException, ConnectionDBFailedException, BadEntryException {
+	
+	
+	public DtoComputer read(int id) throws SQLException, ConnectionDBFailedException, RequestFailedException {
 		
 		return MapperComputer.getInstance().toDto(DaoComputer.getInstance().read(id));
 	}
 	
+	
+	
 	public void delete(int id) {
 		try {
 			DaoComputer.getInstance().delete(id);
-		} catch (SQLException | BadEntryException e) {
+		} catch (SQLException | RequestFailedException e) {
 			System.out.println(e.getMessage());
 			Logger logger = LoggerFactory.getLogger(ServiceComputer.class);
 		    logger.info(e.getMessage());
 		}
 	}
 	
-	public void update(ArrayList<String> args, DtoComputer dtoOldComputer) throws BadEntryException, RequestFailedException {
+	public void update(ArrayList<String> args, DtoComputer dtoOldComputer) throws RequestFailedException, BadEntryException {
 		
 		DtoCompany dtoCompany;
 		try {
@@ -71,7 +75,7 @@ public class ServiceComputer {
 			
 			DaoComputer.getInstance().update(MapperComputer.getInstance().toModel(dtoComputer), MapperComputer.getInstance().toModel(dtoOldComputer));
 				
-		} catch (ConnectionDBFailedException | SQLException e) {
+		} catch (ConnectionDBFailedException | RequestFailedException | SQLException e) {
 			Logger logger = LoggerFactory.getLogger(ServiceComputer.class);
 		    logger.info(e.getMessage());
 			System.out.println(e.getMessage());

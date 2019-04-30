@@ -84,7 +84,7 @@ public class Cli {
 		
 		System.out.println("Entrez la date de sortie au format YYYY-MM-DD (optionnel, \"Entrée\" pour passer)");
 		str = sc.nextLine();
-		if(!str.matches("^[1-2][0-9]{3}\\-[0-1][0-9]\\-[0-2][0-9]$"))
+		if(!str.matches("^([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))$"))
 			if(!str.isEmpty()) {
 				throw new BadEntryException("Veuillez rentrer la date de sortie au format YYYY-MM-DD");
 			}
@@ -93,7 +93,7 @@ public class Cli {
 		
 		System.out.println("Entrez la date de retrait au format YYYY-MM-DD (optionnel, \"Entrée\" pour passer)");
 		str = sc.nextLine();
-		if(!str.matches("^[1-2][0-9]{3}\\-[0-1][0-9]\\-[0-2][0-9]$"))
+		if(!str.matches("^([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))$"))
 			if(!str.isEmpty()) {
 				throw new BadEntryException("Veuillez rentrer la date de retrait au format YYYY-MM-DD");
 			}

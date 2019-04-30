@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.model.ModelCompany;
@@ -46,22 +45,27 @@ public class DaoCompany extends Dao{
 				listOfCompanies.add(new ModelCompany(r.getInt("id"), r.getString("name")));
 			}
 			
-			return listOfCompanies;
+			if (listOfCompanies.isEmpty()) throw new RequestFailedException("Aucun résultat");
+			else return listOfCompanies;
 			
 		} catch (SQLException e) {
-			throw new ConnectionDBFailedException("La connection à la bdd a échouée");
+			throw new RequestFailedException("Il y a un soucis au niveau de la requête SQL");
 		}
 	}
 
-	public String getMatch(int id) throws BadEntryException, RequestFailedException, ConnectionDBFailedException {
+	public String getMatch(int id) throws RequestFailedException, ConnectionDBFailedException {
 		try(
 				Connection connection = super.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_GET);
 			) {
+			
 			preparedStatement.setInt(1,id);
 			ResultSet r = preparedStatement.executeQuery();
+			
 			if(r.next()) return r.getString("name");
-			else throw new BadEntryException("Vous avez rentré un company_id invalide");
+			
+			
+			else throw new RequestFailedException("Vous avez rentré un company_id invalide");
 		} catch (SQLException e) {
 			throw new RequestFailedException("Requête échouée");
 		}

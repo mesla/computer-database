@@ -94,7 +94,7 @@ public class Controller {
 		else ServiceComputer.getInstance().create(args);
 	}
 
-	private void read() throws BadEntryException, SQLException, ConnectionDBFailedException {
+	private void read() throws SQLException, ConnectionDBFailedException, RequestFailedException, BadEntryException {
 		int id = ui.askId();
 		ArrayList<DtoComputer> DtoComputerList = new ArrayList<DtoComputer>();
 		DtoComputerList.add(ServiceComputer.getInstance().read(id));
