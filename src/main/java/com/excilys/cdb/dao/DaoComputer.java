@@ -19,12 +19,15 @@ public class DaoComputer extends Dao{
 	
 	private static DaoComputer INSTANCE = null;
 	
+	private static DaoCompany daoCompany = DaoCompany.getInstance();
+	
+	private Logger logger = LoggerFactory.getLogger(DaoComputer.class);
+	
 	private final String SQL_GETLIST = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id ORDER BY computer.id ASC LIMIT ? OFFSET ?;";
 	private final String SQL_GET = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;";
 	private final String SQL_CREATE = "INSERT INTO computer (name, introduced,discontinued,company_id) VALUES (?,?,?,?);";
 	private final String SQL_DELETE = "DELETE FROM computer WHERE id = ?;";
 	private final String SQL_UPDATE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
-	
 	
 	private DaoComputer() {}
 	
@@ -57,7 +60,9 @@ public class DaoComputer extends Dao{
 							r.getString("computer.name"),
 							r.getTimestamp("computer.introduced"),
 							r.getTimestamp("computer.discontinued"),
-							new ModelCompany(r.getInt("company.id"), r.getString("company.name"))));
+							new ModelCompany(
+									r.getInt("company.id") == 0 ? null : r.getInt("company.id"),
+									r.getString("company.name"))));
 			
 			}
 			
@@ -83,7 +88,9 @@ public class DaoComputer extends Dao{
 							r.getString("computer.name"),
 							r.getTimestamp("computer.introduced"),
 							r.getTimestamp("computer.discontinued"),
-							new ModelCompany(r.getInt("company.id"), r.getString("company.name")));
+							new ModelCompany(
+									r.getInt("company.id") == 0 ? null : r.getInt("company.id"),
+									r.getString("company.name")));
 			}
 			else throw new RequestFailedException("Vous avez rentré un ID invalide");
 		}
@@ -97,18 +104,18 @@ public class DaoComputer extends Dao{
 			preparedStatement.setString(1,modelComputer.getName());
 			preparedStatement.setTimestamp(2, modelComputer.getIntroduced());
 			preparedStatement.setTimestamp(3, modelComputer.getDiscontinued());
-			if (modelComputer.getCompany_id() == null)
+			if (modelComputer.getCompanyId() == null)
 				preparedStatement.setNull(4, java.sql.Types.INTEGER);
-			else if(!DaoCompany.getInstance().getMatch(modelComputer.getCompany_id()).isEmpty())
-				preparedStatement.setInt(4, modelComputer.getCompany_id());
+			else if(!daoCompany.getMatch(modelComputer.getCompanyId()).isEmpty())
+				preparedStatement.setInt(4, modelComputer.getCompanyId());
 			else
 				throw new RequestFailedException("Vous avez rentré un company_id invalide");
 				
 			preparedStatement.executeUpdate();
+			logger.info("Ordinateur bien créé.");
 		}
 		catch (ConnectionDBFailedException e) {
-			Logger logger = LoggerFactory.getLogger(DaoComputer.class);
-		    logger.info(e.getMessage());
+			logger.error(e.getMessage());
 		}
 	}
 	
@@ -117,18 +124,18 @@ public class DaoComputer extends Dao{
 				Connection connection = super.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_DELETE);
 			) {
-			preparedStatement.setInt(1,id);
 			
-			try {
-				if (preparedStatement.executeUpdate() == 0)
-					throw new RequestFailedException("Vous avez rentré un ID invalide");
-			}
-			catch (SQLException e){throw new RequestFailedException("Vous avez rentré un ID invalide");}
+			preparedStatement.setInt(1,id);
+			if (preparedStatement.executeUpdate() == 0)
+				throw new RequestFailedException("Il n'y a aucun ordinateur à cet ID.");
+			else logger.info("Ordinateur bien supprimé");
+				
 		}
 		catch (ConnectionDBFailedException e) {
-			Logger logger = LoggerFactory.getLogger(DaoComputer.class);
-		    logger.info(e.getMessage());
-			System.out.println(e.getMessage());
+		    logger.error(e.getMessage());
+		}
+		catch (SQLException e) {
+			throw new RequestFailedException("Vous avez rentré un ID invalide");
 		}
 	}
 	
@@ -137,7 +144,7 @@ public class DaoComputer extends Dao{
 		String name = (modelComputer.getName() == null) ? oldComputer.getName() : modelComputer.getName();
 		Timestamp intro = (modelComputer.getIntroduced() == null) ? oldComputer.getIntroduced() : modelComputer.getIntroduced();
 		Timestamp discon = (modelComputer.getDiscontinued() == null) ? oldComputer.getDiscontinued() : modelComputer.getDiscontinued();
-		Integer company_id = (modelComputer.getCompany_id() == null) ? oldComputer.getCompany_id() : modelComputer.getCompany_id();
+		Integer company_id = (modelComputer.getCompanyId() == null) ? oldComputer.getCompanyId() : modelComputer.getCompanyId();
 
 		try(
 				Connection connection = super.connection();
@@ -146,20 +153,21 @@ public class DaoComputer extends Dao{
 			preparedStatement.setString(1,name);
 			preparedStatement.setTimestamp(2, intro);
 			preparedStatement.setTimestamp(3, discon);
+			
 			if (company_id == null)
 				preparedStatement.setNull(4, java.sql.Types.INTEGER);
-			else if(!DaoCompany.getInstance().getMatch(company_id).isEmpty())
+			else if(!daoCompany.getMatch(company_id).isEmpty())
 				preparedStatement.setInt(4, company_id);
 			else
 				throw new RequestFailedException("Vous avez rentré un company_id invalide");
+			
 			preparedStatement.setInt(5, oldComputer.getId());
 				
 			preparedStatement.executeUpdate();
+			logger.info("Les données de l'ordinateur ont bien été mises à jour.");
 		} 
 		catch (ConnectionDBFailedException e) {
-			Logger logger = LoggerFactory.getLogger(DaoComputer.class);
-		    logger.info(e.getMessage());
-			System.out.println(e.getMessage());
+		    logger.error(e.getMessage());
 		}
 	}
 

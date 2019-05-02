@@ -1,5 +1,7 @@
 package com.excilys.cdb.dao;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.FileInputStream;
 
 import org.dbunit.DBTestCase;
@@ -12,8 +14,8 @@ import org.junit.Test;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
 
-public class DaoCompanyTest extends DBTestCase{
-	
+public class DaoCompanyTest{
+	/*
 	//Methodes DBUnit
 	
 	@Override
@@ -31,7 +33,7 @@ public class DaoCompanyTest extends DBTestCase{
         return DatabaseOperation.NONE;
     }
     
-
+*/
     // Tests
 
 	/*

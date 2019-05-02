@@ -13,6 +13,9 @@ public class ServiceCompany {
 	
 	private static ServiceCompany INSTANCE = null;
 	
+	private static DaoCompany daoCompany = DaoCompany.getInstance();
+	private static MapperCompany mapperCompany = MapperCompany.getInstance();
+	
 	private ServiceCompany () { }
 	
 	public static ServiceCompany getInstance() {
@@ -27,8 +30,8 @@ public class ServiceCompany {
 		
 		ArrayList<DtoCompany> dtoCompanyList = new ArrayList<DtoCompany>();
 		
-		for (ModelCompany company : DaoCompany.getInstance().listCompanies(limit, offset)) {
-			dtoCompanyList.add(MapperCompany.getInstance().toDto(company));
+		for (ModelCompany company : daoCompany.listCompanies(limit, offset)) {
+			dtoCompanyList.add(mapperCompany.toDto(company));
 		}
 		return dtoCompanyList;
 	}

@@ -1,19 +1,23 @@
 package com.excilys.cdb.dto;
 
+import java.util.Optional;
+
 public class DtoComputer{
 	
 	private String id;
 	private String name;
 	private String introduced;
 	private String discontinued;
-	DtoCompany dtocompany;
+	private String companyId;
+	private String companyName;
 	
-	public DtoComputer(String pId, String pName, String pIntroduced, String pDiscontinued, DtoCompany dtocompany) {
+	public DtoComputer(String pId, String pName, String pIntroduced, String pDiscontinued, String pCompanyId, String pCompanyName) {
 		this.id =  pId;
 		this.name = pName;
-		this.introduced = pIntroduced  == null ? "null" : pIntroduced ;
-		this.discontinued = pDiscontinued == null ? "null" : pDiscontinued;
-		this.dtocompany = dtocompany;
+		this.introduced = pIntroduced;
+		this.discontinued = pDiscontinued;
+		this.companyId = pCompanyId;
+		this.companyName = pCompanyName;
 	}
 	
 
@@ -23,17 +27,44 @@ public class DtoComputer{
 				+ ", name=" + name 
 				+ ", introduced=" + introduced
 				+ ", discontinued="	+ discontinued
-				+ ", company_id=" + dtocompany.getId()
-				+ ", company_name=" + dtocompany.getName() 
+				+ ", company_id=" + companyId
+				+ ", company_name=" + companyName
 				+"]";
+	}
+
+
+
+	public String getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Optional<String> getIntroduced() {
+		return Optional.ofNullable(introduced);
+	}
+
+	public Optional<String> getDiscontinued() {
+		return Optional.ofNullable(discontinued);
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+	
+	public String getCompanyName() {
+		return companyName;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((companyId == null) ? 0 : companyId.hashCode());
+		result = prime * result + ((companyName == null) ? 0 : companyName.hashCode());
 		result = prime * result + ((discontinued == null) ? 0 : discontinued.hashCode());
-		result = prime * result + ((dtocompany == null) ? 0 : dtocompany.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((introduced == null) ? 0 : introduced.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -50,15 +81,20 @@ public class DtoComputer{
 		if (getClass() != obj.getClass())
 			return false;
 		DtoComputer other = (DtoComputer) obj;
+		if (companyId == null) {
+			if (other.companyId != null)
+				return false;
+		} else if (!companyId.equals(other.companyId))
+			return false;
+		if (companyName == null) {
+			if (other.companyName != null)
+				return false;
+		} else if (!companyName.equals(other.companyName))
+			return false;
 		if (discontinued == null) {
 			if (other.discontinued != null)
 				return false;
 		} else if (!discontinued.equals(other.discontinued))
-			return false;
-		if (dtocompany == null) {
-			if (other.dtocompany != null)
-				return false;
-		} else if (!dtocompany.equals(other.dtocompany))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -76,32 +112,6 @@ public class DtoComputer{
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
-	}
-
-
-	public String getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getIntroduced() {
-		return introduced;
-	}
-
-
-	public String getDiscontinued() {
-		return discontinued;
-	}
-
-	public String getCompany_id() {
-		return dtocompany.getId();
-	}
-
-	public String getCompany_name() {
-		return dtocompany.getName();
 	}
 	
 }

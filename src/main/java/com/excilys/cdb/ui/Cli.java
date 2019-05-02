@@ -15,6 +15,8 @@ import com.excilys.cdb.exception.RequestFailedException;
 public class Cli {
 	private final static Scanner sc = new Scanner(System.in);
 	
+	static Logger logger = LoggerFactory.getLogger(Cli.class);
+	
 	public static void displayChoicesList() throws BadEntryException{
 		boolean run = true;
 		String i = "";
@@ -32,12 +34,10 @@ public class Cli {
 			
 			if(i.matches("^[1-6]$")) {
 				try {
-					Controller.getInstance().callFonction(i);;
+					Controller.getInstance().callFonction(i);
 					
 				} catch (SQLException | ConnectionDBFailedException | RequestFailedException e) {
-					System.out.println(e.getMessage());
-					Logger logger = LoggerFactory.getLogger(Cli.class);
-				    logger.info(e.getMessage());
+				    logger.error(e.getMessage());
 					Cli.displayChoicesList();
 				}
 			}
@@ -113,7 +113,7 @@ public class Cli {
 
 	public int[] askPage() throws BadEntryException {
 		
-		System.out.println("Combien d'ordinateurs voulez-vous afficher ?");
+		System.out.println("Combien d'éléments voulez-vous afficher ?");
 		String str = sc.nextLine();
 		if(!str.matches("^[0-9]*$"))
 			if(!str.isEmpty()) {

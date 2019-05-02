@@ -62,10 +62,11 @@ public class DaoCompany extends Dao{
 			preparedStatement.setInt(1,id);
 			ResultSet r = preparedStatement.executeQuery();
 			
-			if(r.next()) return r.getString("name");
+			if(r.next())
+				return r.getString("name");
+			else
+				throw new RequestFailedException("Vous avez rentré un company_id invalide");
 			
-			
-			else throw new RequestFailedException("Vous avez rentré un company_id invalide");
 		} catch (SQLException e) {
 			throw new RequestFailedException("Requête échouée");
 		}

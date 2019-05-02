@@ -14,6 +14,12 @@ public abstract class Dao {
 	protected Connection connection() throws ConnectionDBFailedException {
 		
 		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			throw new ConnectionDBFailedException("connexion à la DB échouée");
+		}
+		
+		try {
 			return DriverManager.getConnection(Dao.DBACCESS, Dao.DBUSER, Dao.DBPASS);
 		} catch (SQLException e) {
 			throw new ConnectionDBFailedException("connexion à la DB échouée");

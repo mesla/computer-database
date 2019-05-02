@@ -12,6 +12,11 @@ public class DtoCompany {
 	public String getId() {
 		return this.id;
 	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -41,10 +46,6 @@ public class DtoCompany {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
-	}
-
-	public String getName() {
-		return this.name;
 	}
 
 	@Override

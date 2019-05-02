@@ -7,13 +7,12 @@ import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.ui.Cli;
 
 public class Main {
-	public static void main(String[] args){        
+	public static void main(String[] args){
 		try {
 			Cli.displayChoicesList();
 		} catch (BadEntryException e) {
-			System.out.println(e.getMessage());
 			Logger logger = LoggerFactory.getLogger(Main.class);
-		    logger.info(e.getMessage());
+		    logger.error(e.getMessage());
 		}
 	}
 

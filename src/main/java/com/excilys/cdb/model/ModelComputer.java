@@ -33,11 +33,11 @@ public class ModelComputer{
 		return discontinued;
 	}
 
-	public Integer getCompany_id() {
+	public Integer getCompanyId() {
 		return modelCompany.getId();
 	}
 
-	public String getCompany_name() {
+	public String getCompanyName() {
 		return modelCompany.getName();
 	}
 
