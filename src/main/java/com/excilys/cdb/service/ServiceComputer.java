@@ -13,7 +13,6 @@ import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.mapper.MapperComputer;
-import com.excilys.cdb.model.ModelComputer;
 
 public class ServiceComputer {
 	
@@ -37,9 +36,10 @@ public class ServiceComputer {
 
 		ArrayList<DtoComputer> dtoComputerList = new ArrayList<DtoComputer>();
 		
-		for (ModelComputer computer : DaoComputer.getInstance().listComputer(limit, offset)) {
-			dtoComputerList.add(mapperComputer.toDto(computer));
-		}
+		daoComputer.listComputer(limit, offset).stream()
+			.map(x -> mapperComputer.toDto(x))
+			.forEach(dtoComputerList::add);
+				
 		return dtoComputerList;
 	}
 	

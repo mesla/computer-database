@@ -4,3 +4,5 @@
 2019-05-02_15:12:02.358 [main] INFO  com.excilys.cdb.dao.DaoComputer - connexion à la DB échouée
 2019-05-02_16:34:35.153 [main] ERROR com.excilys.cdb.ui.Cli - Aucun résultat
 2019-05-02_17:36:41.340 [main] INFO  com.excilys.cdb.dao.DaoComputer - Ordinateur bien créé.
+2019-05-03_10:41:35.502 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée
+2019-05-03_10:53:07.835 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée

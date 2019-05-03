@@ -7,7 +7,6 @@ import com.excilys.cdb.dto.DtoCompany;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.mapper.MapperCompany;
-import com.excilys.cdb.model.ModelCompany;
 
 public class ServiceCompany {
 	
@@ -30,9 +29,10 @@ public class ServiceCompany {
 		
 		ArrayList<DtoCompany> dtoCompanyList = new ArrayList<DtoCompany>();
 		
-		for (ModelCompany company : daoCompany.listCompanies(limit, offset)) {
-			dtoCompanyList.add(mapperCompany.toDto(company));
-		}
+		daoCompany.listCompanies(limit, offset).stream()
+		.map(x -> mapperCompany.toDto(x))
+		.forEach(dtoCompanyList::add);
+		
 		return dtoCompanyList;
 	}
 }
