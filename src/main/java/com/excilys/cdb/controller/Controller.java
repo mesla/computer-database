@@ -13,12 +13,14 @@ import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.service.ServiceCompany;
 import com.excilys.cdb.service.ServiceComputer;
 import com.excilys.cdb.ui.Cli;
+import com.excilys.cdb.validator.UiValidator;
 
 public class Controller {
 	private Cli ui;
 	private static Logger logger = LoggerFactory.getLogger(Controller.class);
 	private static ServiceComputer serviceComputer = ServiceComputer.getInstance();
 	private static ServiceCompany serviceCompany = ServiceCompany.getInstance();
+	private static UiValidator validator = UiValidator.getInstance();
 	
 	//Lazy Loading
 	private static Controller INSTANCE = null;
@@ -61,25 +63,30 @@ public class Controller {
 		}
 	}
 
-	private void listCompanies() throws RequestFailedException, ConnectionDBFailedException, BadEntryException {
-		int[] limits = ui.askPage();
+	private void listCompanies() throws RequestFailedException, ConnectionDBFailedException {
+		try {
+			String[] limits = ui.askPage();
+			if(validator.checkId(limits[0]) && (validator.checkId(limits[1])))
+				ui.read(serviceCompany.listCompanies(Integer.valueOf(limits[0]), Integer.valueOf(limits[1])));
+		} catch (BadEntryException e) {
+			logger.error(e.getMessage());
+		}
 		
-		ui.read(serviceCompany.listCompanies(limits[0], limits[1]));
 	}
 
-	private void update() throws BadEntryException, SQLException, ConnectionDBFailedException {
+	private void update() throws SQLException, ConnectionDBFailedException {
 		try {
 
 			int id = ui.askId();
+			DtoComputer oldComputer = serviceComputer.read(id);
 			
 			ArrayList<DtoComputer> DtoComputerList = new ArrayList<DtoComputer>();
-			DtoComputerList.add(serviceComputer.read(id));
+			DtoComputerList.add(oldComputer);
 			ui.read(DtoComputerList);
 			
-			DtoComputer oldComputer = serviceComputer.read(id);
 			serviceComputer.update(this.ui.createOrUpdate(), oldComputer);
 			
-		} catch (RequestFailedException e) {
+		} catch (RequestFailedException | BadEntryException e) {
 		    logger.error(e.getMessage());
 		}
 	}
@@ -89,12 +96,17 @@ public class Controller {
 		serviceComputer.delete(id);
 	}
 
-	private void create() throws BadEntryException {
-		ArrayList<String> args = this.ui.createOrUpdate();
-		if(args.get(0).isEmpty())
-			throw new BadEntryException("Veuillez rentrer une valeur pour le nom");
-		else
-			serviceComputer.create(args);
+	private void create() {
+		try {
+			ArrayList<String> args = this.ui.createOrUpdate();
+			if(args.get(0).isEmpty())
+				throw new BadEntryException("Veuillez rentrer une valeur pour le nom");
+			else
+				serviceComputer.create(args);
+		}
+		catch(BadEntryException e) {
+			logger.error(e.getMessage());
+		}
 	}
 
 	private void read() throws SQLException, ConnectionDBFailedException, RequestFailedException, BadEntryException {
@@ -104,8 +116,15 @@ public class Controller {
 		ui.read(DtoComputerList);
 	}
 
-	private void listComputers() throws RequestFailedException, ConnectionDBFailedException, BadEntryException {
-		int[] limits = ui.askPage();
-		ui.read(serviceComputer.listComputer(limits[0], limits[1]));		
+	private void listComputers() throws RequestFailedException, ConnectionDBFailedException {
+		String[] limits;
+		try {
+			limits = ui.askPage();
+			if(validator.checkId(limits[0]) && (validator.checkId(limits[1])))
+				ui.read(serviceComputer.listComputer(Integer.valueOf(limits[0]), Integer.valueOf(limits[1])));	
+		} catch (BadEntryException e) {
+			logger.error(e.getMessage());
+		}
+	
 	}
 }

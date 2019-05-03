@@ -11,11 +11,13 @@ import com.excilys.cdb.controller.Controller;
 import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
+import com.excilys.cdb.validator.UiValidator;
 
 public class Cli {
 	private final static Scanner sc = new Scanner(System.in);
 	
-	static Logger logger = LoggerFactory.getLogger(Cli.class);
+	private static Logger logger = LoggerFactory.getLogger(Cli.class);
+	private static UiValidator validator = UiValidator.getInstance();
 	
 	public static void displayChoicesList() throws BadEntryException{
 		boolean run = true;
@@ -58,7 +60,7 @@ public class Cli {
 		for (T dto : dtoList) {
 			System.out.println(dto.toString());
 		}
-		System.out.println("\n");
+		System.out.println("\n");		
 	}
 
 	public int askId() throws BadEntryException {
@@ -76,6 +78,7 @@ public class Cli {
 	
 	public ArrayList<String> createOrUpdate() throws BadEntryException {
 		
+
 		ArrayList<String> args = new ArrayList<String>();
 		
 		System.out.println("Entrez le nom (Optionnel pour modifier un ordi \"Entrée\" pour passer)");		
@@ -84,53 +87,35 @@ public class Cli {
 		
 		System.out.println("Entrez la date de sortie au format YYYY-MM-DD (optionnel, \"Entrée\" pour passer)");
 		str = sc.nextLine();
-		if(!str.matches("^([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))$"))
-			if(!str.isEmpty()) {
-				throw new BadEntryException("Veuillez rentrer la date de sortie au format YYYY-MM-DD");
-			}
 		args.add(str);
 		
 		
 		System.out.println("Entrez la date de retrait au format YYYY-MM-DD (optionnel, \"Entrée\" pour passer)");
 		str = sc.nextLine();
-		if(!str.matches("^([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))$"))
-			if(!str.isEmpty()) {
-				throw new BadEntryException("Veuillez rentrer la date de retrait au format YYYY-MM-DD");
-			}
 		args.add(str);
 		
 		System.out.println("Entrez l'id de l'entreprise (optionnel, \"Entrée\" pour passer)");
 		str = sc.nextLine();
-		if(!str.matches("^[0-9]*$"))
-			if(!str.isEmpty()) {
-				throw new BadEntryException("Veuillez rentrer un id valide");
-			}
-
 		args.add(str);
+
+		validator.checkCreateOrUpdate(args);
 		
 		return args;
+
+		
 	}
 
-	public int[] askPage() throws BadEntryException {
+	public String[] askPage() throws BadEntryException {
 		
 		System.out.println("Combien d'éléments voulez-vous afficher ?");
-		String str = sc.nextLine();
-		if(!str.matches("^[0-9]*$"))
-			if(!str.isEmpty()) {
-				throw new BadEntryException("Veuillez rentrer un offset valide");
-			}
-		int limit = Integer.valueOf(str);
+		String limit = sc.nextLine();
+		//int limit = Integer.valueOf(str);
 		
 		System.out.println("à partir de combien de résultats voulez-vous commencer à afficher ?");
-		str = sc.nextLine();
-		if(!str.matches("^[0-9]*$"))
-			if(!str.isEmpty()) {
-				throw new BadEntryException("Veuillez rentrer un offset valide");
-			}
-				
-		int offset = Integer.valueOf(str);
+		String offset = sc.nextLine();
+		//int offset = Integer.valueOf(str);
 		
-		int[] limits = {limit, offset};
+		String[] limits = {limit, offset};
 		return limits;
 	}
 }
