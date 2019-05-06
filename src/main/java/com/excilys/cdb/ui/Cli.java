@@ -77,7 +77,6 @@ public class Cli {
 	
 	
 	public ArrayList<String> createOrUpdate() throws BadEntryException {
-		
 
 		ArrayList<String> args = new ArrayList<String>();
 		
@@ -101,8 +100,6 @@ public class Cli {
 		validator.checkCreateOrUpdate(args);
 		
 		return args;
-
-		
 	}
 
 	public String[] askPage() throws BadEntryException {

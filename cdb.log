@@ -7,3 +7,33 @@
 2019-05-03_10:41:35.502 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée
 2019-05-03_10:53:07.835 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée
 2019-05-03_11:38:20.378 [main] ERROR com.excilys.cdb.main.Main - Veuillez rentrer la date de sortie au format YYYY-MM-DD
+2019-05-03_17:14:38.717 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée
+2019-05-03_17:16:25.357 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée
+2019-05-03_17:17:08.457 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée
+2019-05-03_17:18:16.297 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée
+2019-05-03_17:20:13.921 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée
+2019-05-03_17:20:53.461 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée
+2019-05-03_17:21:35.025 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée
+2019-05-03_17:44:14.292 [main] INFO  com.excilys.cdb.dao.DaoComputer - Ordinateur bien cr��.
+2019-05-06_11:47:41.740 [main] ERROR c.e.cdb.service.ServiceComputer - connexion à la DB échouée
+2019-05-06_11:47:41.752 [main] ERROR c.e.cdb.service.ServiceComputer - connexion à la DB échouée
+2019-05-06_11:47:41.756 [main] ERROR c.e.cdb.service.ServiceComputer - connexion à la DB échouée
+2019-05-06_11:49:51.568 [main] ERROR c.e.cdb.service.ServiceComputer - connexion à la DB échouée
+2019-05-06_11:49:51.587 [main] ERROR c.e.cdb.service.ServiceComputer - connexion à la DB échouée
+2019-05-06_11:49:51.588 [main] ERROR c.e.cdb.service.ServiceComputer - connexion à la DB échouée
+2019-05-06_12:29:41.458 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée
+2019-05-06_12:29:56.616 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée
+2019-05-06_12:30:18.528 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée
+2019-05-06_12:30:39.662 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée
+2019-05-06_12:30:53.776 [main] ERROR com.excilys.cdb.ui.Cli - connexion à la DB échouée
+2019-05-06_14:17:23.852 [main] INFO  com.excilys.cdb.dao.DaoComputer - Ordinateur bien créé.
+2019-05-06_14:19:55.328 [main] INFO  com.excilys.cdb.dao.DaoComputer - Ordinateur bien créé.
+2019-05-06_14:22:27.205 [main] ERROR c.excilys.cdb.controller.Controller - Veuillez rentrer un entier valide
+2019-05-06_14:23:59.116 [main] INFO  com.excilys.cdb.dao.DaoComputer - Ordinateur bien créé.
+2019-05-06_14:24:21.149 [main] INFO  com.excilys.cdb.dao.DaoComputer - Ordinateur bien créé.
+2019-05-06_14:31:46.453 [main] INFO  com.excilys.cdb.dao.DaoComputer - Ordinateur bien créé.
+2019-05-06_14:37:45.663 [main] ERROR c.excilys.cdb.controller.Controller - Veuillez rentrer un entier valide
+2019-05-06_14:38:22.776 [main] INFO  com.excilys.cdb.dao.DaoComputer - Ordinateur bien créé.
+2019-05-06_14:41:16.479 [main] INFO  com.excilys.cdb.dao.DaoComputer - Ordinateur bien créé.
+2019-05-06_14:41:52.348 [main] INFO  com.excilys.cdb.dao.DaoComputer - Ordinateur bien créé.
+2019-05-06_14:44:29.067 [main] INFO  com.excilys.cdb.dao.DaoComputer - Ordinateur bien créé.

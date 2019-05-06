@@ -44,8 +44,8 @@ public class DaoCompany extends Dao{
 			while(r.next()) {
 				listOfCompanies.add(new ModelCompany(r.getInt("id"), r.getString("name")));
 			}
-			
-			if (listOfCompanies.isEmpty()) throw new RequestFailedException("Aucun résultat");
+			if (limit < 0 || offset < 0) throw new RequestFailedException("Veuillez entrer des nombres positifs");
+			else if (listOfCompanies.isEmpty()) throw new RequestFailedException("Aucun résultat");
 			else return listOfCompanies;
 			
 		} catch (SQLException e) {

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.cdb.dao.Dao;
 import com.excilys.cdb.dao.DaoCompany;
 import com.excilys.cdb.dao.DaoComputer;
 import com.excilys.cdb.dto.DtoComputer;
@@ -23,7 +24,13 @@ public class ServiceComputer {
 	private static DaoCompany daoCompany = DaoCompany.getInstance();
 	private static MapperComputer mapperComputer = MapperComputer.getInstance();
 	
-	private ServiceComputer () { }
+	private ServiceComputer () {
+		try {
+			Dao.initConnection("main");
+		} catch (ConnectionDBFailedException e) {
+			logger.error(e.getMessage());
+		}
+	}
 	
 	public static ServiceComputer getInstance() {
 		if (INSTANCE == null)

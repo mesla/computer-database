@@ -65,8 +65,8 @@ public class DaoComputer extends Dao{
 									r.getString("company.name"))));
 			
 			}
-			
-			if (listOfComputers.isEmpty()) throw new RequestFailedException("Aucun résultat");
+			if (limit < 0 || offset < 0) throw new RequestFailedException("Veuillez entrer des nombres positifs");
+			else if (listOfComputers.isEmpty()) throw new RequestFailedException("Aucun résultat");
 			else return listOfComputers;
 			
 		} catch (SQLException e) {

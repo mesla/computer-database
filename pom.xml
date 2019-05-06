@@ -55,14 +55,16 @@
 		  <artifactId>mockito-all</artifactId>
 		  <version>1.9.5</version>
 		</dependency>
-		
+
+		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
 		<dependency>
-		  <groupId>org.dbunit</groupId>
-		  <artifactId>dbunit</artifactId>
-		  <version>2.6.0</version>
-		  <scope>test</scope>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		    <version>1.4.197</version>
+		    <scope>test</scope>
 		</dependency>
-		
+
+
 		<!-- https://mvnrepository.com/artifact/jstl/jstl -->
 		<dependency>
 		    <groupId>jstl</groupId>

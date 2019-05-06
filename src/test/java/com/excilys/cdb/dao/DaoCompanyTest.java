@@ -2,38 +2,20 @@ package com.excilys.cdb.dao;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.SQLException;
 
-import org.dbunit.DBTestCase;
-import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.dbunit.operation.DatabaseOperation;
+import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
+import com.excilys.cdb.service.ServiceComputer;
 
 public class DaoCompanyTest{
-	/*
-	//Methodes DBUnit
-	
-	@Override
-	protected IDataSet getDataSet() throws Exception {
-		return new FlatXmlDataSetBuilder().build(new FileInputStream("computer-database-db.xml"));
-	}
-	
-    protected DatabaseOperation getSetUpOperation() throws Exception
-    {
-        return DatabaseOperation.REFRESH;
-    }
-
-    protected DatabaseOperation getTearDownOperation() throws Exception
-    {
-        return DatabaseOperation.NONE;
-    }
-    
-*/
+	private Logger logger = LoggerFactory.getLogger(ServiceComputer.class);
     // Tests
 
 	/*
@@ -41,6 +23,15 @@ public class DaoCompanyTest{
 	 * LI = Legal Invalid data
 	 * I = Illegal
 	 */
+	
+	@Before
+	public final void initBdd() {
+		try {
+			DBManager.getInstance().reload();
+		} catch (IOException | SQLException | ConnectionDBFailedException e) {
+			logger.error(e.getMessage());
+		}
+	}	
 
 	@Test
 	public final void testListCompaniesLV() throws RequestFailedException, ConnectionDBFailedException {

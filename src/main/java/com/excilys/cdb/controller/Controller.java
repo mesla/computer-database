@@ -64,10 +64,15 @@ public class Controller {
 	}
 
 	private void listCompanies() throws RequestFailedException, ConnectionDBFailedException {
+				
 		try {
 			String[] limits = ui.askPage();
-			if(validator.checkId(limits[0]) && (validator.checkId(limits[1])))
-				ui.read(serviceCompany.listCompanies(Integer.valueOf(limits[0]), Integer.valueOf(limits[1])));
+			
+			validator.checkId(limits[0]);
+			validator.checkId(limits[1]);
+			
+			ui.read(serviceCompany.listCompanies(Integer.valueOf(limits[0]), Integer.valueOf(limits[1])));
+			
 		} catch (BadEntryException e) {
 			logger.error(e.getMessage());
 		}
@@ -120,8 +125,12 @@ public class Controller {
 		String[] limits;
 		try {
 			limits = ui.askPage();
-			if(validator.checkId(limits[0]) && (validator.checkId(limits[1])))
-				ui.read(serviceComputer.listComputer(Integer.valueOf(limits[0]), Integer.valueOf(limits[1])));	
+			
+			validator.checkId(limits[0]);
+			validator.checkId(limits[1]);
+			
+			ui.read(serviceComputer.listComputer(Integer.valueOf(limits[0]), Integer.valueOf(limits[1])));	
+			
 		} catch (BadEntryException e) {
 			logger.error(e.getMessage());
 		}

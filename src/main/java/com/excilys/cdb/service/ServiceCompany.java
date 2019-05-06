@@ -2,6 +2,10 @@ package com.excilys.cdb.service;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.excilys.cdb.dao.Dao;
 import com.excilys.cdb.dao.DaoCompany;
 import com.excilys.cdb.dto.DtoCompany;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
@@ -12,10 +16,17 @@ public class ServiceCompany {
 	
 	private static ServiceCompany INSTANCE = null;
 	
+	private Logger logger = LoggerFactory.getLogger(ServiceComputer.class);
 	private static DaoCompany daoCompany = DaoCompany.getInstance();
 	private static MapperCompany mapperCompany = MapperCompany.getInstance();
 	
-	private ServiceCompany () { }
+	private ServiceCompany () {
+		try {
+			Dao.initConnection("main");
+		} catch (ConnectionDBFailedException e) {
+			logger.error(e.getMessage());
+		}
+	}
 	
 	public static ServiceCompany getInstance() {
 		if (INSTANCE == null)
