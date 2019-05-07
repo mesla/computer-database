@@ -1,6 +1,5 @@
 package com.excilys.cdb.dao;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -20,7 +19,7 @@ public abstract class Dao {
 	public static void initConnection(String runContext) throws ConnectionDBFailedException{
 			switch(runContext) {
 				case "main":
-					Dao.srcConfig = "src/main/resources/config.properties";
+					Dao.srcConfig = "config.properties";
 					Dao.driver = "com.mysql.cj.jdbc.Driver";
 					break;
 				case "test":
@@ -35,7 +34,8 @@ public abstract class Dao {
 	public static Connection connection() throws ConnectionDBFailedException {
 		try {
 			final Properties prop = new Properties();
-			InputStream input = new FileInputStream(srcConfig);
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			InputStream input =classLoader.getResourceAsStream(srcConfig);
 			prop.load(input);
 			
 			Dao.url = prop.getProperty("db.url");
@@ -49,7 +49,7 @@ public abstract class Dao {
 					username,
 					password);
 
-		} catch (ClassNotFoundException | IOException | SQLException e) {
+		} catch (ClassNotFoundException | SQLException | IOException e) {
 			throw new ConnectionDBFailedException("connexion à la DB échouée");
 		}
 

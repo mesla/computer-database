@@ -23,11 +23,13 @@ public class DaoComputer extends Dao{
 	
 	private Logger logger = LoggerFactory.getLogger(DaoComputer.class);
 	
+	//TODO WHERE computer.name LIKE ? dans SQL_GETLIST avant order by (voir pour remplacer le ?)
 	private final String SQL_GETLIST = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id ORDER BY computer.id ASC LIMIT ? OFFSET ?;";
 	private final String SQL_GET = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;";
 	private final String SQL_CREATE = "INSERT INTO computer (name, introduced,discontinued,company_id) VALUES (?,?,?,?);";
 	private final String SQL_DELETE = "DELETE FROM computer WHERE id = ?;";
 	private final String SQL_UPDATE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
+	private final String SQL_COUNT = "SELECT count(*) as nbComputers FROM computer";
 	
 	private DaoComputer() {}
 	
@@ -48,8 +50,8 @@ public class DaoComputer extends Dao{
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_GETLIST);
 			) {
 						
-			preparedStatement.setInt(1,limit);
-			preparedStatement.setInt(2,offset);
+			preparedStatement.setInt(2,limit);
+			preparedStatement.setInt(3,offset);
 			ResultSet r = preparedStatement.executeQuery();
 			
 			ArrayList<ModelComputer> listOfComputers = new ArrayList<ModelComputer>();
@@ -170,6 +172,19 @@ public class DaoComputer extends Dao{
 		    logger.error(e.getMessage());
 		}
 	}
-
+	
+	public int getNbComputers() throws SQLException, ConnectionDBFailedException, RequestFailedException {
+		try(
+				Connection connection = super.connection();
+				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_COUNT);
+			){
+			ResultSet r = preparedStatement.executeQuery();
+			if(r.next())
+				return r.getInt("nbComputers");
+			else
+				throw new RequestFailedException("Il n'y a aucun ordinateur.");
+		}
+		
+	}
 
 }

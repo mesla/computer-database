@@ -37,3 +37,14 @@
 2019-05-06_14:41:16.479 [main] INFO  com.excilys.cdb.dao.DaoComputer - Ordinateur bien créé.
 2019-05-06_14:41:52.348 [main] INFO  com.excilys.cdb.dao.DaoComputer - Ordinateur bien créé.
 2019-05-06_14:44:29.067 [main] INFO  com.excilys.cdb.dao.DaoComputer - Ordinateur bien créé.
+2019-05-06_15:35:51.653 [main] ERROR com.excilys.cdb.ui.Cli - computer-database\src\main\resources\config.properties (Le chemin d’accès spécifié est introuvable)
+2019-05-06_15:46:31.239 [main] ERROR com.excilys.cdb.ui.Cli - config.properties (Le fichier spécifié est introuvable)
+2019-05-06_15:46:50.448 [main] ERROR com.excilys.cdb.ui.Cli - config.properties (Le fichier spécifié est introuvable)
+2019-05-06_15:52:44.554 [main] ERROR com.excilys.cdb.ui.Cli - config.properties (Le fichier spécifié est introuvable)
+2019-05-06_15:53:02.339 [main] ERROR com.excilys.cdb.ui.Cli - config.properties (Le fichier spécifié est introuvable)
+2019-05-06_15:54:45.596 [main] ERROR com.excilys.cdb.ui.Cli - config.properties (Le fichier spécifié est introuvable)
+2019-05-06_15:55:36.209 [main] ERROR com.excilys.cdb.ui.Cli - config.properties (Le fichier spécifié est introuvable)
+2019-05-06_16:01:29.959 [main] ERROR com.excilys.cdb.ui.Cli - config.properties (Le fichier spécifié est introuvable)
+2019-05-06_16:13:09.591 [main] INFO  com.excilys.cdb.dao.DaoComputer - Ordinateur bien cr��.
+2019-05-06_16:24:18.299 [main] ERROR com.excilys.cdb.ui.Cli - config.properties (Le fichier spécifié est introuvable)
+2019-05-07_10:58:54.372 [main] ERROR com.excilys.cdb.ui.Cli - Vous avez rentré un ID invalide

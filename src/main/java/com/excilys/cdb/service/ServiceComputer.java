@@ -49,9 +49,7 @@ public class ServiceComputer {
 				
 		return dtoComputerList;
 	}
-	
-	
-	
+		
 	public DtoComputer read(int id) throws SQLException, ConnectionDBFailedException, RequestFailedException {
 		return mapperComputer.toDto(daoComputer.read(id));
 	}
@@ -104,7 +102,10 @@ public class ServiceComputer {
 			} catch (SQLException | RequestFailedException | ConnectionDBFailedException e) {
 			    logger.error(e.getMessage());
 			}
-		
-
 	}
+	
+	public int getNbComputers() throws SQLException, ConnectionDBFailedException, RequestFailedException {
+		return daoComputer.getNbComputers();
+	}
+
 }

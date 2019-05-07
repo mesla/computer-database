@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.excilys.cdb</groupId>
   <artifactId>cdb</artifactId>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <name>Maven Quick Start Archetype</name>
   <url>http://maven.apache.org</url>
@@ -75,9 +75,7 @@
   </dependencies>
   
   
-  <build>
-    <sourceDirectory>src</sourceDirectory>
-    
+  <build>    
     <plugins>
     
       <plugin>
