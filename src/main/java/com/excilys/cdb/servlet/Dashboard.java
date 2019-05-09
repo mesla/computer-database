@@ -41,7 +41,7 @@ public class Dashboard extends HttpServlet {
 		
 		this.getAttributes(request);
 		
-		page.setNbComputers(serviceComputer.getNbComputers());
+		page.setNbComputers(serviceComputer.getNbComputers(page.getLike()));
 		page.setNbPages(page.getNbComputers()%page.getLimit() == 0 ? page.getNbComputers()/page.getLimit() : page.getNbComputers()/page.getLimit()+1);
 		
 		ArrayList<Integer> availablePages = new ArrayList<Integer>();
@@ -53,11 +53,11 @@ public class Dashboard extends HttpServlet {
 		
 		System.out.println(page.toString());
 		
+		request.setAttribute("nbComputers", serviceComputer.getNbComputers(page.getLike()));
 		request.setAttribute("nbPages", page.getNbPages());
 		request.setAttribute("page", page.getPage());
 		request.setAttribute("availablePages", page.getAvailablePages());
-		request.setAttribute("nbComputers", serviceComputer.getNbComputers());
-		request.setAttribute("computerList", serviceComputer.listComputer(page.getLimit(), page.getOffset()));
+		request.setAttribute("computerList", serviceComputer.listComputer(page.getLimit(), page.getOffset(), page.getLike()));
 	}
 	
 	private void getAttributes(HttpServletRequest request) throws RequestFailedException, ConnectionDBFailedException {
@@ -67,7 +67,7 @@ public class Dashboard extends HttpServlet {
 		if(request.getParameter("size") != null)
 			page.setLimit(Integer.valueOf(request.getParameter("size")));
 		
-		//if(request.getParameter("search") != null)
-			//request.setAttribute("computerList", serviceComputer.listComputer(page.getLimit(), page.getOffset(),request.getParameter("search")));
+		if(request.getParameter("search") != null)
+			page.setLike(request.getParameter("search"));
 	}
 }

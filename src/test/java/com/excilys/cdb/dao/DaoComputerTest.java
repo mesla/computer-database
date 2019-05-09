@@ -42,17 +42,17 @@ public class DaoComputerTest {
 	
 	@Test
 	public final void testListComputersLV() throws RequestFailedException, ConnectionDBFailedException {
-		assertEquals(2,DaoComputer.getInstance().listComputer(2, 5).size());
+		assertEquals(2,DaoComputer.getInstance().listComputer(2, 5, null).size());
 	}
 	
 	@Test (expected = RequestFailedException.class)
 	public final void testListComputersLI() throws RequestFailedException, ConnectionDBFailedException {
-		DaoComputer.getInstance().listComputer(Integer.MAX_VALUE, Integer.MAX_VALUE);
+		DaoComputer.getInstance().listComputer(Integer.MAX_VALUE, Integer.MAX_VALUE, null);
 	}
 	
 	@Test (expected = RequestFailedException.class)
 	public final void testListComputersI() throws RequestFailedException, ConnectionDBFailedException {		  
-		DaoComputer.getInstance().listComputer(-1, -1);
+		DaoComputer.getInstance().listComputer(-1, -1, null);
 	}
 	
 	

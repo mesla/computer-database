@@ -39,11 +39,11 @@ public class ServiceComputer {
 		return INSTANCE;
 	}
 	
-	public ArrayList<DtoComputer> listComputer(int limit, int offset) throws RequestFailedException, ConnectionDBFailedException {
+	public ArrayList<DtoComputer> listComputer(int limit, int offset, String sql_like) throws RequestFailedException, ConnectionDBFailedException {
 
 		ArrayList<DtoComputer> dtoComputerList = new ArrayList<DtoComputer>();
 		
-		daoComputer.listComputer(limit, offset).stream()
+		daoComputer.listComputer(limit, offset, sql_like).stream()
 			.map(x -> mapperComputer.toDto(x))
 			.forEach(dtoComputerList::add);
 				
@@ -104,8 +104,8 @@ public class ServiceComputer {
 			}
 	}
 	
-	public int getNbComputers() throws SQLException, ConnectionDBFailedException, RequestFailedException {
-		return daoComputer.getNbComputers();
+	public int getNbComputers(String sql_like) throws SQLException, ConnectionDBFailedException, RequestFailedException {
+		return daoComputer.getNbComputers(sql_like);
 	}
 
 }

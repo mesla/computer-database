@@ -97,7 +97,7 @@
 					<li><a href="?page=${page}">${page}</a></li>
 				</c:forEach>
 
-				<li><a href="?page=${(page <= nbPages) ? (page+1) : page}" aria-label="Next">
+				<li><a href="?page=${(page < nbPages) ? (page+1) : page}" aria-label="Next">
 					<span aria-hidden="true">&raquo;</span>
 				</a></li>
 			</ul>

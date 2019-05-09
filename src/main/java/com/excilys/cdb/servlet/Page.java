@@ -8,12 +8,13 @@ public class Page {
 	private int limit;
 	private int nbComputers;
 	private int nbPages;
-	private ArrayList<Integer> availablePages;	
+	private ArrayList<Integer> availablePages;
+	private String like;
 
 	@Override
 	public String toString() {
 		return "Page [page=" + page + ", offset=" + offset + ", limit=" + limit + ", nbComputers="
-				+ nbComputers + ", nbPages=" + nbPages + ", availablePages=" + availablePages + "]";
+				+ nbComputers + ", nbPages=" + nbPages + ", availablePages=" + availablePages + ", like=" + like +"]";
 	}
 
 	private static Page INSTANCE = null;
@@ -21,9 +22,10 @@ public class Page {
 	private Page() {this.setDefault();}
 	
 	public void setDefault() {
-		this.limit = 10;
-		this.page = 1;
-		this.offset = (page-1) * limit;
+		limit = 10;
+		page = 1;
+		offset = (page-1) * limit;
+		like = "";
 	}
 	
 	public static Page getInstance()
@@ -55,11 +57,15 @@ public class Page {
 	}
 
 	public void setLimit(int limit) {
-		if((page-1)*limit < nbComputers) {
-			this.limit = limit;
-			offset = (page-1)*limit;
+		this.limit = limit;
+		
+		//if the current page doesn't exist anymore (because the new limit * current page > number of computers),
+		//redirect to last existing page
+		setNbPages(nbComputers%limit == 0 ? nbComputers/limit : nbComputers/limit+1);
+		if((page-1)*limit >= nbComputers) {
+			page = nbPages;
 		}
-		else this.setDefault();
+		offset = (page-1)*limit;
 	}
 	
 	public int getNbComputers() {
@@ -84,6 +90,14 @@ public class Page {
 
 	public void setAvailablePages(ArrayList<Integer> availablePages) {
 		this.availablePages = availablePages;
+	}
+
+	public String getLike() {
+		return like;
+	}
+
+	public void setLike(String like) {
+		this.like = like;
 	}
 	
 	

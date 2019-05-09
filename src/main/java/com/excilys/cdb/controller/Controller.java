@@ -129,7 +129,7 @@ public class Controller {
 			validator.checkId(limits[0]);
 			validator.checkId(limits[1]);
 			
-			ui.read(serviceComputer.listComputer(Integer.valueOf(limits[0]), Integer.valueOf(limits[1])));	
+			ui.read(serviceComputer.listComputer(Integer.valueOf(limits[0]), Integer.valueOf(limits[1]), null));	
 			
 		} catch (BadEntryException e) {
 			logger.error(e.getMessage());
