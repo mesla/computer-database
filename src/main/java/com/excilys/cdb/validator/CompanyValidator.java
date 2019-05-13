@@ -28,7 +28,7 @@ public class CompanyValidator {
 	
 	private boolean checkNameIsNotEmptyOrNull(String name){
 		try {
-			if(name.isEmpty() || name.equals(null)) throw new BadEntryException("Le champ 'name' doit être spécifié");
+			if(name == null || name.isEmpty()) throw new BadEntryException("Le champ 'name' doit être spécifié");
 			return true;
 		} catch (BadEntryException e) {
 			logger.warn(e.getMessage());

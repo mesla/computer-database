@@ -36,9 +36,8 @@ public class DaoCompany extends Dao{
 		try(
 				Connection connection = super.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_GETLIST);
+				ResultSet r = preparedStatement.executeQuery();
 			) {
-			ResultSet r = preparedStatement.executeQuery();
-			
 			ArrayList<ModelCompany> listOfCompanies = new  ArrayList<ModelCompany>();
 			while(r.next()) {
 				listOfCompanies.add(new ModelCompany(r.getInt("id"), r.getString("name")));
@@ -58,12 +57,12 @@ public class DaoCompany extends Dao{
 			) {
 			
 			preparedStatement.setInt(1,id);
-			ResultSet r = preparedStatement.executeQuery();
-			
-			if(r.next())
-				return r.getString("name");
-			else
-				throw new BadEntryException("Vous avez rentré un company_id invalide");
+			try (ResultSet r = preparedStatement.executeQuery();) {
+				if(r.next())
+					return r.getString("name");
+				else
+					throw new BadEntryException("Vous avez rentré un company_id invalide");
+			}
 			
 		} catch (SQLException e) {
 			throw new RequestFailedException("Requête échouée");

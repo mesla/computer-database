@@ -3,6 +3,7 @@ package com.excilys.cdb.servlet;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,9 +21,9 @@ import com.excilys.cdb.service.ServiceComputer;
 @WebServlet(urlPatterns = "/dashboard")
 public class Dashboard extends HttpServlet {
 
-	private Page page = Page.getInstance();
-	private Logger logger = LoggerFactory.getLogger(Dashboard.class);
-	private ServiceComputer serviceComputer = ServiceComputer.getInstance();
+	private final Page page = Page.getInstance();
+	private final Logger logger = LoggerFactory.getLogger(Dashboard.class);
+	private final ServiceComputer serviceComputer = ServiceComputer.getInstance();
 
 	private static final long serialVersionUID = -3858556152838148500L;
 
@@ -33,7 +34,7 @@ public class Dashboard extends HttpServlet {
 			this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
 		} catch (RequestFailedException | ConnectionDBFailedException | SQLException | ServletException
 				| IOException e) {
-			logger.error(e.getMessage() + "\n" + e.getStackTrace().toString());
+			logger.error(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 		}
 	}
 
@@ -69,7 +70,7 @@ public class Dashboard extends HttpServlet {
 			try {
 				page.setPage(Integer.valueOf(request.getParameter("page")));
 			} catch (NumberFormatException e) {
-				logger.warn(new BadArgumentException("L'attribut 'page' fourni dans l'url doit être un entier positif.").getMessage());
+				logger.warn(new BadArgumentException("L'attribut 'page' fourni dans l'url doit être un entier positif.").getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 			} catch (BadArgumentException e) {
 				logger.warn(e.getMessage());
 			}
@@ -79,9 +80,9 @@ public class Dashboard extends HttpServlet {
 			try {
 				page.setLimit(Integer.valueOf(request.getParameter("size")));
 			} catch (NumberFormatException e) {
-				logger.warn(new BadArgumentException("L'attribut 'size' fourni dans l'url doit être un entier positif.").getMessage());
+				logger.warn(new BadArgumentException("L'attribut 'size' fourni dans l'url doit être un entier positif.").getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 			} catch (BadArgumentException e) {
-				logger.warn(e.getMessage());
+				logger.warn(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 			}
 		}
 
@@ -89,7 +90,7 @@ public class Dashboard extends HttpServlet {
 			try {
 				page.setLike(request.getParameter("search"));
 			} catch (BadArgumentException e) {
-				logger.warn(e.getMessage());
+				logger.warn(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 			}
 	}
 
@@ -98,14 +99,20 @@ public class Dashboard extends HttpServlet {
 		if (request.getParameter("selection") != null) {
 			String listId[] = request.getParameter("selection").split(",");
 			for (String id : listId) {
-				ServiceComputer.getInstance().delete(Integer.valueOf(id));
+				try {
+					ServiceComputer.getInstance().delete(Integer.valueOf(id));
+				} catch (NumberFormatException e) {
+					logger.warn(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+				} catch (ConnectionDBFailedException e) {
+					logger.error(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+				}
 			}
 			try {
 				response.sendRedirect(this.getServletContext().getContextPath());
 			} catch (IOException e) {
 				logger.error(
 						new RedirectionException("Redirection à la page d'accueil échouée dans Dashboard").getMessage()
-								+ "\n" + e.getStackTrace().toString());
+							+ "\n" + Arrays.toString(e.getStackTrace()));
 			}
 		}
 	}

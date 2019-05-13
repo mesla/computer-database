@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,9 +31,9 @@ public class AddComputer extends HttpServlet{
 
 	private static final long serialVersionUID = 4504965411432198749L;
 	
-	private Logger logger = LoggerFactory.getLogger(AddComputer.class);
-	private ServiceComputer serviceComputer = ServiceComputer.getInstance();
-	private ServiceCompany serviceCompany = ServiceCompany.getInstance();
+	private final Logger logger = LoggerFactory.getLogger(AddComputer.class);
+	private final ServiceComputer serviceComputer = ServiceComputer.getInstance();
+	private final ServiceCompany serviceCompany = ServiceCompany.getInstance();
 	
 	
 	@Override
@@ -41,7 +42,7 @@ public class AddComputer extends HttpServlet{
 			this.setAttributes(request);
 			this.getServletContext().getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward( request, response );
 		} catch (ServletException | IOException | SQLException | ConnectionDBFailedException | RequestFailedException e) {
-			logger.error(e.getMessage()+ "\n" + e.getStackTrace().toString());
+			logger.error(e.getMessage()+ "\n" + Arrays.toString(e.getStackTrace()));
 		}
 	}
 
@@ -64,20 +65,20 @@ public class AddComputer extends HttpServlet{
 												request.getParameter("companyId").equals("0") ? null : Integer.valueOf(request.getParameter("companyId")),
 												null)
 					)));
-				} catch (RequestFailedException | BadEntryException | SQLException | UnvalidDtoException e) {
-					logger.warn(e.getMessage() + "\n" + e.getStackTrace().toString());
+				} catch (RequestFailedException | BadEntryException | SQLException | UnvalidDtoException | ConnectionDBFailedException e) {
+					logger.warn(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 				}
 			}
 		} catch(DateTimeParseException e) {
-			logger.warn(new BadEntryException("La date entrée n'est pas au format YYYY-mm-DD").getMessage());
+			logger.warn(new BadEntryException("La date entrée n'est pas au format YYYY-mm-DD").getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 		}
 		catch(NumberFormatException e) {
-			logger.warn(new BadEntryException("L'ID renseigné n'est pas un entier").getMessage() + "\n" + e.getStackTrace().toString());
+			logger.warn(new BadEntryException("L'ID renseigné n'est pas un entier").getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 		}
 		try {
 			response.sendRedirect(this.getServletContext().getContextPath());
 		} catch (IOException e) {
-			logger.error(new RedirectionException("Redirection à la page d'accueil échouée dans AddComputer").getMessage() + "\n" + e.getStackTrace().toString());
+			logger.error(new RedirectionException("Redirection à la page d'accueil échouée dans AddComputer").getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 		}
 	}
 

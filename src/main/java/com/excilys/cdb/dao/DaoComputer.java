@@ -20,7 +20,7 @@ public class DaoComputer extends Dao{
 	
 	private static DaoComputer INSTANCE = null;
 	private static DaoCompany daoCompany = DaoCompany.getInstance();
-	private Logger logger = LoggerFactory.getLogger(DaoComputer.class);
+	private final Logger logger = LoggerFactory.getLogger(DaoComputer.class);
 	
 	private final String SQL_GETLIST = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.name ASC LIMIT ? OFFSET ?;";
 	private final String SQL_GET = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;";
@@ -42,7 +42,7 @@ public class DaoComputer extends Dao{
 	
 	
 	public ArrayList<ModelComputer> listComputer(int limit, int offset, String sql_like) throws RequestFailedException, ConnectionDBFailedException {
-		if(sql_like!=null && sql_like!="")
+		if(sql_like!=null && sql_like.isEmpty())
 			sql_like = "%" + sql_like + "%";
 		else
 			sql_like = "%%";
@@ -54,52 +54,56 @@ public class DaoComputer extends Dao{
 			preparedStatement.setString(2, sql_like);
 			preparedStatement.setInt(3,limit);
 			preparedStatement.setInt(4,offset);
-			ResultSet r = preparedStatement.executeQuery();
 			
-			ArrayList<ModelComputer> listOfComputers = new ArrayList<ModelComputer>();
-			while(r.next()) {
-			listOfComputers.add(
-					new ModelComputer(
-							r.getInt("computer.id"),
-							r.getString("computer.name"),
-							r.getTimestamp("computer.introduced"),
-							r.getTimestamp("computer.discontinued"),
-							new ModelCompany(
-									r.getInt("company.id") == 0 ? null : r.getInt("company.id"),
-									r.getString("company.name"))));
-			
+			try(ResultSet r = preparedStatement.executeQuery();) {
+				ArrayList<ModelComputer> listOfComputers = new ArrayList<ModelComputer>();
+				while(r.next()) {
+				listOfComputers.add(
+						new ModelComputer(
+								r.getInt("computer.id"),
+								r.getString("computer.name"),
+								r.getTimestamp("computer.introduced"),
+								r.getTimestamp("computer.discontinued"),
+								new ModelCompany(
+										r.getInt("company.id") == 0 ? null : r.getInt("company.id"),
+										r.getString("company.name"))));
+				
+				}
+				if (limit < 0 || offset < 0) throw new RequestFailedException("Veuillez entrer des nombres positifs");
+				else return listOfComputers;
 			}
-			if (limit < 0 || offset < 0) throw new RequestFailedException("Veuillez entrer des nombres positifs");
-			else return listOfComputers;
-			
 		} catch (SQLException e) {
 			throw new RequestFailedException("Il y a un soucis au niveau de la requête SQL");
 		}
 	}
 	
-	public ModelComputer read(int id) throws SQLException, ConnectionDBFailedException, RequestFailedException {
+	public ModelComputer read(int id) throws ConnectionDBFailedException, RequestFailedException {
 		try(
 				Connection connection = super.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_GET);
 			) {
 			
 			preparedStatement.setInt(1,id);
-			ResultSet r = preparedStatement.executeQuery();
 			
-			if(r.next()) {
-				return new ModelComputer(r.getInt("computer.id"),
-							r.getString("computer.name"),
-							r.getTimestamp("computer.introduced"),
-							r.getTimestamp("computer.discontinued"),
-							new ModelCompany(
-									r.getInt("company.id") == 0 ? null : r.getInt("company.id"),
-									r.getString("company.name")));
+				try(ResultSet r = preparedStatement.executeQuery();)
+				{
+				if(r.next()) {
+					return new ModelComputer(r.getInt("computer.id"),
+								r.getString("computer.name"),
+								r.getTimestamp("computer.introduced"),
+								r.getTimestamp("computer.discontinued"),
+								new ModelCompany(
+										r.getInt("company.id") == 0 ? null : r.getInt("company.id"),
+										r.getString("company.name")));
+				}
+				else throw new RequestFailedException("Vous avez rentré un ID invalide");
 			}
-			else throw new RequestFailedException("Vous avez rentré un ID invalide");
+		} catch (SQLException e) {
+			throw new RequestFailedException("Il y a un soucis au niveau de la requête SQL");
 		}
 	}
 	
-	public void create(ModelComputer modelComputer) throws SQLException, RequestFailedException, BadEntryException {
+	public void create(ModelComputer modelComputer) throws SQLException, RequestFailedException, BadEntryException, ConnectionDBFailedException {
 		try(
 				Connection connection = super.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_CREATE);
@@ -117,27 +121,21 @@ public class DaoComputer extends Dao{
 			preparedStatement.executeUpdate();
 			logger.info("Ordinateur bien créé.");
 		}
-		catch (ConnectionDBFailedException e) {
-			logger.error(e.getMessage());
-		}
 	}
 	
-	public void delete(int id) throws SQLException, RequestFailedException {
+	public void delete(int id) throws SQLException, RequestFailedException, ConnectionDBFailedException {
 		try(
 				Connection connection = super.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_DELETE);
 			) {
 			
 			preparedStatement.setInt(1,id);
+			
 			if (preparedStatement.executeUpdate() == 0)
 				throw new RequestFailedException("Il n'y a aucun ordinateur à cet ID.");
 			else logger.info("Ordinateur bien supprimé");
 				
-		}
-		catch (ConnectionDBFailedException e) {
-		    logger.error(e.getMessage());
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new RequestFailedException("Vous avez rentré un ID invalide");
 		}
 	}
@@ -168,9 +166,6 @@ public class DaoComputer extends Dao{
 				
 			preparedStatement.executeUpdate();
 			logger.info("Les données de l'ordinateur ont bien été mises à jour.");
-		} 
-		catch (ConnectionDBFailedException e) {
-		    logger.error(e.getMessage());
 		}
 	}
 	
@@ -179,17 +174,18 @@ public class DaoComputer extends Dao{
 				Connection connection = super.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_COUNT);
 			){
-			if(sql_like!=null && sql_like!="")
+			if(sql_like!=null && sql_like.isEmpty())
 				sql_like = "%" + sql_like + "%";
 			else
 				sql_like = "%%";
 			preparedStatement.setString(1,sql_like);
 			preparedStatement.setString(2,sql_like);
-			ResultSet r = preparedStatement.executeQuery();
-			if(r.next())
-				return r.getInt("nbComputers");
-			else
-				throw new RequestFailedException("Il n'y a aucun ordinateur.");
+			try(ResultSet r = preparedStatement.executeQuery();) {
+				if(r.next())
+					return r.getInt("nbComputers");
+				else
+					throw new RequestFailedException("Il n'y a aucun ordinateur.");
+			}
 		}
 		
 	}

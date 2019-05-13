@@ -57,7 +57,7 @@ public class ServiceComputer {
 	
 	
 	
-	public void delete(int id) {
+	public void delete(int id) throws ConnectionDBFailedException {
 		try {
 			daoComputer.delete(id);
 		} catch (SQLException | RequestFailedException e) {
@@ -86,7 +86,7 @@ public class ServiceComputer {
 //	
 	}
 	
-	public void create(ModelComputer modelComputer) throws BadEntryException, SQLException, RequestFailedException {
+	public void create(ModelComputer modelComputer) throws BadEntryException, SQLException, RequestFailedException, ConnectionDBFailedException {
 		daoComputer.create(modelComputer);
 	}
 	

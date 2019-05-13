@@ -28,7 +28,7 @@ public class MapperComputer {
 				t.getName(),
 				dateIntro,
 				dateDiscon,
-				t.getCompanyId() == null ? null : new ModelCompany(Integer.valueOf(t.getCompanyId()),
+				t.getCompanyId() == null ? null : new ModelCompany(t.getCompanyId(),
 				t.getCompanyName()));
 
 	}
