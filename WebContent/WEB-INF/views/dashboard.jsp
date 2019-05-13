@@ -23,7 +23,7 @@
 			<h1 id="homeTitle">${nbComputers} computers.</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
-					<form id="searchForm" action="#" method="GET" class="form-inline">
+					<form id="searchForm" action="dashboard" method="GET" class="form-inline">
 
 						<input type="search" id="searchbox" name="search"
 							class="form-control" placeholder="Search name" /> <input
@@ -32,14 +32,14 @@
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="addComputer.html">Add
+					<a class="btn btn-success" id="addComputer" href="addComputer">Add
 						Computer</a> <a class="btn btn-default" id="editComputer" href="#"
 						onclick="$.fn.toggleEditMode();">Edit</a>
 				</div>
 			</div>
 		</div>
 
-		<form id="deleteForm" action="#" method="POST">
+		<form id="deleteForm" method="POST">
 			<input type="hidden" name="selection" value="">
 		</form>
 
@@ -74,8 +74,8 @@
 								class="cb" value="${computer.getId()}"></td>
 							<td><a href="editComputer.html" onclick="">${computer.getName()}</a>
 							</td>
-							<td>${computer.getIntroduced().orElse("-")}</td>
-							<td>${computer.getDiscontinued().orElse("-")}</td>
+							<td>${computer.getIntroduced() == null ? "-" : computer.getIntroduced()}</td>
+							<td>${computer.getDiscontinued() == null ? "-" : computer.getDiscontinued()}</td>
 							<td>${computer.getCompanyName() == "null" ? "-" : computer.getCompanyName()}</td>
 						</tr>
 					</c:forEach>
@@ -102,9 +102,9 @@
 				</a></li>
 			</ul>
 			<div class="btn-group btn-group-sm pull-right" role="group">
-				<a href="?page=${page}&size=10" class="btn btn-default">10</a>
-				<a href="?page=${page}&size=50" class="btn btn-default">50</a>
-				<a href="?page=${page}&size=100" class="btn btn-default">100</a>
+				<a href="?size=10" class="btn btn-default">10</a>
+				<a href="?size=50" class="btn btn-default">50</a>
+				<a href="?size=100" class="btn btn-default">100</a>
 			</div>
 		</div>
 	</footer>

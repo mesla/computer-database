@@ -11,8 +11,8 @@ import javax.servlet.http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.cdb.dao.DaoComputer;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
+import com.excilys.cdb.exception.RedirectionException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.service.ServiceComputer;
 
@@ -20,20 +20,18 @@ import com.excilys.cdb.service.ServiceComputer;
 public class Dashboard extends HttpServlet {
 	
 	private Page page = Page.getInstance();
-	private Logger logger = LoggerFactory.getLogger(DaoComputer.class);
+	private Logger logger = LoggerFactory.getLogger(Dashboard.class);
 	private ServiceComputer serviceComputer = ServiceComputer.getInstance();
 	
 	private static final long serialVersionUID = -3858556152838148500L;
 	
 	@Override
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) {
-
 		try {
 			this.setAttributes(request);
 			this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward( request, response );
 		} catch (RequestFailedException | ConnectionDBFailedException | SQLException | ServletException | IOException e) {
-			logger.error(e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage() +"\n" + e.getStackTrace().toString());
 		}
 	}
 	
@@ -53,21 +51,38 @@ public class Dashboard extends HttpServlet {
 		
 		System.out.println(page.toString());
 		
-		request.setAttribute("nbComputers", serviceComputer.getNbComputers(page.getLike()));
+		request.setAttribute("nbComputers", page.getNbComputers());
 		request.setAttribute("nbPages", page.getNbPages());
 		request.setAttribute("page", page.getPage());
 		request.setAttribute("availablePages", page.getAvailablePages());
 		request.setAttribute("computerList", serviceComputer.listComputer(page.getLimit(), page.getOffset(), page.getLike()));
 	}
 	
-	private void getAttributes(HttpServletRequest request) throws RequestFailedException, ConnectionDBFailedException {
+	private void getAttributes(HttpServletRequest request) throws RequestFailedException, ConnectionDBFailedException, SQLException {
 		if(request.getParameter("page") != null)
 			page.setPage(Integer.valueOf(request.getParameter("page")));
 		
 		if(request.getParameter("size") != null)
 			page.setLimit(Integer.valueOf(request.getParameter("size")));
 		
-		if(request.getParameter("search") != null)
+		if(request.getParameter("search") != null) {
 			page.setLike(request.getParameter("search"));
+		}
+	}
+
+	
+	@Override
+	public void doPost( HttpServletRequest request, HttpServletResponse response ) {
+		if(request.getParameter("selection") != null) {
+			String listId[] = request.getParameter("selection").split(",");
+			for (String id : listId) {
+				ServiceComputer.getInstance().delete(Integer.valueOf(id));
+			}
+			try {
+				response.sendRedirect(this.getServletContext().getContextPath());
+			} catch (IOException e) {
+				logger.error(new RedirectionException("Redirection à la page d'accueil échouée dans Dashboard").getMessage() + "\n" + e.getStackTrace().toString());
+			}
+		}
 	}
 }

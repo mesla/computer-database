@@ -34,11 +34,11 @@ public class ModelComputer{
 	}
 
 	public Integer getCompanyId() {
-		return modelCompany.getId();
+		return modelCompany==null ? null : modelCompany.getId();
 	}
 
 	public String getCompanyName() {
-		return modelCompany.getName();
+		return modelCompany==null ? null : modelCompany.getName();
 	}
 
 	@Override

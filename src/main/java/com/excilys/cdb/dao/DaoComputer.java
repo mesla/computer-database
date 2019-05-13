@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.model.ModelCompany;
@@ -98,7 +99,7 @@ public class DaoComputer extends Dao{
 		}
 	}
 	
-	public void create(ModelComputer modelComputer) throws SQLException, RequestFailedException {
+	public void create(ModelComputer modelComputer) throws SQLException, RequestFailedException, BadEntryException {
 		try(
 				Connection connection = super.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_CREATE);
@@ -141,7 +142,7 @@ public class DaoComputer extends Dao{
 		}
 	}
 	
-	public void update(ModelComputer modelComputer, ModelComputer oldComputer) throws SQLException, RequestFailedException, ConnectionDBFailedException {
+	public void update(ModelComputer modelComputer, ModelComputer oldComputer) throws SQLException, RequestFailedException, ConnectionDBFailedException, BadEntryException {
 
 		String name = (modelComputer.getName() == null) ? oldComputer.getName() : modelComputer.getName();
 		Timestamp intro = (modelComputer.getIntroduced() == null) ? oldComputer.getIntroduced() : modelComputer.getIntroduced();

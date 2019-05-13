@@ -58,14 +58,8 @@ public class Page {
 
 	public void setLimit(int limit) {
 		this.limit = limit;
-		
-		//if the current page doesn't exist anymore (because the new limit * current page > number of computers),
-		//redirect to last existing page
 		setNbPages(nbComputers%limit == 0 ? nbComputers/limit : nbComputers/limit+1);
-		if((page-1)*limit >= nbComputers) {
-			page = nbPages;
-		}
-		offset = (page-1)*limit;
+		setPage(1);
 	}
 	
 	public int getNbComputers() {
@@ -98,6 +92,7 @@ public class Page {
 
 	public void setLike(String like) {
 		this.like = like;
+		setPage(1);
 	}
 	
 	

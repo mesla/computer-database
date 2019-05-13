@@ -18,13 +18,13 @@ public class MapperCompany {
 	
 	public ModelCompany toModel(DtoCompany t) {
 		return new ModelCompany(
-				Integer.parseInt(t.getId()),
+				t.getId(),
 				t.getName());
 	}
 
 	public DtoCompany toDto(ModelCompany u) {
 		return new DtoCompany(
-				String.valueOf(u.getId()),
+				u.getId(),
 				String.valueOf(u.getName()));
 	}
 }

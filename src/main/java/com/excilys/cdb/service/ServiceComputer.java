@@ -14,6 +14,7 @@ import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.mapper.MapperComputer;
+import com.excilys.cdb.model.ModelComputer;
 
 public class ServiceComputer {
 	
@@ -65,47 +66,36 @@ public class ServiceComputer {
 	}
 	
 	public void update(ArrayList<String> args, DtoComputer dtoOldComputer) throws RequestFailedException, BadEntryException {
-
-		try {
-	
-			DtoComputer dtoComputer = new DtoComputer(
-					"0",
-					args.get(0),
-					args.get(1),
-					args.get(2),
-					args.get(3),
-					(args.get(3) == null || args.get(3).isEmpty()) ? null : daoCompany.getMatch(Integer.valueOf(args.get(3)))
-					);
-			
-			daoComputer.update(mapperComputer.toModel(dtoComputer), mapperComputer.toModel(dtoOldComputer));
-				
-		} catch (ConnectionDBFailedException | RequestFailedException | SQLException e) {
-		    logger.error(e.getMessage());
-		}
-	
+//
+//		try {
+//	
+//			DtoComputer dtoComputer = new DtoComputer(
+//					"0",
+//					args.get(0),
+//					args.get(1),
+//					args.get(2),
+//					args.get(3),
+//					(args.get(3) == null || args.get(3).isEmpty()) ? null : daoCompany.getMatch(Integer.valueOf(args.get(3)))
+//					);
+//			
+//			daoComputer.update(mapperComputer.toModel(dtoComputer), mapperComputer.toModel(dtoOldComputer));
+//				
+//		} catch (ConnectionDBFailedException | RequestFailedException | SQLException e) {
+//		    logger.error(e.getMessage());
+//		}
+//	
 	}
 	
-	public void create(ArrayList<String> args) throws BadEntryException {
-			try {
-
-				DtoComputer dtoComputer = new DtoComputer(
-						"0",
-						args.get(0),
-						args.get(1),
-						args.get(2),
-						args.get(3),
-						(args.get(3) == null || args.get(3).isEmpty()) ? null : daoCompany.getMatch(Integer.valueOf(args.get(3)))
-						);
-				
-				daoComputer.create(mapperComputer.toModel(dtoComputer));
-				
-			} catch (SQLException | RequestFailedException | ConnectionDBFailedException e) {
-			    logger.error(e.getMessage());
-			}
+	public void create(ModelComputer modelComputer) throws BadEntryException, SQLException, RequestFailedException {
+		daoComputer.create(modelComputer);
 	}
 	
 	public int getNbComputers(String sql_like) throws SQLException, ConnectionDBFailedException, RequestFailedException {
 		return daoComputer.getNbComputers(sql_like);
+	}
+	
+	public String getCompanyById(int companyId) throws RequestFailedException, ConnectionDBFailedException, BadEntryException {
+		return daoCompany.getMatch(companyId);
 	}
 
 }

@@ -36,11 +36,11 @@ public class ServiceCompany {
 	}
 	
 	
-	public ArrayList<DtoCompany> listCompanies(int limit, int offset) throws RequestFailedException, ConnectionDBFailedException {
+	public ArrayList<DtoCompany> listCompanies() throws RequestFailedException, ConnectionDBFailedException {
 		
 		ArrayList<DtoCompany> dtoCompanyList = new ArrayList<DtoCompany>();
 		
-		daoCompany.listCompanies(limit, offset).stream()
+		daoCompany.listCompanies().stream()
 		.map(x -> mapperCompany.toDto(x))
 		.forEach(dtoCompanyList::add);
 		
