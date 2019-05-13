@@ -2,6 +2,8 @@ package com.excilys.cdb.servlet;
 
 import java.util.ArrayList;
 
+import com.excilys.cdb.exception.BadArgumentException;
+
 public class Page {
 	private int page;
 	private int offset;
@@ -13,36 +15,40 @@ public class Page {
 
 	@Override
 	public String toString() {
-		return "Page [page=" + page + ", offset=" + offset + ", limit=" + limit + ", nbComputers="
-				+ nbComputers + ", nbPages=" + nbPages + ", availablePages=" + availablePages + ", like=" + like +"]";
+		return "Page [page=" + page + ", offset=" + offset + ", limit=" + limit + ", nbComputers=" + nbComputers
+				+ ", nbPages=" + nbPages + ", availablePages=" + availablePages + ", like=" + like + "]";
 	}
 
 	private static Page INSTANCE = null;
-	
-	private Page() {this.setDefault();}
-	
+
+	private Page() {
+		this.setDefault();
+	}
+
 	public void setDefault() {
 		limit = 10;
 		page = 1;
-		offset = (page-1) * limit;
+		offset = (page - 1) * limit;
 		like = "";
 	}
-	
-	public static Page getInstance()
-	   {           
-	       if (INSTANCE == null)
-	       {   INSTANCE = new Page(); 
-	       }
-	       return INSTANCE;
-	   }
+
+	public static Page getInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new Page();
+		}
+		return INSTANCE;
+	}
 
 	public int getPage() {
 		return page;
 	}
 
-	public void setPage(int page) {
-		this.page = page;
-		offset = (page-1)*limit;
+	public void setPage(int page) throws BadArgumentException {
+		if (page <= nbPages && page > 0) {
+			this.page = page;
+			offset = (page - 1) * limit;
+		}
+		else throw new BadArgumentException("Les pages disponibles sont comprises entre 1 et " + nbPages);
 	}
 
 	public int getOffset() {
@@ -52,16 +58,19 @@ public class Page {
 	public void setOffset(int offset) {
 		this.offset = offset;
 	}
+
 	public int getLimit() {
 		return limit;
 	}
 
-	public void setLimit(int limit) {
-		this.limit = limit;
-		setNbPages(nbComputers%limit == 0 ? nbComputers/limit : nbComputers/limit+1);
-		setPage(1);
+	public void setLimit(int limit) throws BadArgumentException {
+		if(limit == 10 || limit == 50 || limit == 100) {
+			this.limit = limit;
+			setNbPages(nbComputers % limit == 0 ? nbComputers / limit : nbComputers / limit + 1);
+			setPage(1);
+		} else throw new BadArgumentException("La taille d'une page ne peut que être comprise entre 10, 50 et 100");
 	}
-	
+
 	public int getNbComputers() {
 		return nbComputers;
 	}
@@ -90,10 +99,9 @@ public class Page {
 		return like;
 	}
 
-	public void setLike(String like) {
+	public void setLike(String like) throws BadArgumentException {
 		this.like = like;
 		setPage(1);
 	}
-	
-	
+
 }

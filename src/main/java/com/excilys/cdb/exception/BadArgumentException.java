@@ -1,11 +1,10 @@
 package com.excilys.cdb.exception;
 
-
-public class BadEntryException extends Exception {
-
+public class BadArgumentException extends Exception {
 	private static final long serialVersionUID = 1L;
-
-	public BadEntryException(String str) {
+	
+	public BadArgumentException(String str) {
 		super(str);
 	}
 }
+
