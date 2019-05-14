@@ -12,6 +12,7 @@ import javax.servlet.http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.cdb.dto.DtoComputer;
 import com.excilys.cdb.exception.BadArgumentException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RedirectionException;
@@ -33,46 +34,47 @@ public class Dashboard extends HttpServlet {
 			this.setAttributes(request);
 			this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
 		} catch (RequestFailedException | ConnectionDBFailedException | SQLException | ServletException
-				| IOException e) {
+				| IOException | BadArgumentException e) {
 			logger.error(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 		}
 	}
 
 	private void setAttributes(HttpServletRequest request)
-			throws SQLException, ConnectionDBFailedException, RequestFailedException {
+			throws SQLException, ConnectionDBFailedException, RequestFailedException, BadArgumentException {
 
 		this.getAttributes(request);
-
+		
+		ArrayList<DtoComputer> dtoComputerList = serviceComputer.listComputer(page.getLimit(), page.getOffset(), page.getLike());
 		page.setNbComputers(serviceComputer.getNbComputers(page.getLike()));
-		page.setNbPages(page.getNbComputers() % page.getLimit() == 0 ? page.getNbComputers() / page.getLimit()
-				: page.getNbComputers() / page.getLimit() + 1);
-
+		
+		page.refreshNbPages();
+		
 		ArrayList<Integer> availablePages = new ArrayList<Integer>();
 		for (int i = page.getPage() - 2; i <= page.getPage() + 2; i++) {
 			if (i > 0 && i <= page.getNbPages())
 				availablePages.add(i);
 		}
-
 		page.setAvailablePages(availablePages);
-
-		System.out.println(page.toString());
-
-		request.setAttribute("nbComputers", page.getNbComputers());
+		
 		request.setAttribute("nbPages", page.getNbPages());
 		request.setAttribute("page", page.getPage());
 		request.setAttribute("availablePages", page.getAvailablePages());
-		request.setAttribute("computerList",
-				serviceComputer.listComputer(page.getLimit(), page.getOffset(), page.getLike()));
+		request.setAttribute("computerList", dtoComputerList);
+		request.setAttribute("nbComputers", page.getNbComputers());
+
+		System.out.println(page.toString());
+
 	}
 
 	private void getAttributes(HttpServletRequest request) throws RequestFailedException, ConnectionDBFailedException, SQLException {
+		
 		if(request.getParameter("page") != null) {
 			try {
 				page.setPage(Integer.valueOf(request.getParameter("page")));
 			} catch (NumberFormatException e) {
 				logger.warn(new BadArgumentException("L'attribut 'page' fourni dans l'url doit être un entier positif.").getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 			} catch (BadArgumentException e) {
-				logger.warn(e.getMessage());
+				logger.warn(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 			}
 		}
 		

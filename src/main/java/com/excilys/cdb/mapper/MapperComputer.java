@@ -39,6 +39,6 @@ public class MapperComputer {
 				(u.getIntroduced() == null) ? null : u.getIntroduced().toLocalDateTime().toLocalDate(),
 				(u.getDiscontinued() == null) ? null : u.getDiscontinued().toLocalDateTime().toLocalDate(),
 				u.getCompanyId(),
-				String.valueOf(u.getCompanyName()));
+				u.getCompanyName() == null ? null : String.valueOf(u.getCompanyName()));
 	}
 }

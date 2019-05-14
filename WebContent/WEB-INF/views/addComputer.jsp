@@ -30,18 +30,18 @@
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input name="introduced" type="date" class="form-control" id="introduced" placeholder="Introduced date">
+                                <input name="introduced" type="date" class="form-control" id="introduced" placeholder="Introduced date" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input name="discontinued" type="date" class="form-control" id="discontinued" placeholder="Discontinued date">
+                                <input name="discontinued" type="date" class="form-control" id="discontinued" placeholder="Discontinued date" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
                                 <select name="companyId" class="form-control" id="companyId" >
                                     <option value="0">--</option>
 									<c:forEach var="company" items="${companyList}">
-									 	<option value="${company.getId()}">${company.getId()}</option>
+									 	<option value="${company.getId()}">${company.getName()}</option>
 									</c:forEach>
                                 </select>
                             </div>                  
@@ -49,7 +49,7 @@
                         <div class="actions pull-right">
                             <input type="submit" value="Add" class="btn btn-primary">
                             or
-                            <a href="dashboard.html" class="btn btn-default">Cancel</a>
+                            <a href="dashboard?page=1" class="btn btn-default">Cancel</a>
                         </div>
                     </form>
                 </div>

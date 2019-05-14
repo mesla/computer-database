@@ -13,12 +13,6 @@ public class Page {
 	private ArrayList<Integer> availablePages;
 	private String like;
 
-	@Override
-	public String toString() {
-		return "Page [page=" + page + ", offset=" + offset + ", limit=" + limit + ", nbComputers=" + nbComputers
-				+ ", nbPages=" + nbPages + ", availablePages=" + availablePages + ", like=" + like + "]";
-	}
-
 	private static Page INSTANCE = null;
 
 	private Page() {
@@ -66,9 +60,11 @@ public class Page {
 	public void setLimit(int limit) throws BadArgumentException {
 		if(limit == 10 || limit == 50 || limit == 100) {
 			this.limit = limit;
-			setNbPages(nbComputers % limit == 0 ? nbComputers / limit : nbComputers / limit + 1);
-			setPage(1);
 		} else throw new BadArgumentException("La taille d'une page ne peut que être comprise entre 10, 50 et 100");
+	}
+	
+	public void refreshNbPages() throws BadArgumentException {
+		setNbPages(nbComputers % limit == 0 ? nbComputers / limit : nbComputers / limit + 1);
 	}
 
 	public int getNbComputers() {
@@ -102,6 +98,12 @@ public class Page {
 	public void setLike(String like) throws BadArgumentException {
 		this.like = like;
 		setPage(1);
+	}
+
+	@Override
+	public String toString() {
+		return "Page [page=" + page + ", offset=" + offset + ", limit=" + limit + ", nbComputers=" + nbComputers
+				+ ", nbPages=" + nbPages + ", availablePages=" + availablePages + ", like=" + like + "]";
 	}
 
 }

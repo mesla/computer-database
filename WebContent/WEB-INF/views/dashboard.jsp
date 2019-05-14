@@ -23,7 +23,7 @@
 			<h1 id="homeTitle">${nbComputers} computers.</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
-					<form id="searchForm" action="dashboard" method="GET" class="form-inline">
+					<form id="searchForm" action="dashboard?page=1" method="GET" class="form-inline">
 
 						<input type="search" id="searchbox" name="search"
 							class="form-control" placeholder="Search name" /> <input
@@ -72,11 +72,11 @@
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
 								class="cb" value="${computer.getId()}"></td>
-							<td><a href="editComputer.html" onclick="">${computer.getName()}</a>
+							<td><a href="editComputer?computerId=${computer.getId()}">${computer.getName()}</a>
 							</td>
 							<td>${computer.getIntroduced() == null ? "-" : computer.getIntroduced()}</td>
 							<td>${computer.getDiscontinued() == null ? "-" : computer.getDiscontinued()}</td>
-							<td>${computer.getCompanyName() == "null" ? "-" : computer.getCompanyName()}</td>
+							<td>${computer.getCompanyName() == null ? "-" : computer.getCompanyName()}</td>
 						</tr>
 					</c:forEach>
 
@@ -92,7 +92,7 @@
 				<li><a href="?page=${(page-1 > 0) ? (page-1) : page}" aria-label="Previous">
 					<span aria-hidden="true">&laquo;</span>
 				</a></li>
-				<!--  TODO : foreach (voir implé au dessus) pour afficher autant de pages que nbPages -->
+				
 				<c:forEach var="page" items="${availablePages}">
 					<li><a href="?page=${page}">${page}</a></li>
 				</c:forEach>
@@ -102,9 +102,9 @@
 				</a></li>
 			</ul>
 			<div class="btn-group btn-group-sm pull-right" role="group">
-				<a href="?size=10" class="btn btn-default">10</a>
-				<a href="?size=50" class="btn btn-default">50</a>
-				<a href="?size=100" class="btn btn-default">100</a>
+				<a href="?size=10&page=1" class="btn btn-default">10</a>
+				<a href="?size=50&page=1" class="btn btn-default">50</a>
+				<a href="?size=100&page=1" class="btn btn-default">100</a>
 			</div>
 		</div>
 	</footer>

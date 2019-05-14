@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import org.slf4j.Logger;
@@ -27,7 +26,7 @@ public class DaoComputer extends Dao{
 	private final String SQL_CREATE = "INSERT INTO computer (name, introduced,discontinued,company_id) VALUES (?,?,?,?);";
 	private final String SQL_DELETE = "DELETE FROM computer WHERE id = ?;";
 	private final String SQL_UPDATE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
-	private final String SQL_COUNT = "SELECT count(*) as nbComputers FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ?;";
+	private final String SQL_COUNT = "SELECT count(computer.id) as nbComputers FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ?;";
 	
 	private DaoComputer() {}
 	
@@ -42,12 +41,12 @@ public class DaoComputer extends Dao{
 	
 	
 	public ArrayList<ModelComputer> listComputer(int limit, int offset, String sql_like) throws RequestFailedException, ConnectionDBFailedException {
-		if(sql_like!=null && sql_like.isEmpty())
+		if(sql_like!=null && ! sql_like.isEmpty())
 			sql_like = "%" + sql_like + "%";
 		else
 			sql_like = "%%";
 		try(
-				Connection connection = super.connection();
+				Connection connection = Dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_GETLIST);
 			) {
 			preparedStatement.setString(1, sql_like);
@@ -79,7 +78,7 @@ public class DaoComputer extends Dao{
 	
 	public ModelComputer read(int id) throws ConnectionDBFailedException, RequestFailedException {
 		try(
-				Connection connection = super.connection();
+				Connection connection = Dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_GET);
 			) {
 			
@@ -105,7 +104,7 @@ public class DaoComputer extends Dao{
 	
 	public void create(ModelComputer modelComputer) throws SQLException, RequestFailedException, BadEntryException, ConnectionDBFailedException {
 		try(
-				Connection connection = super.connection();
+				Connection connection = Dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_CREATE);
 			) {
 			preparedStatement.setString(1,modelComputer.getName());
@@ -125,7 +124,7 @@ public class DaoComputer extends Dao{
 	
 	public void delete(int id) throws SQLException, RequestFailedException, ConnectionDBFailedException {
 		try(
-				Connection connection = super.connection();
+				Connection connection = Dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_DELETE);
 			) {
 			
@@ -140,29 +139,27 @@ public class DaoComputer extends Dao{
 		}
 	}
 	
-	public void update(ModelComputer modelComputer, ModelComputer oldComputer) throws SQLException, RequestFailedException, ConnectionDBFailedException, BadEntryException {
-
-		String name = (modelComputer.getName() == null) ? oldComputer.getName() : modelComputer.getName();
-		Timestamp intro = (modelComputer.getIntroduced() == null) ? oldComputer.getIntroduced() : modelComputer.getIntroduced();
-		Timestamp discon = (modelComputer.getDiscontinued() == null) ? oldComputer.getDiscontinued() : modelComputer.getDiscontinued();
-		Integer company_id = (modelComputer.getCompanyId() == null) ? oldComputer.getCompanyId() : modelComputer.getCompanyId();
+	public void update(ModelComputer modelComputer) throws SQLException, RequestFailedException, ConnectionDBFailedException, BadEntryException {
 
 		try(
-				Connection connection = super.connection();
+				Connection connection = Dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_UPDATE);
 			) {
-			preparedStatement.setString(1,name);
-			preparedStatement.setTimestamp(2, intro);
-			preparedStatement.setTimestamp(3, discon);
+			
+			System.out.println("UPDATE DAO : "+ modelComputer.getId() + " " + modelComputer.getName() + " " + modelComputer.getIntroduced() + " " + modelComputer.getDiscontinued() + " " + modelComputer.getCompanyId());
+			preparedStatement.setString(1,modelComputer.getName());
+			preparedStatement.setTimestamp(2, modelComputer.getIntroduced());
+			preparedStatement.setTimestamp(3, modelComputer.getDiscontinued());
+			
+			Integer company_id = modelComputer.getCompanyId();
 			
 			if (company_id == null)
 				preparedStatement.setNull(4, java.sql.Types.INTEGER);
-			else if(!daoCompany.getMatch(company_id).isEmpty())
+			else {
+				daoCompany.getMatch(company_id);
 				preparedStatement.setInt(4, company_id);
-			else
-				throw new RequestFailedException("Vous avez rentré un company_id invalide");
-			
-			preparedStatement.setInt(5, oldComputer.getId());
+			}
+			preparedStatement.setInt(5, modelComputer.getId());
 				
 			preparedStatement.executeUpdate();
 			logger.info("Les données de l'ordinateur ont bien été mises à jour.");
@@ -171,10 +168,10 @@ public class DaoComputer extends Dao{
 	
 	public int getNbComputers(String sql_like) throws SQLException, ConnectionDBFailedException, RequestFailedException {
 		try(
-				Connection connection = super.connection();
+				Connection connection = Dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_COUNT);
 			){
-			if(sql_like!=null && sql_like.isEmpty())
+			if(sql_like!=null && ! sql_like.isEmpty())
 				sql_like = "%" + sql_like + "%";
 			else
 				sql_like = "%%";

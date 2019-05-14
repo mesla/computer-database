@@ -71,8 +71,7 @@ public class AddComputer extends HttpServlet{
 			}
 		} catch(DateTimeParseException e) {
 			logger.warn(new BadEntryException("La date entrée n'est pas au format YYYY-mm-DD").getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
-		}
-		catch(NumberFormatException e) {
+		} catch(NumberFormatException e) {
 			logger.warn(new BadEntryException("L'ID renseigné n'est pas un entier").getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 		}
 		try {

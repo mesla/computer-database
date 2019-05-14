@@ -34,7 +34,7 @@ public class DaoCompany extends Dao{
 	public ArrayList<ModelCompany> listCompanies() throws RequestFailedException, ConnectionDBFailedException {
 		
 		try(
-				Connection connection = super.connection();
+				Connection connection = Dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_GETLIST);
 				ResultSet r = preparedStatement.executeQuery();
 			) {
@@ -52,14 +52,14 @@ public class DaoCompany extends Dao{
 
 	public String getMatch(int id) throws RequestFailedException, ConnectionDBFailedException, BadEntryException {
 		try(
-				Connection connection = super.connection();
+				Connection connection = Dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_GET);
 			) {
 			
 			preparedStatement.setInt(1,id);
 			try (ResultSet r = preparedStatement.executeQuery();) {
-				if(r.next())
-					return r.getString("name");
+				if(r.next()) 
+					return r.getString("name");					
 				else
 					throw new BadEntryException("Vous avez rentré un company_id invalide");
 			}

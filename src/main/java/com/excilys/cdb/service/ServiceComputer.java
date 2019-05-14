@@ -41,13 +41,13 @@ public class ServiceComputer {
 	}
 	
 	public ArrayList<DtoComputer> listComputer(int limit, int offset, String sql_like) throws RequestFailedException, ConnectionDBFailedException {
-
-		ArrayList<DtoComputer> dtoComputerList = new ArrayList<DtoComputer>();
 		
+		ArrayList<DtoComputer> dtoComputerList = new ArrayList<DtoComputer>();
+
 		daoComputer.listComputer(limit, offset, sql_like).stream()
 			.map(x -> mapperComputer.toDto(x))
 			.forEach(dtoComputerList::add);
-				
+		
 		return dtoComputerList;
 	}
 		
@@ -65,25 +65,8 @@ public class ServiceComputer {
 		}
 	}
 	
-	public void update(ArrayList<String> args, DtoComputer dtoOldComputer) throws RequestFailedException, BadEntryException {
-//
-//		try {
-//	
-//			DtoComputer dtoComputer = new DtoComputer(
-//					"0",
-//					args.get(0),
-//					args.get(1),
-//					args.get(2),
-//					args.get(3),
-//					(args.get(3) == null || args.get(3).isEmpty()) ? null : daoCompany.getMatch(Integer.valueOf(args.get(3)))
-//					);
-//			
-//			daoComputer.update(mapperComputer.toModel(dtoComputer), mapperComputer.toModel(dtoOldComputer));
-//				
-//		} catch (ConnectionDBFailedException | RequestFailedException | SQLException e) {
-//		    logger.error(e.getMessage());
-//		}
-//	
+	public void update(ModelComputer modelComputer) throws RequestFailedException, BadEntryException, SQLException, ConnectionDBFailedException {
+		daoComputer.update(modelComputer);
 	}
 	
 	public void create(ModelComputer modelComputer) throws BadEntryException, SQLException, RequestFailedException, ConnectionDBFailedException {
