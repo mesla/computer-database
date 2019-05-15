@@ -21,7 +21,7 @@ public class DBManager {
     }
 
     private static void executeScript(String filename) throws ConnectionDBFailedException{
-    	Dao.initConnection("test");
+    	
         try (final Connection connection = Dao.connection();
              final Statement statement = connection.createStatement();
              final InputStream resourceAsStream = DBManager.class.getClassLoader().getResourceAsStream(filename);

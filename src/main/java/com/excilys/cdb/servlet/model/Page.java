@@ -1,8 +1,9 @@
-package com.excilys.cdb.servlet;
+package com.excilys.cdb.servlet.model;
 
 import java.util.ArrayList;
 
 import com.excilys.cdb.exception.BadArgumentException;
+import com.excilys.cdb.servlet.enums.OrderBy;
 
 public class Page {
 	private int page;
@@ -12,6 +13,8 @@ public class Page {
 	private int nbPages;
 	private ArrayList<Integer> availablePages;
 	private String like;
+	
+	private OrderBy orderBy;
 
 	private static Page INSTANCE = null;
 
@@ -24,6 +27,7 @@ public class Page {
 		page = 1;
 		offset = (page - 1) * limit;
 		like = "";
+		orderBy = OrderBy.ORDERBY_COMPUTER_ID_ASC;
 	}
 
 	public static Page getInstance() {
@@ -99,11 +103,22 @@ public class Page {
 		this.like = like;
 		setPage(1);
 	}
+	
+	
+
+	public OrderBy getOrderBy() {
+		return orderBy;
+	}
+
+	public void setOrderby(OrderBy orderBy) throws BadArgumentException {
+		this.orderBy = orderBy;
+		setPage(1);
+	}
 
 	@Override
 	public String toString() {
 		return "Page [page=" + page + ", offset=" + offset + ", limit=" + limit + ", nbComputers=" + nbComputers
-				+ ", nbPages=" + nbPages + ", availablePages=" + availablePages + ", like=" + like + "]";
+				+ ", nbPages=" + nbPages + ", availablePages=" + availablePages + ", like=" + like + ", orderBy=" + orderBy + "]";
 	}
 
 }

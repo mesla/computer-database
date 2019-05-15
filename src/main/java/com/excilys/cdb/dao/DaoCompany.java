@@ -12,7 +12,7 @@ import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.model.ModelCompany;
 
 
-public class DaoCompany extends Dao{
+public class DaoCompany {
 	
 	private static DaoCompany INSTANCE = null;
 	

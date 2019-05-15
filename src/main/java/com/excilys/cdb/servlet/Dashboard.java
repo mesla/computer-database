@@ -18,6 +18,8 @@ import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RedirectionException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.service.ServiceComputer;
+import com.excilys.cdb.servlet.enums.OrderBy;
+import com.excilys.cdb.servlet.model.Page;
 
 @WebServlet(urlPatterns = "/dashboard")
 public class Dashboard extends HttpServlet {
@@ -44,17 +46,14 @@ public class Dashboard extends HttpServlet {
 
 		this.getAttributes(request);
 		
-		ArrayList<DtoComputer> dtoComputerList = serviceComputer.listComputer(page.getLimit(), page.getOffset(), page.getLike());
+		ArrayList<DtoComputer> dtoComputerList = serviceComputer.listComputer(page.getLimit(), page.getOffset(), page.getLike(), page.getOrderBy());
 		page.setNbComputers(serviceComputer.getNbComputers(page.getLike()));
 		
 		page.refreshNbPages();
 		
-		ArrayList<Integer> availablePages = new ArrayList<Integer>();
-		for (int i = page.getPage() - 2; i <= page.getPage() + 2; i++) {
-			if (i > 0 && i <= page.getNbPages())
-				availablePages.add(i);
-		}
-		page.setAvailablePages(availablePages);
+
+		
+		page.setAvailablePages(pagination());
 		
 		request.setAttribute("nbPages", page.getNbPages());
 		request.setAttribute("page", page.getPage());
@@ -94,6 +93,18 @@ public class Dashboard extends HttpServlet {
 			} catch (BadArgumentException e) {
 				logger.warn(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 			}
+		
+		if(request.getParameter("orderBy") != null)
+			try {
+				for(OrderBy ob : OrderBy.values()) {
+					if(request.getParameter("orderBy").equals(ob.toString())){
+						page.setOrderby(ob);				
+						break;
+					}
+				}
+			} catch (BadArgumentException e) {
+				logger.warn(e.getMessage() + "\n" + Arrays.toString(e.	getStackTrace()));
+			}
 	}
 
 	@Override
@@ -103,7 +114,7 @@ public class Dashboard extends HttpServlet {
 			for (String id : listId) {
 				try {
 					ServiceComputer.getInstance().delete(Integer.valueOf(id));
-				} catch (NumberFormatException e) {
+				} catch (NumberFormatException | SQLException | RequestFailedException e) {
 					logger.warn(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 				} catch (ConnectionDBFailedException e) {
 					logger.error(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
@@ -117,5 +128,20 @@ public class Dashboard extends HttpServlet {
 							+ "\n" + Arrays.toString(e.getStackTrace()));
 			}
 		}
+	}
+	
+	private ArrayList<Integer> pagination() {
+		
+		ArrayList<Integer> availablePages = new ArrayList<Integer>();
+		int currentPage = page.getPage();
+		int nbPages = page.getNbPages();
+		
+		int p = Math.max(3, Math.min (currentPage, nbPages-2));
+		  for (int i = p-2 ; i <= p+2 ; i++) {
+			  if (i > 0 && i <= nbPages)
+		    	 availablePages.add(i);
+		  }
+
+		return availablePages;
 	}
 }

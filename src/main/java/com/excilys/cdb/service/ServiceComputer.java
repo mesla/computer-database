@@ -3,10 +3,6 @@ package com.excilys.cdb.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.excilys.cdb.dao.Dao;
 import com.excilys.cdb.dao.DaoCompany;
 import com.excilys.cdb.dao.DaoComputer;
 import com.excilys.cdb.dto.DtoComputer;
@@ -15,23 +11,17 @@ import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.mapper.MapperComputer;
 import com.excilys.cdb.model.ModelComputer;
+import com.excilys.cdb.servlet.enums.OrderBy;
 
 public class ServiceComputer {
 	
 	private static ServiceComputer INSTANCE = null;
 	
-	private Logger logger = LoggerFactory.getLogger(ServiceComputer.class);
 	private static DaoComputer daoComputer = DaoComputer.getInstance();
 	private static DaoCompany daoCompany = DaoCompany.getInstance();
 	private static MapperComputer mapperComputer = MapperComputer.getInstance();
 	
-	private ServiceComputer () {
-		try {
-			Dao.initConnection("main");
-		} catch (ConnectionDBFailedException e) {
-			logger.error(e.getMessage());
-		}
-	}
+	private ServiceComputer () { }
 	
 	public static ServiceComputer getInstance() {
 		if (INSTANCE == null)
@@ -40,11 +30,11 @@ public class ServiceComputer {
 		return INSTANCE;
 	}
 	
-	public ArrayList<DtoComputer> listComputer(int limit, int offset, String sql_like) throws RequestFailedException, ConnectionDBFailedException {
+	public ArrayList<DtoComputer> listComputer(int limit, int offset, String sql_like, OrderBy orderby) throws RequestFailedException, ConnectionDBFailedException {
 		
 		ArrayList<DtoComputer> dtoComputerList = new ArrayList<DtoComputer>();
 
-		daoComputer.listComputer(limit, offset, sql_like).stream()
+		daoComputer.listComputer(limit, offset, sql_like, orderby).stream()
 			.map(x -> mapperComputer.toDto(x))
 			.forEach(dtoComputerList::add);
 		
@@ -55,14 +45,8 @@ public class ServiceComputer {
 		return mapperComputer.toDto(daoComputer.read(id));
 	}
 	
-	
-	
-	public void delete(int id) throws ConnectionDBFailedException {
-		try {
-			daoComputer.delete(id);
-		} catch (SQLException | RequestFailedException e) {
-		    logger.error(e.getMessage());
-		}
+	public void delete(int id) throws ConnectionDBFailedException, SQLException, RequestFailedException {
+		daoComputer.delete(id);
 	}
 	
 	public void update(ModelComputer modelComputer) throws RequestFailedException, BadEntryException, SQLException, ConnectionDBFailedException {

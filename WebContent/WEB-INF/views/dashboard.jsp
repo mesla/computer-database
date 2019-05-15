@@ -9,6 +9,7 @@
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 <link href="css/font-awesome.css" rel="stylesheet" media="screen">
 <link href="css/main.css" rel="stylesheet" media="screen">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
@@ -20,7 +21,7 @@
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle">${nbComputers} computers.</h1>
+			<h1 id="homeTitle">${nbComputers} computer(s).</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="dashboard?page=1" method="GET" class="form-inline">
@@ -44,6 +45,9 @@
 		</form>
 
 		<div class="container" style="margin-top: 10px;">
+				<a href="dashboard?orderBy=ORDERBY_COMPUTER_ID_ASC" class="btn btn-default sort-default">
+					Reset order by
+				</a>
 			<table class="table table-striped table-bordered">
 				<thead>
 					<tr>
@@ -53,16 +57,45 @@
 						<th class="editMode" style="width: 60px; height: 22px;"><input
 							type="checkbox" id="selectall" /> <span
 							style="vertical-align: top;"> - <a href="#"
-								id="deleteSelected" onclick="$.fn.deleteSelected();"> <i
-									class="fa fa-trash-o fa-lg"></i>
+								id="deleteSelected" onclick="$.fn.deleteSelected();"> <i class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th>Computer name</th>
-						<th>Introduced date</th>
-						<!-- Table header for Discontinued Date -->
-						<th>Discontinued date</th>
-						<!-- Table header for Company -->
-						<th>Company</th>
+						
+						<th>Computer name
+							<a href="dashboard?orderBy=ORDERBY_COMPUTER_NAME_ASC" class="sort computerName asc">
+								<i class="fas fa-sort-up"></i>
+							</a>
+							<a href="dashboard?orderBy=ORDERBY_COMPUTER_NAME_DESC" class="sort computerName desc">
+								<i class="fas fa-sort-down"></i>
+							</a>	
+						</th>
+						
+						<th>Introduced date
+							<a href="dashboard?orderBy=ORDERBY_INTRODUCED_ASC" class="sort introduced asc">
+								<i class="fas fa-sort-up"></i>
+							</a>
+							<a href="dashboard?orderBy=ORDERBY_INTRODUCED_DESC" class="sort introduced desc">
+								<i class="fas fa-sort-down"></i>
+							</a>
+						</th>
+							
+						<th>Discontinued date
+							<a href="dashboard?orderBy=ORDERBY_DISCONTINUED_ASC" class="sort discontinued asc">
+								<i class="fas fa-sort-up"></i>
+							</a>
+							<a href="dashboard?orderBy=ORDERBY_DISCONTINUED_DESC" class="sort discontinued desc">
+								<i class="fas fa-sort-down"></i>
+							</a>
+						</th>
+						
+						<th>Company
+							<a href="dashboard?orderBy=ORDERBY_COMPANY_NAME_ASC" class="sort companyName asc">
+								<i class="fas fa-sort-up"></i>
+							</a>
+							<a href="dashboard?orderBy=ORDERBY_COMPANY_NAME_DESC" class="sort companyName desc">
+								<i class="fas fa-sort-down"></i>
+							</a>
+						</th>
 
 					</tr>
 				</thead>

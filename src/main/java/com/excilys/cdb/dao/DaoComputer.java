@@ -14,19 +14,22 @@ import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.model.ModelCompany;
 import com.excilys.cdb.model.ModelComputer;
+import com.excilys.cdb.servlet.enums.OrderBy;
 
-public class DaoComputer extends Dao{
+public class DaoComputer {
 	
 	private static DaoComputer INSTANCE = null;
 	private static DaoCompany daoCompany = DaoCompany.getInstance();
 	private final Logger logger = LoggerFactory.getLogger(DaoComputer.class);
 	
-	private final String SQL_GETLIST = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.name ASC LIMIT ? OFFSET ?;";
+	private final String SQL_GETLIST = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY %s LIMIT ? OFFSET ?;";
 	private final String SQL_GET = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;";
 	private final String SQL_CREATE = "INSERT INTO computer (name, introduced,discontinued,company_id) VALUES (?,?,?,?);";
 	private final String SQL_DELETE = "DELETE FROM computer WHERE id = ?;";
 	private final String SQL_UPDATE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
 	private final String SQL_COUNT = "SELECT count(computer.id) as nbComputers FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ?;";
+	
+	private String orderBySQL;
 	
 	private DaoComputer() {}
 	
@@ -40,19 +43,23 @@ public class DaoComputer extends Dao{
 	   }
 	
 	
-	public ArrayList<ModelComputer> listComputer(int limit, int offset, String sql_like) throws RequestFailedException, ConnectionDBFailedException {
-		if(sql_like!=null && ! sql_like.isEmpty())
+	public ArrayList<ModelComputer> listComputer(int limit, int offset, String sql_like, OrderBy orderBy) throws RequestFailedException, ConnectionDBFailedException {
+		if(sql_like!=null && !sql_like.isEmpty())
 			sql_like = "%" + sql_like + "%";
 		else
 			sql_like = "%%";
+		
+		orderBySQL = String.format(SQL_GETLIST, orderBy.getField() + " " + orderBy.getDirection());		
 		try(
 				Connection connection = Dao.connection();
-				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_GETLIST);
+				PreparedStatement preparedStatement = connection.prepareStatement(orderBySQL);
 			) {
+			
 			preparedStatement.setString(1, sql_like);
 			preparedStatement.setString(2, sql_like);
 			preparedStatement.setInt(3,limit);
 			preparedStatement.setInt(4,offset);
+			
 			
 			try(ResultSet r = preparedStatement.executeQuery();) {
 				ArrayList<ModelComputer> listOfComputers = new ArrayList<ModelComputer>();
@@ -171,7 +178,7 @@ public class DaoComputer extends Dao{
 				Connection connection = Dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_COUNT);
 			){
-			if(sql_like!=null && ! sql_like.isEmpty())
+			if(sql_like!=null && !sql_like.isEmpty())
 				sql_like = "%" + sql_like + "%";
 			else
 				sql_like = "%%";

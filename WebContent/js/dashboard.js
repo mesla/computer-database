@@ -21,9 +21,8 @@ $(function() {
             $("#deleteSelected").disable();
         }
     });
-
+    
 });
-
 
 // Function setCheckboxValues
 (function ( $ ) {
@@ -90,4 +89,3 @@ $(document).keydown(function(e) {
             break;
     }
 });
-

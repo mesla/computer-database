@@ -1,55 +1,38 @@
 package com.excilys.cdb.dao;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
+
 import java.sql.SQLException;
-import java.util.Properties;
+import java.util.ResourceBundle;
 
 import com.excilys.cdb.exception.ConnectionDBFailedException;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
-public abstract class Dao {
-	private static String url;
-	private static String username;
-	private static String password;
-	private static String srcConfig;
-	private static String driver;
+public class Dao {
+
+	private static  HikariConfig config;
+	private	static  HikariDataSource dataSource;
+	//C://Users/kutt9/Desktop/maven/computer-database/src/main/resources/
+	static {
+		ResourceBundle bundle = ResourceBundle.getBundle("config");
+		config = new HikariConfig();
+		config.setDriverClassName(bundle.getString("driverClassName"));
+        config.setJdbcUrl(bundle.getString("jdbcUrl"));
+        config.setUsername(bundle.getString("username"));
+        config.setPassword(bundle.getString("password"));
+        config.addDataSourceProperty( "cachePrepStmts" , "true" );
+        config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
+        config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
+        dataSource = new HikariDataSource( config );
+	}
 	
-	public static void initConnection(String runContext) throws ConnectionDBFailedException{
-			switch(runContext) {
-				case "main":
-					Dao.srcConfig = "config.properties";
-					Dao.driver = "com.mysql.cj.jdbc.Driver";
-					break;
-				case "test":
-					Dao.srcConfig = "src/test/resources/config.properties";
-					Dao.driver = "org.h2.Driver";
-					break;
-				default:
-					throw new ConnectionDBFailedException("Identifiants de connexion à la BDD introuvables");
-			}
-		}
-	
+	private Dao() { }
+
 	public static Connection connection() throws ConnectionDBFailedException {
 		try {
-			final Properties prop = new Properties();
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-			InputStream input =classLoader.getResourceAsStream(srcConfig);
-			prop.load(input);
-			
-			Dao.url = prop.getProperty("db.url");
-			Dao.username = prop.getProperty("db.username");
-			Dao.password = prop.getProperty("db.password");
-
-			Class.forName(driver);
-						
-			return DriverManager.getConnection(
-					url,
-					username,
-					password);
-
-		} catch (ClassNotFoundException | SQLException | IOException e) {
+			return dataSource.getConnection();
+		} catch (SQLException e) {
 			throw new ConnectionDBFailedException("connexion à la DB échouée");
 		}
 
