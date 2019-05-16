@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
@@ -16,9 +19,12 @@ public class DaoCompany {
 	
 	private static DaoCompany INSTANCE = null;
 	
+	private final Logger logger = LoggerFactory.getLogger(DaoCompany.class);
+	
 	private final String SQL_GETLIST = "SELECT * FROM company ORDER BY company.id";
 	private final String SQL_GET = "SELECT * from company WHERE id = ?";
-	
+	private static final String SQL_DELETE_COMPANY = "DELETE FROM company WHERE id= ?";
+	private static final String SQL_DELETE_COMPUTER = "DELETE FROM computer WHERE company_id= ?";
 	
 	private DaoCompany() { }
 	
@@ -67,5 +73,30 @@ public class DaoCompany {
 		} catch (SQLException e) {
 			throw new RequestFailedException("Requête échouée");
 		}
+	}
+	
+	public boolean delete(int id) throws RequestFailedException, ConnectionDBFailedException {
+		try(Connection connection = Dao.connection();){
+			try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_COMPANY);
+					PreparedStatement preparedStatement2 = connection.prepareStatement(SQL_DELETE_COMPUTER)){
+				
+				connection.setAutoCommit(false);
+				
+				preparedStatement2.setInt(1, id);
+				preparedStatement.setInt(1, id);
+				
+				preparedStatement2.executeUpdate();
+				preparedStatement.executeUpdate();
+				
+				connection.commit();
+				logger.info("Entreprise correctement supprimée");
+			}catch(SQLException ex) {
+				connection.rollback();
+				throw new RequestFailedException("Echec delete company");
+			}
+		}catch(SQLException ex) {
+			throw new RequestFailedException("Echec delete company");
+		}
+		return false;
 	}
 }

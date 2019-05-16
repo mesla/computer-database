@@ -2,23 +2,31 @@ package com.excilys.cdb.ui;
 
 //import java.sql.SQLException;
 //import java.util.ArrayList;
-//import java.util.Scanner;
+import java.util.Scanner;
 //
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 //
-//import com.excilys.cdb.controller.Controller;
+import com.excilys.cdb.controller.Controller;
 //import com.excilys.cdb.exception.BadEntryException;
 //import com.excilys.cdb.exception.ConnectionDBFailedException;
 //import com.excilys.cdb.exception.RequestFailedException;
 //import com.excilys.cdb.validator.UiValidator;
 
 public class Cli {
-//	private final static Scanner sc = new Scanner(System.in);
+
+	private final static Scanner sc = new Scanner(System.in);
 //	
 //	private static Logger logger = LoggerFactory.getLogger(Cli.class);
 //	private static UiValidator validator = UiValidator.getInstance();
-//	
+	private final Controller controller = Controller.getInstance();
+	
+	public void deleteCompany() {
+		System.out.println("Veuillez entrer l'id de l'entreprise à supprimer : ");
+		String id = sc.nextLine();
+		controller.deleteCompany(id);
+		sc.close();
+	}
 //	public static void displayChoicesList() throws BadEntryException{
 //		boolean run = true;
 //		String i = "";

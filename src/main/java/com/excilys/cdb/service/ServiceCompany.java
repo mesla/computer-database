@@ -35,4 +35,8 @@ public class ServiceCompany {
 		
 		return dtoCompanyList;
 	}
+	
+	public void delete(int id) throws RequestFailedException, ConnectionDBFailedException {
+		daoCompany.delete(id);
+	}
 }

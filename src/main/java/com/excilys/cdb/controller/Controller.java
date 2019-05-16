@@ -1,40 +1,59 @@
 package com.excilys.cdb.controller;
 
+import java.util.Arrays;
+
 //import java.sql.SQLException;
 //import java.util.ArrayList;
 //
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.excilys.cdb.service.ServiceCompany;
 //
 //import com.excilys.cdb.dto.DtoComputer;
-//import com.excilys.cdb.exception.BadEntryException;
+import com.excilys.cdb.exception.BadEntryException;
+import com.excilys.cdb.exception.ConnectionDBFailedException;
+import com.excilys.cdb.exception.RequestFailedException;
 //import com.excilys.cdb.exception.ConnectionDBFailedException;
 //import com.excilys.cdb.exception.RequestFailedException;
-//import com.excilys.cdb.service.ServiceCompany;
 //import com.excilys.cdb.service.ServiceComputer;
 //import com.excilys.cdb.ui.Cli;
 //import com.excilys.cdb.validator.UiValidator;
 
 public class Controller {
 //	private Cli ui;
-//	private static Logger logger = LoggerFactory.getLogger(Controller.class);
+	private static Logger logger = LoggerFactory.getLogger(Controller.class);
 //	private static ServiceComputer serviceComputer = ServiceComputer.getInstance();
-//	private static ServiceCompany serviceCompany = ServiceCompany.getInstance();
+	private static ServiceCompany serviceCompany = ServiceCompany.getInstance();
 //	private static UiValidator validator = UiValidator.getInstance();
 //	
-//	//Lazy Loading
-//	private static Controller INSTANCE = null;
+	//Lazy Loading
+	private static Controller INSTANCE = null;
 //	
-//	private Controller() {}
+	private Controller() {}
 //	
-//	public static Controller getInstance()
-//    {           
-//        if (INSTANCE == null)
-//        {   INSTANCE = new Controller(); 
-//        }
-//        return INSTANCE;
-//    }
-//	
+	public static Controller getInstance()
+    {           
+        if (INSTANCE == null)
+        {   INSTANCE = new Controller(); 
+        }
+        return INSTANCE;
+    }
+
+	
+	public void deleteCompany(String idStr) {
+		try {
+			int id = Integer.valueOf(idStr);
+			serviceCompany.delete(id);
+		} catch (NumberFormatException e) {
+			logger.warn(new BadEntryException("Vous n'avez pas entré un entier ").getMessage());
+		} catch (RequestFailedException e1) {
+			logger.warn(e1.getMessage() + "\n" + Arrays.asList(e1.getStackTrace()));
+		} catch (ConnectionDBFailedException e2) {
+			logger.error(e2.getMessage() + "\n" + Arrays.asList(e2.getStackTrace()));
+		}
+	}
+	
 //	public void callFonction (String choice) throws BadEntryException, SQLException, ConnectionDBFailedException, RequestFailedException {
 //		this.ui = new Cli();
 //		switch(choice) {
