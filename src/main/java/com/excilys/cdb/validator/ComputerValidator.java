@@ -1,6 +1,7 @@
 package com.excilys.cdb.validator;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +36,8 @@ public class ComputerValidator {
 			return dtoComputer;
 		}
 		catch(BadEntryException e) {
-			logger.warn(e.getMessage());
-			throw new UnvalidDtoException("Le Dto fourni n'est pas correct. Veuillez vérifier les informations fournies");
+			logger.warn(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
+			throw new UnvalidDtoException("Un des champs fourni n'est pas correct. Veuillez vérifier les informations fournies");
 		}
 	}
 	
@@ -63,7 +64,7 @@ public class ComputerValidator {
 			return true;
 		
 		} catch (RequestFailedException | ConnectionDBFailedException | BadEntryException e) {
-			logger.warn(e.getMessage());
+			logger.warn(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
 			return false;
 		}
 	}

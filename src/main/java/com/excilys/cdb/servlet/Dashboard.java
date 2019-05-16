@@ -38,6 +38,11 @@ public class Dashboard extends HttpServlet {
 		} catch (RequestFailedException | ConnectionDBFailedException | SQLException | ServletException
 				| IOException | BadArgumentException e) {
 			logger.error(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+			try {
+				response.sendError(500, e.getMessage());
+			} catch (IOException e1) {
+				logger.error(new RedirectionException("Echec de redirection vers page d'erreur + " + 500).getMessage());
+			}
 		}
 	}
 

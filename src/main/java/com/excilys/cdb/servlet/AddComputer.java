@@ -65,8 +65,20 @@ public class AddComputer extends HttpServlet{
 												request.getParameter("companyId").equals("0") ? null : Integer.valueOf(request.getParameter("companyId")),
 												null)
 					)));
-				} catch (RequestFailedException | BadEntryException | SQLException | UnvalidDtoException | ConnectionDBFailedException e) {
-					logger.warn(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+					try {
+						response.sendRedirect(this.getServletContext().getContextPath());
+					} catch (IOException e) {
+						logger.error(new RedirectionException("Redirection à la page d'accueil échouée dans AddComputer").getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+					}
+				} catch (ConnectionDBFailedException e) {
+					logger.error(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+				} catch (RequestFailedException | BadEntryException | SQLException | UnvalidDtoException e1) {
+					logger.warn(e1.getMessage() + "\n" + Arrays.toString(e1.getStackTrace()));
+					try {
+						response.sendError(500, e1.getMessage());
+					} catch (IOException e) {
+						logger.error(new RedirectionException("Redirection vers la page d'erreur 500 échouée").getMessage());
+					}
 				}
 			}
 		} catch(DateTimeParseException e) {
@@ -74,11 +86,7 @@ public class AddComputer extends HttpServlet{
 		} catch(NumberFormatException e) {
 			logger.warn(new BadEntryException("L'ID renseigné n'est pas un entier").getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 		}
-		try {
-			response.sendRedirect(this.getServletContext().getContextPath());
-		} catch (IOException e) {
-			logger.error(new RedirectionException("Redirection à la page d'accueil échouée dans AddComputer").getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
-		}
+
 	}
 
 }
