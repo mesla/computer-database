@@ -27,6 +27,7 @@ public class Dao {
         config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
         config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
         dataSource = new HikariDataSource( config );
+
 	}
 	
 	public Dao() {

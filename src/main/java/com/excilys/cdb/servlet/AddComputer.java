@@ -18,9 +18,8 @@ import com.excilys.cdb.exception.UnvalidDtoException;
 
 @WebServlet(urlPatterns= "/addComputer")
 public class AddComputer extends Servlet{
-
+	
 	private static final long serialVersionUID = 4504965411432198749L;
-
 	
 	@Override
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) {

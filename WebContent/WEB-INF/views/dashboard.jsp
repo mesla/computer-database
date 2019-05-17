@@ -62,37 +62,37 @@
 						</span></th>
 						
 						<th>Computer name
-							<a href="dashboard?orderBy=ORDERBY_COMPUTER_NAME_ASC" class="sort computerName asc">
+							<a href="dashboard?orderBy=ORDERBY_COMPUTER_NAME_ASC">
 								<i class="fas fa-sort-up"></i>
 							</a>
-							<a href="dashboard?orderBy=ORDERBY_COMPUTER_NAME_DESC" class="sort computerName desc">
+							<a href="dashboard?orderBy=ORDERBY_COMPUTER_NAME_DESC">
 								<i class="fas fa-sort-down"></i>
-							</a>	
+							</a>
 						</th>
 						
 						<th>Introduced date
-							<a href="dashboard?orderBy=ORDERBY_INTRODUCED_ASC" class="sort introduced asc">
+							<a href="dashboard?orderBy=ORDERBY_INTRODUCED_ASC">
 								<i class="fas fa-sort-up"></i>
 							</a>
-							<a href="dashboard?orderBy=ORDERBY_INTRODUCED_DESC" class="sort introduced desc">
+							<a href="dashboard?orderBy=ORDERBY_INTRODUCED_DESC">
 								<i class="fas fa-sort-down"></i>
 							</a>
 						</th>
 							
 						<th>Discontinued date
-							<a href="dashboard?orderBy=ORDERBY_DISCONTINUED_ASC" class="sort discontinued asc">
+							<a href="dashboard?orderBy=ORDERBY_DISCONTINUED_ASC">
 								<i class="fas fa-sort-up"></i>
 							</a>
-							<a href="dashboard?orderBy=ORDERBY_DISCONTINUED_DESC" class="sort discontinued desc">
+							<a href="dashboard?orderBy=ORDERBY_DISCONTINUED_DESC">
 								<i class="fas fa-sort-down"></i>
 							</a>
 						</th>
 						
 						<th>Company
-							<a href="dashboard?orderBy=ORDERBY_COMPANY_NAME_ASC" class="sort companyName asc">
+							<a href="dashboard?orderBy=ORDERBY_COMPANY_NAME_ASC">
 								<i class="fas fa-sort-up"></i>
 							</a>
-							<a href="dashboard?orderBy=ORDERBY_COMPANY_NAME_DESC" class="sort companyName desc">
+							<a href="dashboard?orderBy=ORDERBY_COMPANY_NAME_DESC">
 								<i class="fas fa-sort-down"></i>
 							</a>
 						</th>

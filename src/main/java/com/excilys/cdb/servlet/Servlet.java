@@ -30,13 +30,13 @@ public abstract class Servlet extends HttpServlet{
 	protected final ServiceCompany serviceCompany = context.getBean(ServiceCompany.class);
 	protected final MapperComputer mapperComputer = context.getBean(MapperComputer.class);
 	protected final ComputerValidator computerValidator = context.getBean(ComputerValidator.class);
-	private final static Logger logger = LoggerFactory.getLogger(Servlet.class);
+	private final Logger logger = LoggerFactory.getLogger(Servlet.class);
 		
-	protected static void errorManager(Exception e, HttpServletResponse response) {
+	protected void errorManager(Exception e, HttpServletResponse response) {
 		if(e instanceof ServletException || e instanceof IOException || e instanceof errorTypeException) {
 			logger.error(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
 			try {
-				response.sendError(500);
+				response.sendError(500, e.getMessage());
 			} catch (IOException e1) {
 				logger.error(new RedirectionException("Echec de redirection vers page d'erreur + " + 500).getMessage());
 			}
@@ -51,7 +51,7 @@ public abstract class Servlet extends HttpServlet{
 		} else {
 			logger.error(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
 			try {
-				response.sendError(501);
+				response.sendError(501, e.getMessage());
 			} catch (IOException e1) {
 				logger.error(new RedirectionException("Echec de redirection vers page d'erreur + " + 501).getMessage());
 			}
