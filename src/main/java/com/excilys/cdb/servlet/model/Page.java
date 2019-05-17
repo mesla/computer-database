@@ -67,7 +67,7 @@ public class Page {
 		} else throw new BadArgumentException("La taille d'une page ne peut que être comprise entre 10, 50 et 100");
 	}
 	
-	public void refreshNbPages() throws BadArgumentException {
+	public void refreshNbPages() {
 		setNbPages(nbComputers % limit == 0 ? nbComputers / limit : nbComputers / limit + 1);
 	}
 

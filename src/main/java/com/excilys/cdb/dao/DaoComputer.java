@@ -74,8 +74,8 @@ public class DaoComputer {
 				if (limit < 0 || offset < 0) throw new RequestFailedException("Veuillez entrer des nombres positifs");
 				else return listOfComputers;
 			}
-		} catch (SQLException e) {
-			throw new RequestFailedException("Il y a un soucis au niveau de la requête SQL");
+		} catch (SQLException e){
+			throw new RequestFailedException("Request listComputer failed because of SQLException");
 		}
 	}
 	
@@ -100,12 +100,12 @@ public class DaoComputer {
 				}
 				else throw new RequestFailedException("Vous avez rentré un ID invalide");
 			}
-		} catch (SQLException e) {
-			throw new RequestFailedException("Il y a un soucis au niveau de la requête SQL");
+		} catch (SQLException e){
+			throw new RequestFailedException("Request read failed because of SQLException");
 		}
 	}
 	
-	public void create(ModelComputer modelComputer) throws SQLException, RequestFailedException, BadEntryException, ConnectionDBFailedException {
+	public void create(ModelComputer modelComputer) throws RequestFailedException, BadEntryException, ConnectionDBFailedException {
 		try(
 				Connection connection = dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_CREATE);
@@ -122,10 +122,12 @@ public class DaoComputer {
 				
 			preparedStatement.executeUpdate();
 			logger.info("Ordinateur bien créé.");
+		} catch (SQLException e){
+			throw new RequestFailedException("Request create failed because of SQLException");
 		}
 	}
 	
-	public void delete(int id) throws SQLException, RequestFailedException, ConnectionDBFailedException {
+	public void delete(int id) throws RequestFailedException, ConnectionDBFailedException {
 		try(
 				Connection connection = dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_DELETE);
@@ -137,12 +139,12 @@ public class DaoComputer {
 				throw new RequestFailedException("Il n'y a aucun ordinateur à cet ID.");
 			else logger.info("Ordinateur bien supprimé");
 				
-		} catch (SQLException e) {
-			throw new RequestFailedException("Vous avez rentré un ID invalide");
+		}  catch (SQLException e){
+			throw new RequestFailedException("Request delete failed because of SQLException");
 		}
 	}
 	
-	public void update(ModelComputer modelComputer) throws SQLException, RequestFailedException, ConnectionDBFailedException, BadEntryException {
+	public void update(ModelComputer modelComputer) throws RequestFailedException, ConnectionDBFailedException, BadEntryException {
 
 		try(
 				Connection connection = dao.connection();
@@ -166,10 +168,12 @@ public class DaoComputer {
 				
 			preparedStatement.executeUpdate();
 			logger.info("Les données de l'ordinateur ont bien été mises à jour.");
+		}  catch (SQLException e){
+			throw new RequestFailedException("Request update failed because of SQLException");
 		}
 	}
 	
-	public int getNbComputers(String sql_like) throws SQLException, ConnectionDBFailedException, RequestFailedException {
+	public int getNbComputers(String sql_like) throws ConnectionDBFailedException, RequestFailedException {
 		try(
 				Connection connection = dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_COUNT);
@@ -186,6 +190,8 @@ public class DaoComputer {
 				else
 					throw new RequestFailedException("Il n'y a aucun ordinateur.");
 			}
+		} catch (SQLException e){
+			throw new RequestFailedException("Request getNbComputers failed because of SQLException");
 		}
 		
 	}

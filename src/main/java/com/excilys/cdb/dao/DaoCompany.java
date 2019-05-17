@@ -45,7 +45,7 @@ public class DaoCompany {
 			else return listOfCompanies;
 			
 		} catch (SQLException e) {
-			throw new RequestFailedException("Il y a un soucis au niveau de la requête SQL");
+			throw new RequestFailedException("Request listCompanies failed because of SQLException");
 		}
 	}
 
@@ -64,7 +64,7 @@ public class DaoCompany {
 			}
 			
 		} catch (SQLException e) {
-			throw new RequestFailedException("Requête échouée");
+			throw new RequestFailedException("Request getMatch failed because of SQLException");
 		}
 	}
 	
@@ -85,10 +85,10 @@ public class DaoCompany {
 				logger.info("Entreprise correctement supprimée");
 			}catch(SQLException ex) {
 				connection.rollback();
-				throw new RequestFailedException("Echec delete company");
+				throw new RequestFailedException("Request delete (company) failed because of SQLException");
 			}
 		}catch(SQLException ex) {
-			throw new RequestFailedException("Echec delete company");
+			throw new RequestFailedException("Request delete (company) failed because of SQLException");
 		}
 		return false;
 	}

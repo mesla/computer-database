@@ -20,7 +20,7 @@
             <div class="alert alert-danger">
                 Error 404: Page not found. Too bad bitch!
                 <br/>
-                ${requestScope['javax.servlet.error.message']}
+                La page ${requestScope['javax.servlet.error.message']} n'existe pas !
             </div>
         </div>
     </section>

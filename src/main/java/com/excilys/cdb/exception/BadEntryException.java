@@ -1,7 +1,7 @@
 package com.excilys.cdb.exception;
 
 
-public class BadEntryException extends Exception {
+public class BadEntryException extends warnTypeException {
 
 	private static final long serialVersionUID = 1L;
 

@@ -1,6 +1,6 @@
 package com.excilys.cdb.exception;
 
-public class RedirectionException extends Exception{
+public class RedirectionException extends errorTypeException {
 
 	private static final long serialVersionUID = -5500127817712386606L;
 

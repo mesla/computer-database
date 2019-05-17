@@ -1,18 +1,13 @@
 package com.excilys.cdb.servlet;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.Arrays;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.dto.DtoComputer;
 import com.excilys.cdb.exception.BadEntryException;
@@ -24,25 +19,25 @@ import com.excilys.cdb.exception.UnvalidDtoException;
 @WebServlet(urlPatterns = "/editComputer")
 public class EditComputer extends Servlet {
 
-	private final Logger logger = LoggerFactory.getLogger(EditComputer.class);
 	private static final long serialVersionUID = -6242527594276891068L;
 	
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response){
 		try {
-			if (request.getParameter("computerId") != null) {
-				Integer computerId = Integer.valueOf(request.getParameter("computerId"));
-				request.setAttribute("computer", serviceComputer.read(computerId));
+			try {
+				if (request.getParameter("computerId") != null) {
+					Integer computerId = Integer.valueOf(request.getParameter("computerId"));
+					request.setAttribute("computer", serviceComputer.read(computerId));
+				}
+				request.setAttribute("companyList", serviceCompany.listCompanies());
+				this.getServletContext().getRequestDispatcher("/WEB-INF/views/editComputer.jsp").forward(request, response);
+			} catch (NumberFormatException e) {
+				throw new BadEntryException("L'ID renseigné n'est pas un entier");
 			}
-			request.setAttribute("companyList", serviceCompany.listCompanies());
-
-		} catch (SQLException | ConnectionDBFailedException | RequestFailedException e) {
-			logger.error(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
-		} catch (NumberFormatException e) {
-			logger.warn(new BadEntryException("L'ID renseigné n'est pas un entier").getMessage() + "\n"
-					+ Arrays.toString(e.getStackTrace()));
+		} catch (ServletException | IOException | RequestFailedException | ConnectionDBFailedException | BadEntryException e1) {
+			super.errorManager(e1, response);
 		}
-		this.getServletContext().getRequestDispatcher("/WEB-INF/views/editComputer.jsp").forward(request, response);
+		
 	}
 
 	@Override
@@ -60,23 +55,20 @@ public class EditComputer extends Servlet {
 										request.getParameter("discontinued").isEmpty() ? null : LocalDate.parse(request.getParameter("discontinued")),
 										request.getParameter("companyId").equals("0") ? null : Integer.valueOf(request.getParameter("companyId")),
 										null))));
-				} catch (RequestFailedException | BadEntryException | SQLException | UnvalidDtoException | ConnectionDBFailedException e) {
-					logger.warn(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+				} catch (DateTimeParseException e) {
+					throw new BadEntryException("La date entrée n'est pas au format YYYY-mm-DD");
+				} catch (NumberFormatException e) {
+					throw new BadEntryException("L'ID renseigné n'est pas un entier");
+				}
+				try {
+					response.sendRedirect(this.getServletContext().getContextPath());
+				} catch (IOException e) {
+					throw new RedirectionException("Redirection à la page d'accueil échouée dans AddComputer");
 				}
 			}
-		} catch (DateTimeParseException e) {
-			logger.warn(new BadEntryException("La date entrée n'est pas au format YYYY-mm-DD").getMessage() + "\n"
-					+ Arrays.toString(e.getStackTrace()));
-		} catch (NumberFormatException e) {
-			logger.warn(new BadEntryException("L'ID renseigné n'est pas un entier").getMessage() + "\n"
-					+ Arrays.toString(e.getStackTrace()));
+		} catch (RedirectionException | RequestFailedException | BadEntryException | UnvalidDtoException | ConnectionDBFailedException e) {
+			super.errorManager(e, response);
 		}
-		try {
-			response.sendRedirect(this.getServletContext().getContextPath());
-		} catch (IOException e) {
-			logger.error(
-					new RedirectionException("Redirection à la page d'accueil échouée dans AddComputer").getMessage()
-							+ "\n" + Arrays.toString(e.getStackTrace()));
-		}
+
 	}
 }

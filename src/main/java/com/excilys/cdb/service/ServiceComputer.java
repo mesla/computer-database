@@ -1,6 +1,5 @@
 package com.excilys.cdb.service;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
@@ -39,23 +38,23 @@ public class ServiceComputer {
 		return dtoComputerList;
 	}
 		
-	public DtoComputer read(int id) throws SQLException, ConnectionDBFailedException, RequestFailedException {
+	public DtoComputer read(int id) throws ConnectionDBFailedException, RequestFailedException {
 		return mapperComputer.toDto(daoComputer.read(id));
 	}
 	
-	public void delete(int id) throws ConnectionDBFailedException, SQLException, RequestFailedException {
+	public void delete(int id) throws ConnectionDBFailedException, RequestFailedException {
 		daoComputer.delete(id);
 	}
 	
-	public void update(ModelComputer modelComputer) throws RequestFailedException, BadEntryException, SQLException, ConnectionDBFailedException {
+	public void update(ModelComputer modelComputer) throws RequestFailedException, BadEntryException, ConnectionDBFailedException {
 		daoComputer.update(modelComputer);
 	}
 	
-	public void create(ModelComputer modelComputer) throws BadEntryException, SQLException, RequestFailedException, ConnectionDBFailedException {
+	public void create(ModelComputer modelComputer) throws BadEntryException, RequestFailedException, ConnectionDBFailedException {
 		daoComputer.create(modelComputer);
 	}
 	
-	public int getNbComputers(String sql_like) throws SQLException, ConnectionDBFailedException, RequestFailedException {
+	public int getNbComputers(String sql_like) throws ConnectionDBFailedException, RequestFailedException {
 		return daoComputer.getNbComputers(sql_like);
 	}
 	
