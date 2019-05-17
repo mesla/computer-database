@@ -2,22 +2,16 @@ package com.excilys.cdb.mapper;
 
 import java.sql.Timestamp;
 
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.dto.DtoComputer;
 import com.excilys.cdb.model.ModelCompany;
 import com.excilys.cdb.model.ModelComputer;
 
+@Component
 public class MapperComputer {
 
-	private static MapperComputer INSTANCE = null;
-
-	private MapperComputer () { }
-
-	public static MapperComputer getInstance() {
-		if (INSTANCE == null)
-		{   INSTANCE = new MapperComputer(); 
-		}
-		return INSTANCE;
-	}
+	public MapperComputer () { }
 	
 	public ModelComputer toModel(DtoComputer t) {
 		

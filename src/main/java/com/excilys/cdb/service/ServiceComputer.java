@@ -3,6 +3,8 @@ package com.excilys.cdb.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Service;
+
 import com.excilys.cdb.dao.DaoCompany;
 import com.excilys.cdb.dao.DaoComputer;
 import com.excilys.cdb.dto.DtoComputer;
@@ -13,21 +15,17 @@ import com.excilys.cdb.mapper.MapperComputer;
 import com.excilys.cdb.model.ModelComputer;
 import com.excilys.cdb.servlet.enums.OrderBy;
 
+@Service
 public class ServiceComputer {
+		
+	private final DaoComputer daoComputer;
+	private final DaoCompany daoCompany;
+	private final MapperComputer mapperComputer;
 	
-	private static ServiceComputer INSTANCE = null;
-	
-	private static DaoComputer daoComputer = DaoComputer.getInstance();
-	private static DaoCompany daoCompany = DaoCompany.getInstance();
-	private static MapperComputer mapperComputer = MapperComputer.getInstance();
-	
-	private ServiceComputer () { }
-	
-	public static ServiceComputer getInstance() {
-		if (INSTANCE == null)
-		{   INSTANCE = new ServiceComputer(); 
-		}
-		return INSTANCE;
+	public ServiceComputer (DaoCompany daoCompany, DaoComputer daoComputer, MapperComputer mapperComputer) {
+		this.daoCompany = daoCompany;
+		this.daoComputer = daoComputer;
+		this.mapperComputer = mapperComputer;
 	}
 	
 	public ArrayList<DtoComputer> listComputer(int limit, int offset, String sql_like, OrderBy orderby) throws RequestFailedException, ConnectionDBFailedException {

@@ -8,7 +8,6 @@ import java.util.Arrays;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -20,21 +19,13 @@ import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RedirectionException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.exception.UnvalidDtoException;
-import com.excilys.cdb.mapper.MapperComputer;
-import com.excilys.cdb.service.ServiceCompany;
-import com.excilys.cdb.service.ServiceComputer;
-import com.excilys.cdb.validator.ComputerValidator;
-
 
 @WebServlet(urlPatterns= "/addComputer")
-public class AddComputer extends HttpServlet{
+public class AddComputer extends Servlet{
 
 	private static final long serialVersionUID = 4504965411432198749L;
-	
 	private final Logger logger = LoggerFactory.getLogger(AddComputer.class);
-	private final ServiceComputer serviceComputer = ServiceComputer.getInstance();
-	private final ServiceCompany serviceCompany = ServiceCompany.getInstance();
-	
+
 	
 	@Override
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) {
@@ -56,8 +47,8 @@ public class AddComputer extends HttpServlet{
 			if(request.getParameter("computerName")!=null) {
 				try {
 					serviceComputer.create(
-						MapperComputer.getInstance().toModel(
-							ComputerValidator.getInstance().checkIntegrity(
+						mapperComputer.toModel(
+							computerValidator.checkIntegrity(
 								new DtoComputer(null, 
 												request.getParameter("computerName"), 
 												request.getParameter("introduced").isEmpty() ? null : LocalDate.parse(request.getParameter("introduced")), 

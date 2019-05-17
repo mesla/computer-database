@@ -1,6 +1,7 @@
 package com.excilys.cdb.dto;
 
 public class DtoCompany {
+	
 	private Integer id;
 	private String name;
 	

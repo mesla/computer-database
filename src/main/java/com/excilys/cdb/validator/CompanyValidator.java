@@ -2,22 +2,17 @@ package com.excilys.cdb.validator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.dto.DtoCompany;
 import com.excilys.cdb.exception.BadEntryException;
 
+@Component
 public class CompanyValidator {
-	private static CompanyValidator INSTANCE = null;
+
 	private Logger logger = LoggerFactory.getLogger(CompanyValidator.class);
 	
-	private CompanyValidator () { }
-	
-	public static CompanyValidator getInstance() {
-		if (INSTANCE == null)
-		{   INSTANCE = new CompanyValidator(); 
-		}
-		return INSTANCE;
-	}
+	public CompanyValidator () { }
 	
 	public boolean checkIntegrity(DtoCompany dtoCompany){
 		if(checkNameIsNotEmptyOrNull(dtoCompany.getName()))

@@ -2,29 +2,25 @@ package com.excilys.cdb.service;
 
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Service;
+
 import com.excilys.cdb.dao.DaoCompany;
 import com.excilys.cdb.dto.DtoCompany;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.mapper.MapperCompany;
 
+@Service
 public class ServiceCompany {
+		
+	private final DaoCompany daoCompany;
+	private final MapperCompany mapperCompany;
 	
-	private static ServiceCompany INSTANCE = null;
-	
-	private static DaoCompany daoCompany = DaoCompany.getInstance();
-	private static MapperCompany mapperCompany = MapperCompany.getInstance();
-	
-	private ServiceCompany () { }
-	
-	public static ServiceCompany getInstance() {
-		if (INSTANCE == null)
-		{   INSTANCE = new ServiceCompany(); 
-		}
-		return INSTANCE;
+	public ServiceCompany (DaoCompany daoCompany, MapperCompany mapperCompany) {
+		this.daoCompany = daoCompany;
+		this.mapperCompany = mapperCompany;
 	}
-	
-	
+
 	public ArrayList<DtoCompany> listCompanies() throws RequestFailedException, ConnectionDBFailedException {
 		
 		ArrayList<DtoCompany> dtoCompanyList = new ArrayList<DtoCompany>();

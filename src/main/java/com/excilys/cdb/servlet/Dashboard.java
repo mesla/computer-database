@@ -17,16 +17,14 @@ import com.excilys.cdb.exception.BadArgumentException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RedirectionException;
 import com.excilys.cdb.exception.RequestFailedException;
-import com.excilys.cdb.service.ServiceComputer;
 import com.excilys.cdb.servlet.enums.OrderBy;
 import com.excilys.cdb.servlet.model.Page;
 
 @WebServlet(urlPatterns = "/dashboard")
-public class Dashboard extends HttpServlet {
+public class Dashboard extends Servlet {
 
 	private final Page page = Page.getInstance();
 	private final Logger logger = LoggerFactory.getLogger(Dashboard.class);
-	private final ServiceComputer serviceComputer = ServiceComputer.getInstance();
 
 	private static final long serialVersionUID = -3858556152838148500L;
 
@@ -118,7 +116,7 @@ public class Dashboard extends HttpServlet {
 			String listId[] = request.getParameter("selection").split(",");
 			for (String id : listId) {
 				try {
-					ServiceComputer.getInstance().delete(Integer.valueOf(id));
+					serviceComputer.delete(Integer.valueOf(id));
 				} catch (NumberFormatException | SQLException | RequestFailedException e) {
 					logger.warn(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
 				} catch (ConnectionDBFailedException e) {

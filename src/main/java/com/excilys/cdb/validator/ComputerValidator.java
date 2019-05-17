@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.dto.DtoComputer;
 import com.excilys.cdb.exception.BadEntryException;
@@ -13,18 +14,14 @@ import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.exception.UnvalidDtoException;
 import com.excilys.cdb.service.ServiceComputer;
 
+@Component
 public class ComputerValidator {
-	private static ComputerValidator INSTANCE = null;
+
 	private Logger logger = LoggerFactory.getLogger(ComputerValidator.class);
-	private ServiceComputer serviceComputer = ServiceComputer.getInstance();
+	private ServiceComputer serviceComputer;
 	
-	private ComputerValidator () { }
-	
-	public static ComputerValidator getInstance() {
-		if (INSTANCE == null)
-		{   INSTANCE = new ComputerValidator(); 
-		}
-		return INSTANCE;
+	public ComputerValidator (ServiceComputer serviceComputer) {
+		this.serviceComputer = serviceComputer;
 	}
 	
 	public DtoComputer checkIntegrity(DtoComputer dtoComputer) throws UnvalidDtoException {

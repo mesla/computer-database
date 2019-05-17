@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
@@ -16,10 +17,9 @@ import com.excilys.cdb.model.ModelCompany;
 import com.excilys.cdb.model.ModelComputer;
 import com.excilys.cdb.servlet.enums.OrderBy;
 
+@Component
 public class DaoComputer {
 	
-	private static DaoComputer INSTANCE = null;
-	private static DaoCompany daoCompany = DaoCompany.getInstance();
 	private final Logger logger = LoggerFactory.getLogger(DaoComputer.class);
 	
 	private final String SQL_GETLIST = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY %s LIMIT ? OFFSET ?;";
@@ -29,20 +29,16 @@ public class DaoComputer {
 	private final String SQL_UPDATE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
 	private final String SQL_COUNT = "SELECT count(computer.id) as nbComputers FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ?;";
 	
+	private final DaoCompany daoCompany;
+	private final Dao dao;
+	
 	private String orderBySQL;
 	
-	private DaoComputer() {}
-	
-	
-	public static DaoComputer getInstance()
-	   {           
-	       if (INSTANCE == null)
-	       {   INSTANCE = new DaoComputer(); 
-	       }
-	       return INSTANCE;
-	   }
-	
-	
+	public DaoComputer(DaoCompany daoCompany, Dao dao) {
+		this.daoCompany = daoCompany;
+		this.dao = dao;
+	}
+
 	public ArrayList<ModelComputer> listComputer(int limit, int offset, String sql_like, OrderBy orderBy) throws RequestFailedException, ConnectionDBFailedException {
 		if(sql_like!=null && !sql_like.isEmpty())
 			sql_like = "%" + sql_like + "%";
@@ -51,7 +47,7 @@ public class DaoComputer {
 		
 		orderBySQL = String.format(SQL_GETLIST, orderBy.getField() + " " + orderBy.getDirection());		
 		try(
-				Connection connection = Dao.connection();
+				Connection connection = dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(orderBySQL);
 			) {
 			
@@ -85,7 +81,7 @@ public class DaoComputer {
 	
 	public ModelComputer read(int id) throws ConnectionDBFailedException, RequestFailedException {
 		try(
-				Connection connection = Dao.connection();
+				Connection connection = dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_GET);
 			) {
 			
@@ -111,7 +107,7 @@ public class DaoComputer {
 	
 	public void create(ModelComputer modelComputer) throws SQLException, RequestFailedException, BadEntryException, ConnectionDBFailedException {
 		try(
-				Connection connection = Dao.connection();
+				Connection connection = dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_CREATE);
 			) {
 			preparedStatement.setString(1,modelComputer.getName());
@@ -131,7 +127,7 @@ public class DaoComputer {
 	
 	public void delete(int id) throws SQLException, RequestFailedException, ConnectionDBFailedException {
 		try(
-				Connection connection = Dao.connection();
+				Connection connection = dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_DELETE);
 			) {
 			
@@ -149,7 +145,7 @@ public class DaoComputer {
 	public void update(ModelComputer modelComputer) throws SQLException, RequestFailedException, ConnectionDBFailedException, BadEntryException {
 
 		try(
-				Connection connection = Dao.connection();
+				Connection connection = dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_UPDATE);
 			) {
 			
@@ -175,7 +171,7 @@ public class DaoComputer {
 	
 	public int getNbComputers(String sql_like) throws SQLException, ConnectionDBFailedException, RequestFailedException {
 		try(
-				Connection connection = Dao.connection();
+				Connection connection = dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_COUNT);
 			){
 			if(sql_like!=null && !sql_like.isEmpty())

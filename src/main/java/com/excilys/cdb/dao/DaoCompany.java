@@ -8,16 +8,15 @@ import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.model.ModelCompany;
 
-
+@Component
 public class DaoCompany {
-	
-	private static DaoCompany INSTANCE = null;
 	
 	private final Logger logger = LoggerFactory.getLogger(DaoCompany.class);
 	
@@ -25,22 +24,16 @@ public class DaoCompany {
 	private final String SQL_GET = "SELECT * from company WHERE id = ?";
 	private static final String SQL_DELETE_COMPANY = "DELETE FROM company WHERE id= ?";
 	private static final String SQL_DELETE_COMPUTER = "DELETE FROM computer WHERE company_id= ?";
+	private final Dao dao;
 	
-	private DaoCompany() { }
-	
-	public static DaoCompany getInstance()
-    {           
-        if (INSTANCE == null)
-        {   INSTANCE = new DaoCompany(); 
-        }
-        return INSTANCE;
-    }
-	
+	public DaoCompany(Dao dao) {
+		this.dao = dao;
+	}
 	
 	public ArrayList<ModelCompany> listCompanies() throws RequestFailedException, ConnectionDBFailedException {
 		
 		try(
-				Connection connection = Dao.connection();
+				Connection connection = dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_GETLIST);
 				ResultSet r = preparedStatement.executeQuery();
 			) {
@@ -58,7 +51,7 @@ public class DaoCompany {
 
 	public String getMatch(int id) throws RequestFailedException, ConnectionDBFailedException, BadEntryException {
 		try(
-				Connection connection = Dao.connection();
+				Connection connection = dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_GET);
 			) {
 			
@@ -76,7 +69,7 @@ public class DaoCompany {
 	}
 	
 	public boolean delete(int id) throws RequestFailedException, ConnectionDBFailedException {
-		try(Connection connection = Dao.connection();){
+		try(Connection connection = dao.connection();){
 			try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_COMPANY);
 					PreparedStatement preparedStatement2 = connection.prepareStatement(SQL_DELETE_COMPUTER)){
 				

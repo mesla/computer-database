@@ -8,7 +8,6 @@ import java.util.Arrays;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,26 +20,18 @@ import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RedirectionException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.exception.UnvalidDtoException;
-import com.excilys.cdb.mapper.MapperComputer;
-import com.excilys.cdb.service.ServiceCompany;
-import com.excilys.cdb.service.ServiceComputer;
-import com.excilys.cdb.validator.ComputerValidator;
 
 @WebServlet(urlPatterns = "/editComputer")
-public class EditComputer extends HttpServlet {
+public class EditComputer extends Servlet {
 
 	private final Logger logger = LoggerFactory.getLogger(EditComputer.class);
 	private static final long serialVersionUID = -6242527594276891068L;
-	private final ServiceComputer serviceComputer = ServiceComputer.getInstance();
-	private final ServiceCompany serviceCompany = ServiceCompany.getInstance();
 	
-	private Integer computerId;
-
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			if (request.getParameter("computerId") != null) {
-				this.computerId = Integer.valueOf(request.getParameter("computerId"));
+				Integer computerId = Integer.valueOf(request.getParameter("computerId"));
 				request.setAttribute("computer", serviceComputer.read(computerId));
 			}
 			request.setAttribute("companyList", serviceCompany.listCompanies());
@@ -61,9 +52,9 @@ public class EditComputer extends HttpServlet {
 			if (request.getParameter("computerName") != null) {
 				try {
 					serviceComputer.update(
-						MapperComputer.getInstance().toModel(
-							ComputerValidator.getInstance().checkIntegrity(
-								new DtoComputer(computerId,
+						mapperComputer.toModel(
+							computerValidator.checkIntegrity(
+								new DtoComputer(Integer.valueOf(request.getParameter("computerId")),
 										request.getParameter("computerName"),
 										request.getParameter("introduced").isEmpty() ? null : LocalDate.parse(request.getParameter("introduced")),
 										request.getParameter("discontinued").isEmpty() ? null : LocalDate.parse(request.getParameter("discontinued")),
