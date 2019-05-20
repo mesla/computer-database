@@ -53,8 +53,9 @@ public class Page {
 		return offset;
 	}
 
-	public void setOffset(int offset) {
-		this.offset = offset;
+	public void setOffset(int offset) throws BadArgumentException {
+		if(offset>0) this.offset = offset;
+		else throw new BadArgumentException("l'offset doit être supérieur à 0");
 	}
 
 	public int getLimit() {

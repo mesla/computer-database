@@ -43,4 +43,11 @@ public class DtoComputer{
 	public String getCompanyName() {
 		return companyName;
 	}
+
+	@Override
+	public String toString() {
+		return "DtoComputer [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued="
+				+ discontinued + ", companyId=" + companyId + ", companyName=" + companyName + "]";
+	}
+	
 }

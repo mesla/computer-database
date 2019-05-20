@@ -5,14 +5,14 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-@Component
-public class Dao {
+@Repository
+public class DbConnector {
 	private static  HikariConfig config;
 	private	static  HikariDataSource dataSource;
 	
@@ -30,7 +30,7 @@ public class Dao {
 
 	}
 	
-	public Dao() {
+	public DbConnector() {
 
 	}
 

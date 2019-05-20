@@ -1,10 +1,7 @@
 package com.excilys.cdb.validator;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.dto.DtoComputer;
@@ -17,14 +14,13 @@ import com.excilys.cdb.service.ServiceComputer;
 @Component
 public class ComputerValidator {
 
-	private Logger logger = LoggerFactory.getLogger(ComputerValidator.class);
 	private ServiceComputer serviceComputer;
 	
 	public ComputerValidator (ServiceComputer serviceComputer) {
 		this.serviceComputer = serviceComputer;
 	}
 	
-	public DtoComputer checkIntegrity(DtoComputer dtoComputer) throws UnvalidDtoException {
+	public DtoComputer checkIntegrity(DtoComputer dtoComputer) throws UnvalidDtoException, RequestFailedException, ConnectionDBFailedException {
 		try {
 			checkNameIsNotEmptyOrNull(dtoComputer.getName());
 			checkDateIntroInfToDiscon(dtoComputer.getIntroduced(), dtoComputer.getDiscontinued());
@@ -33,7 +29,6 @@ public class ComputerValidator {
 			return dtoComputer;
 		}
 		catch(BadEntryException e) {
-			logger.warn(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
 			throw new UnvalidDtoException("Un des champs fourni n'est pas correct. Veuillez vérifier les informations fournies");
 		}
 	}
@@ -53,16 +48,12 @@ public class ComputerValidator {
 			throw new BadEntryException("La date 'introduced' doit être inférieure à la date 'discontinued'");
 	}
 	
-	private boolean checkCompanyIdExist(Integer companyId) {
+	private boolean checkCompanyIdExist(Integer companyId) throws RequestFailedException, ConnectionDBFailedException, BadEntryException {
 		if(companyId == null)
 			return true;
-		try {
+		else {
 			serviceComputer.getCompanyById(companyId);
 			return true;
-		
-		} catch (RequestFailedException | ConnectionDBFailedException | BadEntryException e) {
-			logger.warn(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
-			return false;
-		}
+		}		
 	}
 }

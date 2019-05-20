@@ -4,10 +4,12 @@ import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.excilys.cdb.service.ServiceCompany;
-
+import com.excilys.cdb.service.ServiceComputer;
+import com.excilys.cdb.config.AppConfig;
 import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
@@ -15,9 +17,9 @@ import com.excilys.cdb.exception.RequestFailedException;
 public class Controller {
 	private static Controller INSTANCE = null;
 	private static Logger logger = LoggerFactory.getLogger(Controller.class);
-	ApplicationContext appContext;
-	private final ServiceCompany serviceCompany = (ServiceCompany) appContext.getBean("ServiceCompany");;
-
+	protected final ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+	protected final ServiceComputer serviceComputer = context.getBean(ServiceComputer.class);
+	protected final ServiceCompany serviceCompany = context.getBean(ServiceCompany.class);
 	private Controller() { }
 	
 	public static Controller getInstance() {
@@ -119,12 +121,6 @@ public class Controller {
 		}
 	}
 
-	private void read() throws SQLException, ConnectionDBFailedException, RequestFailedException, BadEntryException {
-		int id = ui.askId();
-		ArrayList<DtoComputer> DtoComputerList = new ArrayList<DtoComputer>();
-		DtoComputerList.add(serviceComputer.read(id));
-		ui.read(DtoComputerList);
-	}
 
 	private void listComputers() throws RequestFailedException, ConnectionDBFailedException {
 		String[] limits;

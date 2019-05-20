@@ -1,49 +1,46 @@
 package com.excilys.cdb.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
-import com.excilys.cdb.model.ModelCompany;
+import com.excilys.cdb.mapper.MapperDaoComputer;
 import com.excilys.cdb.model.ModelComputer;
 import com.excilys.cdb.servlet.enums.OrderBy;
 
-@Component
+@Repository
 public class DaoComputer {
 	
 	private final Logger logger = LoggerFactory.getLogger(DaoComputer.class);
 	
-	private final String SQL_GETLIST = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY %s LIMIT ? OFFSET ?;";
-	private final String SQL_GET = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;";
-	private final String SQL_CREATE = "INSERT INTO computer (name, introduced,discontinued,company_id) VALUES (?,?,?,?);";
+	private final String SQL_GETLIST = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE :computerName OR company.name LIKE :companyName ORDER BY %s LIMIT :limit OFFSET :offset;";
+	private final String SQL_GET = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = :id;";
+	private final String SQL_CREATE = "INSERT INTO computer (name, introduced,discontinued,company_id) VALUES (:name, :introduced, :discontinued, :company_id);";
 	private final String SQL_DELETE = "DELETE FROM computer WHERE id = :id;";
 	private final String SQL_UPDATE = "UPDATE computer SET name=:name, introduced=:introduced, discontinued=:discontinued, company_id=:company_id WHERE id=:id;";
 	private final String SQL_COUNT = "SELECT count(computer.id) as nbComputers FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE :sql_like OR company.name LIKE :sql_like;";
 	
 	private final DaoCompany daoCompany;
-	private final Dao dao;
+	private final DbConnector dbConnector;
+	private final MapperDaoComputer mapperDaoComputer;
 	
 	private String orderBySQL;
 	
-	public DaoComputer(DaoCompany daoCompany, Dao dao) {
+	public DaoComputer(DaoCompany daoCompany, DbConnector dbConnector, MapperDaoComputer mapperDaoComputer) {
 		this.daoCompany = daoCompany;
-		this.dao = dao;
+		this.dbConnector = dbConnector;
+		this.mapperDaoComputer = mapperDaoComputer;
 	}
 
-	public ArrayList<ModelComputer> listComputer(int limit, int offset, String sql_like, OrderBy orderBy) throws RequestFailedException, ConnectionDBFailedException {
+	public List<ModelComputer> listComputer(int limit, int offset, String sql_like, OrderBy orderBy) throws RequestFailedException, ConnectionDBFailedException {
 		if(sql_like!=null && !sql_like.isEmpty())
 			sql_like = "%" + sql_like + "%";
 		else
@@ -51,90 +48,63 @@ public class DaoComputer {
 
 		orderBySQL = String.format(SQL_GETLIST, orderBy.getField() + " " + orderBy.getDirection());
 
-		try(
-				Connection connection = dao.connection();
-				PreparedStatement preparedStatement = connection.prepareStatement(orderBySQL);
-			) {
-			
-			preparedStatement.setString(1, sql_like);
-			preparedStatement.setString(2, sql_like);
-			preparedStatement.setInt(3,limit);
-			preparedStatement.setInt(4,offset);
-			
-			
-			try(ResultSet r = preparedStatement.executeQuery();) {
-				ArrayList<ModelComputer> listOfComputers = new ArrayList<ModelComputer>();
-				while(r.next()) {
-				listOfComputers.add(
-						new ModelComputer(
-								r.getInt("computer.id"),
-								r.getString("computer.name"),
-								r.getTimestamp("computer.introduced"),
-								r.getTimestamp("computer.discontinued"),
-								new ModelCompany(
-										r.getInt("company.id") == 0 ? null : r.getInt("company.id"),
-										r.getString("company.name"))));
-				
-				}
-				if (limit < 0 || offset < 0) throw new RequestFailedException("Veuillez entrer des nombres positifs");
-				else return listOfComputers;
-			}
-		} catch (SQLException e){
-			throw new RequestFailedException("Request listComputer failed because of SQLException");
+		try {
+			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dbConnector.getDataSource());
+			MapSqlParameterSource vParams = new MapSqlParameterSource();
+
+			vParams.addValue("computerName", sql_like);
+			vParams.addValue("companyName", sql_like);
+			vParams.addValue("limit", limit);
+			vParams.addValue("offset", offset);		
+
+			List<ModelComputer> listOfComputers = vJdbcTemplate.query(orderBySQL, vParams, mapperDaoComputer);
+
+			return listOfComputers;
+		} catch (DataAccessException e){
+			throw new RequestFailedException("Request listComputer failed because of DataAccessException");
 		}
 	}
 	
 	public ModelComputer read(int id) throws ConnectionDBFailedException, RequestFailedException {
-		try(
-				Connection connection = dao.connection();
-				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_GET);
-			) {
+		try {
+			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dbConnector.getDataSource());
+			MapSqlParameterSource vParams = new MapSqlParameterSource();
+
+			vParams.addValue("id", id);
 			
-			preparedStatement.setInt(1,id);
+			ModelComputer result = vJdbcTemplate.queryForObject(SQL_GET, vParams, mapperDaoComputer);
 			
-				try(ResultSet r = preparedStatement.executeQuery();)
-				{
-				if(r.next()) {
-					return new ModelComputer(r.getInt("computer.id"),
-								r.getString("computer.name"),
-								r.getTimestamp("computer.introduced"),
-								r.getTimestamp("computer.discontinued"),
-								new ModelCompany(
-										r.getInt("company.id") == 0 ? null : r.getInt("company.id"),
-										r.getString("company.name")));
-				}
-				else throw new RequestFailedException("Vous avez rentré un ID invalide");
-			}
-		} catch (SQLException e){
-			throw new RequestFailedException("Request read failed because of SQLException");
+			if(result != null)
+				return result;
+			else
+				throw new RequestFailedException("aucun résultat");
+
+		} catch (DataAccessException e){
+			throw new RequestFailedException("Request read failed because of DataAccessException " + e.getMessage());
 		}
 	}
 	
 	public void create(ModelComputer modelComputer) throws RequestFailedException, BadEntryException, ConnectionDBFailedException {
-		try(
-				Connection connection = dao.connection();
-				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_CREATE);
-			) {
-			preparedStatement.setString(1,modelComputer.getName());
-			preparedStatement.setTimestamp(2, modelComputer.getIntroduced());
-			preparedStatement.setTimestamp(3, modelComputer.getDiscontinued());
-			if (modelComputer.getCompanyId() == null)
-				preparedStatement.setNull(4, java.sql.Types.INTEGER);
-			else if(!daoCompany.getMatch(modelComputer.getCompanyId()).isEmpty())
-				preparedStatement.setInt(4, modelComputer.getCompanyId());
-			else
-				throw new RequestFailedException("Vous avez rentré un company_id invalide");
-				
-			preparedStatement.executeUpdate();
-			logger.info("Ordinateur bien créé.");
-		} catch (SQLException e){
-			throw new RequestFailedException("Request create failed because of SQLException");
+		try {
+			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dbConnector.getDataSource());
+			MapSqlParameterSource vParams = new MapSqlParameterSource();
+			
+			vParams.addValue("name", modelComputer.getName());
+			vParams.addValue("introduced", modelComputer.getIntroduced());
+			vParams.addValue("discontinued", modelComputer.getDiscontinued());
+			vParams.addValue("company_id", modelComputer.getCompanyId());
+			
+			if(vJdbcTemplate.update(SQL_CREATE, vParams) == 1)
+				logger.info("Les données de l'ordinateur ont bien été insérées.");
+
+		} catch (DataAccessException e){
+			throw new RequestFailedException("Request create failed because of DataAccessException");
 		}
 	}
 	
 	public void delete(int id) throws RequestFailedException, ConnectionDBFailedException {
 		try {
-			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dao.getDataSource());
+			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dbConnector.getDataSource());
 			MapSqlParameterSource vParams = new MapSqlParameterSource();
 			
 			vParams.addValue("id", id);
@@ -153,7 +123,7 @@ public class DaoComputer {
 		try {
 			Integer company_id = modelComputer.getCompanyId();
 			
-			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dao.getDataSource());
+			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dbConnector.getDataSource());
 			MapSqlParameterSource vParams = new MapSqlParameterSource();
 			
 			vParams.addValue("name", modelComputer.getName());
@@ -179,7 +149,7 @@ public class DaoComputer {
 			else
 				sql_like = "%%";
 			
-			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dao.getDataSource());
+			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dbConnector.getDataSource());
 			MapSqlParameterSource vParams = new MapSqlParameterSource();
 			vParams.addValue("sql_like", sql_like);
 			vParams.addValue("sql_like", sql_like);

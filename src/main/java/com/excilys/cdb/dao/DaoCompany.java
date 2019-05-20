@@ -8,14 +8,14 @@ import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.model.ModelCompany;
 
-@Component
+@Repository
 public class DaoCompany {
 	
 	private final Logger logger = LoggerFactory.getLogger(DaoCompany.class);
@@ -24,9 +24,9 @@ public class DaoCompany {
 	private final String SQL_GET = "SELECT * from company WHERE id = ?";
 	private static final String SQL_DELETE_COMPANY = "DELETE FROM company WHERE id= ?";
 	private static final String SQL_DELETE_COMPUTER = "DELETE FROM computer WHERE company_id= ?";
-	private final Dao dao;
+	private final DbConnector dao;
 	
-	public DaoCompany(Dao dao) {
+	public DaoCompany(DbConnector dao) {
 		this.dao = dao;
 	}
 	

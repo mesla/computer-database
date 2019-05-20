@@ -21,6 +21,7 @@ public class Cli {
 		controller.deleteCompany(id);
 		sc.close();
 	}
+	
 	/*
 	public static void displayChoicesList() throws BadEntryException{
 		boolean run = true;
@@ -57,7 +58,7 @@ public class Cli {
 		}
 		sc.close();
 	}
-	
+
 	public <T> void read (ArrayList<T> dtoList) {
 		System.out.println("\nRésultat(s) :\n");
 		for (T dto : dtoList) {
