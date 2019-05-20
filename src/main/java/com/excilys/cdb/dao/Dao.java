@@ -40,6 +40,10 @@ public class Dao {
 		} catch (SQLException e) {
 			throw new ConnectionDBFailedException("connexion à la DB échouée");
 		}
-
+		
+	}
+	
+	public HikariDataSource getDataSource() throws ConnectionDBFailedException {
+		return dataSource;
 	}
 }

@@ -8,6 +8,10 @@ import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.exception.BadEntryException;
@@ -26,8 +30,8 @@ public class DaoComputer {
 	private final String SQL_GET = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;";
 	private final String SQL_CREATE = "INSERT INTO computer (name, introduced,discontinued,company_id) VALUES (?,?,?,?);";
 	private final String SQL_DELETE = "DELETE FROM computer WHERE id = ?;";
-	private final String SQL_UPDATE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
-	private final String SQL_COUNT = "SELECT count(computer.id) as nbComputers FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ?;";
+	private final String SQL_UPDATE = "UPDATE computer SET name=:name, introduced=:introduced, discontinued=:discontinued, company_id=:company_id WHERE id=:id;";
+	private final String SQL_COUNT = "SELECT count(computer.id) as nbComputers FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE :sql_like OR company.name LIKE :sql_like;";
 	
 	private final DaoCompany daoCompany;
 	private final Dao dao;
@@ -44,8 +48,9 @@ public class DaoComputer {
 			sql_like = "%" + sql_like + "%";
 		else
 			sql_like = "%%";
-		
-		orderBySQL = String.format(SQL_GETLIST, orderBy.getField() + " " + orderBy.getDirection());		
+
+		orderBySQL = String.format(SQL_GETLIST, orderBy.getField() + " " + orderBy.getDirection());
+
 		try(
 				Connection connection = dao.connection();
 				PreparedStatement preparedStatement = connection.prepareStatement(orderBySQL);
@@ -145,53 +150,46 @@ public class DaoComputer {
 	}
 	
 	public void update(ModelComputer modelComputer) throws RequestFailedException, ConnectionDBFailedException, BadEntryException {
-
-		try(
-				Connection connection = dao.connection();
-				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_UPDATE);
-			) {
-			
-			System.out.println("UPDATE DAO : "+ modelComputer.getId() + " " + modelComputer.getName() + " " + modelComputer.getIntroduced() + " " + modelComputer.getDiscontinued() + " " + modelComputer.getCompanyId());
-			preparedStatement.setString(1,modelComputer.getName());
-			preparedStatement.setTimestamp(2, modelComputer.getIntroduced());
-			preparedStatement.setTimestamp(3, modelComputer.getDiscontinued());
-			
+		try {
 			Integer company_id = modelComputer.getCompanyId();
 			
-			if (company_id == null)
-				preparedStatement.setNull(4, java.sql.Types.INTEGER);
-			else {
-				daoCompany.getMatch(company_id);
-				preparedStatement.setInt(4, company_id);
-			}
-			preparedStatement.setInt(5, modelComputer.getId());
-				
-			preparedStatement.executeUpdate();
-			logger.info("Les données de l'ordinateur ont bien été mises à jour.");
-		}  catch (SQLException e){
-			throw new RequestFailedException("Request update failed because of SQLException");
+			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dao.getDataSource());
+			MapSqlParameterSource vParams = new MapSqlParameterSource();
+			
+			vParams.addValue("name", modelComputer.getName());
+			vParams.addValue("introduced", modelComputer.getIntroduced());
+			vParams.addValue("discontinued", modelComputer.getDiscontinued());
+			vParams.addValue("company_id", company_id);
+			vParams.addValue("company_name", company_id == null ? null : daoCompany.getMatch(company_id));
+			vParams.addValue("id", modelComputer.getId());
+			
+			if(vJdbcTemplate.update(SQL_UPDATE, vParams) == 1)
+				logger.info("Les données de l'ordinateur ont bien été mises à jour.");
+			else
+				throw new RequestFailedException("Request update failed because the given ID didn't match any computer.");
+		}  catch (DataAccessException e){
+			throw new RequestFailedException("Request update failed because of DataAccessException");
 		}
 	}
 	
 	public int getNbComputers(String sql_like) throws ConnectionDBFailedException, RequestFailedException {
-		try(
-				Connection connection = dao.connection();
-				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_COUNT);
-			){
+		try {
 			if(sql_like!=null && !sql_like.isEmpty())
 				sql_like = "%" + sql_like + "%";
 			else
 				sql_like = "%%";
-			preparedStatement.setString(1,sql_like);
-			preparedStatement.setString(2,sql_like);
-			try(ResultSet r = preparedStatement.executeQuery();) {
-				if(r.next())
-					return r.getInt("nbComputers");
-				else
-					throw new RequestFailedException("Il n'y a aucun ordinateur.");
-			}
-		} catch (SQLException e){
-			throw new RequestFailedException("Request getNbComputers failed because of SQLException");
+			
+			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dao.getDataSource());
+			MapSqlParameterSource vParams = new MapSqlParameterSource();
+			vParams.addValue("sql_like", sql_like);
+			vParams.addValue("sql_like", sql_like);
+			
+			int vNbrTicket = vJdbcTemplate.queryForObject(SQL_COUNT, vParams, Integer.class);
+			
+			return vNbrTicket;
+
+		} catch (DataAccessException  e){
+			throw new RequestFailedException("Request getNbComputers failed because of DataAccessException");
 		}
 		
 	}

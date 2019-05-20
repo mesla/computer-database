@@ -30,7 +30,7 @@ public class Dashboard extends Servlet {
 			try{
 				this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
 			} catch(IOException e) {
-				throw new CannotFindFileException("Cannot find file at : /WEB-INF/views/addComputer.jsp");
+				throw new CannotFindFileException("Cannot find file at : /WEB-INF/views/dashboard.jsp");
 			}
 		} catch (CannotFindFileException | ServletException | RequestFailedException | ConnectionDBFailedException | BadEntryException | BadArgumentException e) {
 			super.errorManager(e, response);
