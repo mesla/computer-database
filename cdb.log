@@ -27,3 +27,19 @@
 2019-05-20_15:00:55.845 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
 2019-05-20_15:01:50.526 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
 2019-05-20_15:01:50.654 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2019-05-20_17:52:05.507 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2019-05-20_17:52:05.648 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2019-05-20_17:52:15.539 [main] WARN  c.excilys.cdb.controller.Controller - Request delete (company) failed because of DataAccessException
+[com.excilys.cdb.dao.DaoCompany.delete(DaoCompany.java:93), com.excilys.cdb.service.ServiceCompany.delete(ServiceCompany.java:36), com.excilys.cdb.controller.Controller.deleteCompany(Controller.java:35), com.excilys.cdb.ui.Cli.deleteCompany(Cli.java:21), com.excilys.cdb.main.Main.main(Main.java:7)]
+2019-05-20_17:53:01.152 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2019-05-20_17:53:01.277 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2019-05-20_17:53:02.902 [main] WARN  c.excilys.cdb.controller.Controller - Request delete (company) failed because of DataAccessException 
+SQL [DELETE FROM computer WHERE company_id= ?]: given 1 parameters but expected 0
+[com.excilys.cdb.dao.DaoCompany.delete(DaoCompany.java:93), com.excilys.cdb.service.ServiceCompany.delete(ServiceCompany.java:36), com.excilys.cdb.controller.Controller.deleteCompany(Controller.java:35), com.excilys.cdb.ui.Cli.deleteCompany(Cli.java:21), com.excilys.cdb.main.Main.main(Main.java:7)]
+2019-05-20_17:53:25.831 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2019-05-20_17:53:25.971 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2019-05-20_17:53:27.674 [main] INFO  com.excilys.cdb.dao.DaoCompany - Company supprimée
+2019-05-20_17:54:17.282 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2019-05-20_17:54:17.422 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2019-05-20_17:54:19.297 [main] WARN  c.excilys.cdb.controller.Controller - Aucune entreprise ne possède l'id : 60
+[com.excilys.cdb.dao.DaoCompany.delete(DaoCompany.java:90), com.excilys.cdb.service.ServiceCompany.delete(ServiceCompany.java:36), com.excilys.cdb.controller.Controller.deleteCompany(Controller.java:35), com.excilys.cdb.ui.Cli.deleteCompany(Cli.java:21), com.excilys.cdb.main.Main.main(Main.java:7)]

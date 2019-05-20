@@ -130,7 +130,7 @@ public class DaoComputer {
 			vParams.addValue("introduced", modelComputer.getIntroduced());
 			vParams.addValue("discontinued", modelComputer.getDiscontinued());
 			vParams.addValue("company_id", company_id);
-			vParams.addValue("company_name", company_id == null ? null : daoCompany.getMatch(company_id));
+			vParams.addValue("company_name", company_id == null ? null : daoCompany.getCompany(company_id));
 			vParams.addValue("id", modelComputer.getId());
 			
 			if(vJdbcTemplate.update(SQL_UPDATE, vParams) == 1)
@@ -161,7 +161,5 @@ public class DaoComputer {
 		} catch (DataAccessException  e){
 			throw new RequestFailedException("Request getNbComputers failed because of DataAccessException");
 		}
-		
 	}
-
 }

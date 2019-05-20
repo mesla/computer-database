@@ -11,6 +11,7 @@ import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.mapper.MapperComputer;
+import com.excilys.cdb.model.ModelCompany;
 import com.excilys.cdb.model.ModelComputer;
 import com.excilys.cdb.servlet.enums.OrderBy;
 
@@ -38,8 +39,8 @@ public class ServiceComputer {
 		return dtoComputerList;
 	}
 		
-	public DtoComputer read(int id) throws ConnectionDBFailedException, RequestFailedException {
-		return mapperComputer.toDto(daoComputer.read(id));
+	public ModelComputer read(int id) throws ConnectionDBFailedException, RequestFailedException {
+		return daoComputer.read(id);
 	}
 	
 	public void delete(int id) throws ConnectionDBFailedException, RequestFailedException {
@@ -58,8 +59,8 @@ public class ServiceComputer {
 		return daoComputer.getNbComputers(sql_like);
 	}
 	
-	public String getCompanyById(int companyId) throws RequestFailedException, ConnectionDBFailedException, BadEntryException {
-		return daoCompany.getMatch(companyId);
+	public ModelCompany getCompanyById(int companyId) throws RequestFailedException, ConnectionDBFailedException, BadEntryException {
+		return daoCompany.getCompany(companyId);
 	}
 
 }
