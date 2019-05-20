@@ -1,6 +1,6 @@
 package com.excilys.cdb.exception;
 
-public class RequestFailedException extends warnTypeException {
+public class RequestFailedException extends Type403Exception {
 
 	private static final long serialVersionUID = 1L;
 

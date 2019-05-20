@@ -1,8 +1,8 @@
 package com.excilys.cdb.exception;
 
-public class warnTypeException extends Exception {
+public class Type403Exception extends Exception {
 
-	public warnTypeException(String str) {
+	public Type403Exception(String str) {
 		super(str);
 	}
 

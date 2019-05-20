@@ -46,7 +46,7 @@ public class Page {
 			this.page = page;
 			offset = (page - 1) * limit;
 		}
-		else throw new BadArgumentException("Les pages disponibles sont comprises entre 1 et " + nbPages);
+		else throw new BadArgumentException("La page " + page + " n'existe pas ! Les pages disponibles sont comprises entre 1 et " + nbPages);
 	}
 
 	public int getOffset() {

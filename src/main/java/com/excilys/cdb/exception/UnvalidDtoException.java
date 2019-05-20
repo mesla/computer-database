@@ -1,6 +1,6 @@
 package com.excilys.cdb.exception;
 
-public class UnvalidDtoException extends warnTypeException {
+public class UnvalidDtoException extends Type403Exception {
 
 	private static final long serialVersionUID = 1155736876522044783L;
 

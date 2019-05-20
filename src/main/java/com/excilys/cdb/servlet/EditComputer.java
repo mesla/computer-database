@@ -43,7 +43,6 @@ public class EditComputer extends Servlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			System.out.println(request.getParameter("computerName"));
 			if (request.getParameter("computerName") != null) {
 				try {
 					serviceComputer.update(

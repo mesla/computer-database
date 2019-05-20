@@ -13,6 +13,7 @@ import com.excilys.cdb.dto.DtoComputer;
 import com.excilys.cdb.exception.BadEntryException;
 import com.excilys.cdb.exception.CannotFindFileException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
+import com.excilys.cdb.exception.RedirectionException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.exception.UnvalidDtoException;
 
@@ -55,10 +56,15 @@ public class AddComputer extends Servlet{
 												null)
 					)));
 				}
+				try {
+					response.sendRedirect(request.getContextPath() + "/dashboard");
+				} catch(IOException e) {
+					throw new RedirectionException("Echec de la redirection vers dashboard depuis addComputer");
+				}
 			} catch (DateTimeParseException | NumberFormatException e) {
 				throw new BadEntryException("Veuillez vérifier les informations fournies");
 			}
-		} catch(BadEntryException | RequestFailedException | ConnectionDBFailedException | UnvalidDtoException e1) {
+		} catch(BadEntryException | RequestFailedException | ConnectionDBFailedException | UnvalidDtoException | RedirectionException e1) {
 			super.errorManager(e1, response);
 		}
 	}

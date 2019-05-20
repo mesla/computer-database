@@ -25,7 +25,7 @@
                     <h1>Edit Computer</h1>
 
                     <form action="editComputer" method="POST">
-                        <input type="hidden" value="${computer.getId()}" id="id"/>
+                        <input type="hidden" name="computerId" value="${computer.getId()}" id="id"/>
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>

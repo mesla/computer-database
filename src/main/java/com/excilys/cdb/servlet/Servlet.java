@@ -14,8 +14,9 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import com.excilys.cdb.config.AppConfig;
 import com.excilys.cdb.exception.RedirectionException;
-import com.excilys.cdb.exception.errorTypeException;
-import com.excilys.cdb.exception.warnTypeException;
+import com.excilys.cdb.exception.Type500Exception;
+import com.excilys.cdb.exception.Type403Exception;
+import com.excilys.cdb.exception.Type404Exception;
 import com.excilys.cdb.mapper.MapperComputer;
 import com.excilys.cdb.service.ServiceCompany;
 import com.excilys.cdb.service.ServiceComputer;
@@ -33,28 +34,24 @@ public abstract class Servlet extends HttpServlet{
 	private final Logger logger = LoggerFactory.getLogger(Servlet.class);
 		
 	protected void errorManager(Exception e, HttpServletResponse response) {
-		if(e instanceof ServletException || e instanceof IOException || e instanceof errorTypeException) {
-			logger.error(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
-			try {
+		try {
+			if(e instanceof ServletException || e instanceof IOException || e instanceof Type500Exception) {
+				logger.error(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
 				response.sendError(500, e.getMessage());
-			} catch (IOException e1) {
-				logger.error(new RedirectionException("Echec de redirection vers page d'erreur + " + 500).getMessage());
 			}
-		}
-		else if(e instanceof warnTypeException) {
-			logger.warn(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
-			try {
+			else if(e instanceof Type403Exception) {
+				logger.warn(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
 				response.sendError(403, e.getMessage());
-			} catch (IOException e1) {
-				logger.error(new RedirectionException("Echec de redirection vers page d'erreur + " + 403).getMessage());
+			} else if(e instanceof Type404Exception) {
+				logger.error(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
+				response.sendError(404, e.getMessage());
 			}
-		} else {
-			logger.error(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
-			try {
+			else {
+				logger.error(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
 				response.sendError(501, e.getMessage());
-			} catch (IOException e1) {
-				logger.error(new RedirectionException("Echec de redirection vers page d'erreur + " + 501).getMessage());
 			}
+		} catch(IOException e1) {
+			logger.error(new RedirectionException("Echec de redirection vers page d'erreur ").getMessage()  + "\n" + Arrays.asList(e.getStackTrace()));
 		}
 	}
 }

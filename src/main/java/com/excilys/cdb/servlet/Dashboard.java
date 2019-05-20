@@ -32,12 +32,12 @@ public class Dashboard extends Servlet {
 			} catch(IOException e) {
 				throw new CannotFindFileException("Cannot find file at : /WEB-INF/views/addComputer.jsp");
 			}
-		} catch (CannotFindFileException | ServletException | RequestFailedException | ConnectionDBFailedException | BadEntryException e) {
+		} catch (CannotFindFileException | ServletException | RequestFailedException | ConnectionDBFailedException | BadEntryException | BadArgumentException e) {
 			super.errorManager(e, response);
 		}
 	}
 
-	private void setAttributes(HttpServletRequest request) throws ConnectionDBFailedException, RequestFailedException, BadEntryException {
+	private void setAttributes(HttpServletRequest request) throws ConnectionDBFailedException, RequestFailedException, BadEntryException, BadArgumentException {
 
 		this.getAttributes(request);
 		
@@ -58,7 +58,7 @@ public class Dashboard extends Servlet {
 
 	}
 
-	private void getAttributes(HttpServletRequest request) throws RequestFailedException, ConnectionDBFailedException, BadEntryException {
+	private void getAttributes(HttpServletRequest request) throws RequestFailedException, ConnectionDBFailedException, BadEntryException, BadArgumentException {
 		try {
 			if(request.getParameter("page") != null) 
 					page.setPage(Integer.valueOf(request.getParameter("page")));
@@ -77,7 +77,7 @@ public class Dashboard extends Servlet {
 							break;
 						}
 					}
-		} catch (BadArgumentException | NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			throw new BadEntryException("Veuillez vérifier la cohérence des informations fournies");
 		}
 	}
