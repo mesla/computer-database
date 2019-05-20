@@ -29,7 +29,7 @@ public class DaoComputer {
 	private final String SQL_GETLIST = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY %s LIMIT ? OFFSET ?;";
 	private final String SQL_GET = "SELECT * FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id = ?;";
 	private final String SQL_CREATE = "INSERT INTO computer (name, introduced,discontinued,company_id) VALUES (?,?,?,?);";
-	private final String SQL_DELETE = "DELETE FROM computer WHERE id = ?;";
+	private final String SQL_DELETE = "DELETE FROM computer WHERE id = :id;";
 	private final String SQL_UPDATE = "UPDATE computer SET name=:name, introduced=:introduced, discontinued=:discontinued, company_id=:company_id WHERE id=:id;";
 	private final String SQL_COUNT = "SELECT count(computer.id) as nbComputers FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE :sql_like OR company.name LIKE :sql_like;";
 	
@@ -133,19 +133,19 @@ public class DaoComputer {
 	}
 	
 	public void delete(int id) throws RequestFailedException, ConnectionDBFailedException {
-		try(
-				Connection connection = dao.connection();
-				PreparedStatement preparedStatement = connection.prepareStatement(this.SQL_DELETE);
-			) {
+		try {
+			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dao.getDataSource());
+			MapSqlParameterSource vParams = new MapSqlParameterSource();
 			
-			preparedStatement.setInt(1,id);
+			vParams.addValue("id", id);
 			
-			if (preparedStatement.executeUpdate() == 0)
-				throw new RequestFailedException("Il n'y a aucun ordinateur à cet ID.");
-			else logger.info("Ordinateur bien supprimé");
+			if(vJdbcTemplate.update(SQL_DELETE, vParams) == 1)
+				logger.info("Les données de l'ordinateur ont bien été supprimées.");
+			else
+				throw new RequestFailedException("Request delete failed because the given ID didn't match any computer.");
 				
-		}  catch (SQLException e){
-			throw new RequestFailedException("Request delete failed because of SQLException");
+		}  catch (DataAccessException e){
+			throw new RequestFailedException("Request delete failed because of DataAccessException");
 		}
 	}
 	
