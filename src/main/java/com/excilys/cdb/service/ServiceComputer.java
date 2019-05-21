@@ -13,7 +13,7 @@ import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.mapper.MapperComputer;
 import com.excilys.cdb.model.ModelCompany;
 import com.excilys.cdb.model.ModelComputer;
-import com.excilys.cdb.servlet.enums.OrderBy;
+import com.excilys.cdb.servlet.model.Page;
 
 @Service
 public class ServiceComputer {
@@ -28,11 +28,11 @@ public class ServiceComputer {
 		this.mapperComputer = mapperComputer;
 	}
 	
-	public ArrayList<DtoComputer> listComputer(int limit, int offset, String sql_like, OrderBy orderby) throws RequestFailedException, ConnectionDBFailedException {
+	public ArrayList<DtoComputer> listComputer(Page page) throws RequestFailedException, ConnectionDBFailedException {
 		
 		ArrayList<DtoComputer> dtoComputerList = new ArrayList<DtoComputer>();
 
-		daoComputer.listComputer(limit, offset, sql_like, orderby).stream()
+		daoComputer.listComputer(page).stream()
 			.map(x -> mapperComputer.toDto(x))
 			.forEach(dtoComputerList::add);
 		

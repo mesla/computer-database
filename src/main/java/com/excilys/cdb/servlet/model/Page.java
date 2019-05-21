@@ -41,7 +41,7 @@ public class Page {
 		return page;
 	}
 
-	public void setPage(int page) throws BadArgumentException {
+	public void setCurrentPageAndUpdateOffset(int page) throws BadArgumentException {
 		if (page <= nbPages && page > 0) {
 			this.page = page;
 			offset = (page - 1) * limit;
@@ -100,20 +100,18 @@ public class Page {
 		return like;
 	}
 
-	public void setLike(String like) throws BadArgumentException {
+	public void setLikeAndResetCurrentPage(String like) throws BadArgumentException {
 		this.like = like;
-		setPage(1);
+		setCurrentPageAndUpdateOffset(1);
 	}
-	
-	
 
 	public OrderBy getOrderBy() {
 		return orderBy;
 	}
 
-	public void setOrderby(OrderBy orderBy) throws BadArgumentException {
+	public void setOrderbyAndResetCurrentPage(OrderBy orderBy) throws BadArgumentException {
 		this.orderBy = orderBy;
-		setPage(1);
+		setCurrentPageAndUpdateOffset(1);
 	}
 
 	@Override

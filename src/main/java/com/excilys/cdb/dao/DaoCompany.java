@@ -29,8 +29,8 @@ public class DaoCompany {
 	private final DbConnector dbConnector;
 	private final MapperDaoCompany mapperDaoCompany;
 	
-	public DaoCompany(DbConnector dao, MapperDaoCompany mapperDaoCompany) {
-		this.dbConnector = dao;
+	public DaoCompany(DbConnector dbConnector, MapperDaoCompany mapperDaoCompany) {
+		this.dbConnector = dbConnector;
 		this.mapperDaoCompany = mapperDaoCompany;
 	}
 	

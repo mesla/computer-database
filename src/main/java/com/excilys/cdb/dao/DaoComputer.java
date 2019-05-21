@@ -15,6 +15,7 @@ import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.mapper.MapperDaoComputer;
 import com.excilys.cdb.model.ModelComputer;
 import com.excilys.cdb.servlet.enums.OrderBy;
+import com.excilys.cdb.servlet.model.Page;
 
 @Repository
 public class DaoComputer {
@@ -40,7 +41,12 @@ public class DaoComputer {
 		this.mapperDaoComputer = mapperDaoComputer;
 	}
 
-	public List<ModelComputer> listComputer(int limit, int offset, String sql_like, OrderBy orderBy) throws RequestFailedException, ConnectionDBFailedException {
+	public List<ModelComputer> listComputer(Page page) throws RequestFailedException, ConnectionDBFailedException {
+		String sql_like = page.getLike();
+		OrderBy orderBy = page.getOrderBy();
+		int limit = page.getLimit();
+		int offset = page.getOffset();
+		
 		if(sql_like!=null && !sql_like.isEmpty())
 			sql_like = "%" + sql_like + "%";
 		else

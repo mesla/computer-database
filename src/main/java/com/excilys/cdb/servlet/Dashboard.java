@@ -41,7 +41,7 @@ public class Dashboard extends Servlet {
 
 		this.getAttributes(request);
 		
-		ArrayList<DtoComputer> dtoComputerList = serviceComputer.listComputer(page.getLimit(), page.getOffset(), page.getLike(), page.getOrderBy());
+		ArrayList<DtoComputer> dtoComputerList = serviceComputer.listComputer(page);
 		page.setNbComputers(serviceComputer.getNbComputers(page.getLike()));
 		
 		page.refreshNbPages();
@@ -54,26 +54,24 @@ public class Dashboard extends Servlet {
 		request.setAttribute("computerList", dtoComputerList);
 		request.setAttribute("nbComputers", page.getNbComputers());
 
-		System.out.println(page.toString());
-
 	}
 
 	private void getAttributes(HttpServletRequest request) throws RequestFailedException, ConnectionDBFailedException, BadEntryException, BadArgumentException {
 		try {
 			if(request.getParameter("page") != null) 
-					page.setPage(Integer.valueOf(request.getParameter("page")));
+					page.setCurrentPageAndUpdateOffset(Integer.valueOf(request.getParameter("page")));
 	
 			if(request.getParameter("size") != null) 
 				page.setLimit(Integer.valueOf(request.getParameter("size")));
 	
 			if(request.getParameter("search") != null)
-				page.setLike(request.getParameter("search"));
+				page.setLikeAndResetCurrentPage(request.getParameter("search"));
 	
 			
 			if(request.getParameter("orderBy") != null)
 					for(OrderBy ob : OrderBy.values()) {
 						if(request.getParameter("orderBy").equals(ob.toString())){
-							page.setOrderby(ob);				
+							page.setOrderbyAndResetCurrentPage(ob);				
 							break;
 						}
 					}
