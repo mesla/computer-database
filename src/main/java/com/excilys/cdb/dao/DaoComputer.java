@@ -30,15 +30,14 @@ public class DaoComputer {
 	private final String SQL_COUNT = "SELECT count(computer.id) as nbComputers FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE :sql_like OR company.name LIKE :sql_like;";
 	
 	private final DaoCompany daoCompany;
-	private final DbConnector dbConnector;
 	private final MapperDaoComputer mapperDaoComputer;
-	
+	NamedParameterJdbcTemplate jdbcTemplate;
 	private String orderBySQL;
 	
 	public DaoComputer(DaoCompany daoCompany, DbConnector dbConnector, MapperDaoComputer mapperDaoComputer) {
 		this.daoCompany = daoCompany;
-		this.dbConnector = dbConnector;
 		this.mapperDaoComputer = mapperDaoComputer;
+		this.jdbcTemplate = dbConnector.getJdbcTemplate();
 	}
 
 	public List<ModelComputer> listComputer(Page page) throws RequestFailedException, ConnectionDBFailedException {
@@ -55,7 +54,6 @@ public class DaoComputer {
 		orderBySQL = String.format(SQL_GETLIST, orderBy.getField() + " " + orderBy.getDirection());
 
 		try {
-			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dbConnector.getDataSource());
 			MapSqlParameterSource vParams = new MapSqlParameterSource();
 
 			vParams.addValue("computerName", sql_like);
@@ -63,7 +61,7 @@ public class DaoComputer {
 			vParams.addValue("limit", limit);
 			vParams.addValue("offset", offset);		
 
-			List<ModelComputer> listOfComputers = vJdbcTemplate.query(orderBySQL, vParams, mapperDaoComputer);
+			List<ModelComputer> listOfComputers = jdbcTemplate.query(orderBySQL, vParams, mapperDaoComputer);
 
 			return listOfComputers;
 		} catch (DataAccessException e){
@@ -73,12 +71,11 @@ public class DaoComputer {
 	
 	public ModelComputer read(int id) throws ConnectionDBFailedException, RequestFailedException {
 		try {
-			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dbConnector.getDataSource());
 			MapSqlParameterSource vParams = new MapSqlParameterSource();
 
 			vParams.addValue("id", id);
 			
-			ModelComputer result = vJdbcTemplate.queryForObject(SQL_GET, vParams, mapperDaoComputer);
+			ModelComputer result = jdbcTemplate.queryForObject(SQL_GET, vParams, mapperDaoComputer);
 			
 			if(result != null)
 				return result;
@@ -92,7 +89,6 @@ public class DaoComputer {
 	
 	public void create(ModelComputer modelComputer) throws RequestFailedException, BadEntryException, ConnectionDBFailedException {
 		try {
-			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dbConnector.getDataSource());
 			MapSqlParameterSource vParams = new MapSqlParameterSource();
 			
 			vParams.addValue("name", modelComputer.getName());
@@ -100,7 +96,7 @@ public class DaoComputer {
 			vParams.addValue("discontinued", modelComputer.getDiscontinued());
 			vParams.addValue("company_id", modelComputer.getCompanyId());
 			
-			if(vJdbcTemplate.update(SQL_CREATE, vParams) == 1)
+			if(jdbcTemplate.update(SQL_CREATE, vParams) == 1)
 				logger.info("Les données de l'ordinateur ont bien été insérées.");
 
 		} catch (DataAccessException e){
@@ -110,12 +106,11 @@ public class DaoComputer {
 	
 	public void delete(int id) throws RequestFailedException, ConnectionDBFailedException {
 		try {
-			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dbConnector.getDataSource());
 			MapSqlParameterSource vParams = new MapSqlParameterSource();
 			
 			vParams.addValue("id", id);
 			
-			if(vJdbcTemplate.update(SQL_DELETE, vParams) == 1)
+			if(jdbcTemplate.update(SQL_DELETE, vParams) == 1)
 				logger.info("Les données de l'ordinateur ont bien été supprimées.");
 			else
 				throw new RequestFailedException("Request delete failed because the given ID didn't match any computer.");
@@ -129,7 +124,6 @@ public class DaoComputer {
 		try {
 			Integer company_id = modelComputer.getCompanyId();
 			
-			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dbConnector.getDataSource());
 			MapSqlParameterSource vParams = new MapSqlParameterSource();
 			
 			vParams.addValue("name", modelComputer.getName());
@@ -139,7 +133,7 @@ public class DaoComputer {
 			vParams.addValue("company_name", company_id == null ? null : daoCompany.getCompany(company_id));
 			vParams.addValue("id", modelComputer.getId());
 			
-			if(vJdbcTemplate.update(SQL_UPDATE, vParams) == 1)
+			if(jdbcTemplate.update(SQL_UPDATE, vParams) == 1)
 				logger.info("Les données de l'ordinateur ont bien été mises à jour.");
 			else
 				throw new RequestFailedException("Request update failed because the given ID didn't match any computer.");
@@ -155,12 +149,11 @@ public class DaoComputer {
 			else
 				sql_like = "%%";
 			
-			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dbConnector.getDataSource());
 			MapSqlParameterSource vParams = new MapSqlParameterSource();
 			vParams.addValue("sql_like", sql_like);
 			vParams.addValue("sql_like", sql_like);
 			
-			int vNbrTicket = vJdbcTemplate.queryForObject(SQL_COUNT, vParams, Integer.class);
+			int vNbrTicket = jdbcTemplate.queryForObject(SQL_COUNT, vParams, Integer.class);
 			
 			return vNbrTicket;
 

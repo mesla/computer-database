@@ -5,7 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -26,18 +25,17 @@ public class DaoCompany {
 	private final String SQL_GET = "SELECT * from company WHERE id = :id";
 	private static final String SQL_DELETE_COMPANY = "DELETE FROM company WHERE id= :id";
 	private static final String SQL_DELETE_COMPUTER = "DELETE FROM computer WHERE company_id= :id";
-	private final DbConnector dbConnector;
 	private final MapperDaoCompany mapperDaoCompany;
+	NamedParameterJdbcTemplate jdbcTemplate;
 	
 	public DaoCompany(DbConnector dbConnector, MapperDaoCompany mapperDaoCompany) {
-		this.dbConnector = dbConnector;
 		this.mapperDaoCompany = mapperDaoCompany;
+		this.jdbcTemplate = dbConnector.getJdbcTemplate();
 	}
 	
 	public List<ModelCompany> listCompanies() throws RequestFailedException, ConnectionDBFailedException {
 		try {
-			JdbcTemplate vJdbcTemplate = new JdbcTemplate(dbConnector.getDataSource());
-			List<ModelCompany> listOfCompanies = vJdbcTemplate.query(SQL_GETLIST, mapperDaoCompany);
+			List<ModelCompany> listOfCompanies = jdbcTemplate.query(SQL_GETLIST, mapperDaoCompany);
 			return listOfCompanies;
 			
 		} catch (DataAccessException e) {
@@ -47,11 +45,10 @@ public class DaoCompany {
 
 	public ModelCompany getCompany(int id) throws RequestFailedException, ConnectionDBFailedException, BadEntryException {
 		try {
-			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dbConnector.getDataSource());
 			MapSqlParameterSource vParams = new MapSqlParameterSource();
 			vParams.addValue("id", id);
 			
-			ModelCompany result = vJdbcTemplate.queryForObject(SQL_GET, vParams, mapperDaoCompany);
+			ModelCompany result = jdbcTemplate.queryForObject(SQL_GET, vParams, mapperDaoCompany);
 			
 			if(result != null)
 				return result;
@@ -66,14 +63,13 @@ public class DaoCompany {
 	@Transactional
 	public void delete(int id) throws RequestFailedException, ConnectionDBFailedException {
 		try{
-			NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(dbConnector.getDataSource());
 			MapSqlParameterSource vParams = new MapSqlParameterSource();
 			vParams.addValue("id", id);
 			
-			if(vJdbcTemplate.update(SQL_DELETE_COMPUTER, vParams) != 0)
+			if(jdbcTemplate.update(SQL_DELETE_COMPUTER, vParams) != 0)
 				logger.info("Ordinateurs supprimés");
 			
-			if(vJdbcTemplate.update(SQL_DELETE_COMPANY, vParams) != 0)
+			if(jdbcTemplate.update(SQL_DELETE_COMPANY, vParams) != 0)
 				logger.info("Company supprimée");
 			else
 				throw new RequestFailedException("Aucune entreprise ne possède l'id : " + id);

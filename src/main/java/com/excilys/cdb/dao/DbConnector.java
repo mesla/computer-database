@@ -1,17 +1,14 @@
 package com.excilys.cdb.dao;
 
-import java.sql.Connection;
-
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Component;
 
-import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-@Repository
+@Component
 public class DbConnector {
 	private static  HikariConfig config;
 	private	static  HikariDataSource dataSource;
@@ -27,23 +24,15 @@ public class DbConnector {
         config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
         config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
         dataSource = new HikariDataSource( config );
-
 	}
+	
+	private final NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 	
 	public DbConnector() {
 
 	}
-
-	public Connection connection() throws ConnectionDBFailedException {
-		try {
-			return dataSource.getConnection();
-		} catch (SQLException e) {
-			throw new ConnectionDBFailedException("connexion à la DB échouée");
-		}
-		
-	}
 	
-	public HikariDataSource getDataSource() throws ConnectionDBFailedException {
-		return dataSource;
+	public NamedParameterJdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
 	}
 }

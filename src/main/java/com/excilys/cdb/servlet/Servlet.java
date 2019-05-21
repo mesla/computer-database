@@ -32,7 +32,7 @@ public abstract class Servlet extends HttpServlet{
 	protected final MapperComputer mapperComputer = context.getBean(MapperComputer.class);
 	protected final ComputerValidator computerValidator = context.getBean(ComputerValidator.class);
 	private final Logger logger = LoggerFactory.getLogger(Servlet.class);
-		
+
 	protected void errorManager(Exception e, HttpServletResponse response) {
 		try {
 			if(e instanceof ServletException || e instanceof IOException || e instanceof Type500Exception) {
