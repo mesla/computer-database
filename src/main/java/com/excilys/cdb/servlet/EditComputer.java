@@ -52,13 +52,13 @@ public class EditComputer {
 	
 	@PostMapping( "/editComputer" )
 	public RedirectView doPost(
-			@RequestParam(value="computerName", required=true) String computerNameReq,
+			@RequestParam(value="computerName", required=false) String computerNameReq,
 			@RequestParam(value="computerId", required=false) String computerIdReq,
 			@RequestParam(value="introduced", required=false) String introducedReq,
 			@RequestParam(value="discontinued", required=false) String discontinuedReq,
-			@RequestParam(value="companyId", required=false) String companyIdReq
+			@RequestParam(value="companyId", defaultValue = "0") String companyIdReq
 			) throws RequestFailedException, BadEntryException, ConnectionDBFailedException, UnvalidDtoException {
-		if (computerNameReq != null) {
+		if (!computerNameReq.isEmpty()) {
 			try {
 				serviceComputer.update(
 					mapperComputer.toModel(

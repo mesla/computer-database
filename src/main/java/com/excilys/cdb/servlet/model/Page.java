@@ -16,9 +16,8 @@ public class Page {
 	
 	private OrderBy orderBy;
 
-	private static Page INSTANCE = null;
 
-	private Page() {
+	public Page() {
 		this.setDefault();
 	}
 
@@ -30,19 +29,11 @@ public class Page {
 		orderBy = OrderBy.ORDERBY_COMPUTER_ID_ASC;
 	}
 
-	public static Page getInstance() {
-		if (INSTANCE == null) {
-			INSTANCE = new Page();
-		}
-		return INSTANCE;
-	}
-
 	public int getPage() {
 		return page;
 	}
 
 	public void setCurrentPageAndUpdateOffset(int page) throws BadArgumentException {
-		System.out.println("page + " + page + " nbPages + " + nbPages);
 		if (page <= nbPages && page > 0) {
 			this.page = page;
 			offset = (page - 1) * limit;

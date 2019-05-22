@@ -22,7 +22,7 @@
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle">${nbComputers} computer(s).</h1>
+			<h1 id="homeTitle">${pageInstance.nbComputers} computer(s).</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="dashboard?page=1" method="GET" class="form-inline">
@@ -123,15 +123,15 @@
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
 			<ul class="pagination">
-				<li><a href="?page=${(page-1 > 0) ? (page-1) : page}" aria-label="Previous">
+				<li><a href="?page=${(pageInstance.page-1 > 0) ? (pageInstance.page-1) : pageInstance.page}" aria-label="Previous">
 					<span aria-hidden="true">&laquo;</span>
 				</a></li>
 				
-				<c:forEach var="page" items="${availablePages}">
+				<c:forEach var="page" items="${pageInstance.availablePages}">
 					<li><a href="?page=${page}">${page}</a></li>
 				</c:forEach>
 
-				<li><a href="?page=${(page < nbPages) ? (page+1) : page}" aria-label="Next">
+				<li><a href="?page=${(pageInstance.page < pageInstance.nbPages) ? (pageInstance.page+1) : pageInstance.page}" aria-label="Next">
 					<span aria-hidden="true">&raquo;</span>
 				</a></li>
 			</ul>

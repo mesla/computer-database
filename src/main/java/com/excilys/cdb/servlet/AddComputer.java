@@ -37,23 +37,19 @@ public class AddComputer {
 	
 	@GetMapping( "/addComputer" )
 	public String doGet(Model model) throws ConnectionDBFailedException, RequestFailedException {
-		this.setModelAttr(model);
-		return "AddComputer";
-	}
-
-	private void setModelAttr(Model model) throws ConnectionDBFailedException, RequestFailedException {
 		model.addAttribute("companyList", serviceCompany.listCompanies());
+		return "AddComputer";
 	}
 	
 	@PostMapping( "/addComputer" )
 	public RedirectView doPost(
-			@RequestParam(value = "computerName", required=true) String computerNameReq,
+			@RequestParam(value = "computerName", required=false) String computerNameReq,
 			@RequestParam(value = "introduced", required=false) String introducedReq,
 			@RequestParam(value = "discontinued", required=false) String discontinuedReq,
-			@RequestParam(value = "companyId", required=false) String companyIdReq
+			@RequestParam(value = "companyId", defaultValue = "0") String companyIdReq
 			) throws BadEntryException, RequestFailedException, ConnectionDBFailedException, UnvalidDtoException {
 		try {
-			if(computerNameReq!=null) {
+			if(!computerNameReq.isEmpty()) {
 				serviceComputer.create(
 					mapperComputer.toModel(
 						computerValidator.checkIntegrity(
