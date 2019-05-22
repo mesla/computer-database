@@ -1,19 +1,5 @@
 package com.excilys.cdb.dao;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.sql.SQLException;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.excilys.cdb.exception.ConnectionDBFailedException;
-import com.excilys.cdb.exception.RequestFailedException;
-import com.excilys.cdb.service.ServiceComputer;
-
 public class DaoCompanyTest{
 //	private Logger logger = LoggerFactory.getLogger(ServiceComputer.class);
 //    // Tests

@@ -10,6 +10,7 @@
 <link href="css/font-awesome.css" rel="stylesheet" media="screen">
 <link href="css/main.css" rel="stylesheet" media="screen">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+<link  href="css/font-awesome.css" rel="stylesheet">
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">

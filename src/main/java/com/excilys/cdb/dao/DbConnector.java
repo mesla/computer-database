@@ -25,13 +25,12 @@ public class DbConnector {
         config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
         dataSource = new HikariDataSource( config );
 	}
-	
 	private final NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 	
 	public DbConnector() {
 
 	}
-	
+
 	public NamedParameterJdbcTemplate getJdbcTemplate() {
 		return jdbcTemplate;
 	}

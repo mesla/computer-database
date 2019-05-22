@@ -1,72 +1,73 @@
 package com.excilys.cdb.servlet;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.excilys.cdb.dto.DtoComputer;
 import com.excilys.cdb.exception.BadEntryException;
-import com.excilys.cdb.exception.CannotFindFileException;
 import com.excilys.cdb.exception.ConnectionDBFailedException;
-import com.excilys.cdb.exception.RedirectionException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.exception.UnvalidDtoException;
+import com.excilys.cdb.mapper.MapperComputer;
+import com.excilys.cdb.service.ServiceCompany;
+import com.excilys.cdb.service.ServiceComputer;
+import com.excilys.cdb.validator.ComputerValidator;
 
-@WebServlet(urlPatterns= "/addComputer")
-public class AddComputer extends Servlet{
+@Controller
+public class AddComputer {
+	ServiceComputer serviceComputer;
+	ServiceCompany serviceCompany;
+	MapperComputer mapperComputer;
+	ComputerValidator computerValidator;
 	
-	private static final long serialVersionUID = 4504965411432198749L;
 	
-	@Override
-	public void doGet( HttpServletRequest request, HttpServletResponse response ) {
+	public AddComputer(ServiceComputer serviceComputer, ServiceCompany serviceCompany, MapperComputer mapperComputer, ComputerValidator computerValidator) {
+		this.serviceComputer = serviceComputer;
+		this.serviceCompany = serviceCompany;
+		this.mapperComputer = mapperComputer;
+		this.computerValidator = computerValidator;
+	}
+	
+	@GetMapping( "/addComputer" )
+	public String doGet(Model model) throws ConnectionDBFailedException, RequestFailedException {
+		this.setModelAttr(model);
+		return "AddComputer";
+	}
+
+	private void setModelAttr(Model model) throws ConnectionDBFailedException, RequestFailedException {
+		model.addAttribute("companyList", serviceCompany.listCompanies());
+	}
+	
+	@PostMapping( "/addComputer" )
+	public RedirectView doPost(
+			@RequestParam(value = "computerName", required=true) String computerNameReq,
+			@RequestParam(value = "introduced", required=false) String introducedReq,
+			@RequestParam(value = "discontinued", required=false) String discontinuedReq,
+			@RequestParam(value = "companyId", required=false) String companyIdReq
+			) throws BadEntryException, RequestFailedException, ConnectionDBFailedException, UnvalidDtoException {
 		try {
-			this.setAttributes(request);
-			try {
-				this.getServletContext().getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward( request, response );
-			} catch(IOException e) {
-				throw new CannotFindFileException("Cannot find file at : /WEB-INF/views/addComputer.jsp");
+			if(computerNameReq!=null) {
+				serviceComputer.create(
+					mapperComputer.toModel(
+						computerValidator.checkIntegrity(
+							new DtoComputer(null, 
+											computerNameReq, 
+											introducedReq.isEmpty() ? null : LocalDate.parse(introducedReq), 
+											discontinuedReq.isEmpty() ? null : LocalDate.parse(discontinuedReq), 
+											companyIdReq.equals("0") ? null : Integer.valueOf(companyIdReq),
+											null)
+				)));
 			}
-		} catch (CannotFindFileException | ServletException | ConnectionDBFailedException | RequestFailedException e1) {
-			super.errorManager(e1, response);
+			return new RedirectView("dashboard");
+		} catch (DateTimeParseException | NumberFormatException e) {
+			throw new BadEntryException("Veuillez vérifier les informations fournies");
 		}
 	}
-
-	private void setAttributes(HttpServletRequest request) throws ConnectionDBFailedException, RequestFailedException {
-		request.setAttribute("companyList", serviceCompany.listCompanies());
-	}
-	
-	@Override
-	public void doPost( HttpServletRequest request, HttpServletResponse response ) {
-		try {
-			try {
-				if(request.getParameter("computerName")!=null) {
-					serviceComputer.create(
-						mapperComputer.toModel(
-							computerValidator.checkIntegrity(
-								new DtoComputer(null, 
-												request.getParameter("computerName"), 
-												request.getParameter("introduced").isEmpty() ? null : LocalDate.parse(request.getParameter("introduced")), 
-												request.getParameter("discontinued").isEmpty() ? null : LocalDate.parse(request.getParameter("discontinued")), 
-												request.getParameter("companyId").equals("0") ? null : Integer.valueOf(request.getParameter("companyId")),
-												null)
-					)));
-				}
-				try {
-					response.sendRedirect(request.getContextPath() + "/dashboard");
-				} catch(IOException e) {
-					throw new RedirectionException("Echec de la redirection vers dashboard depuis addComputer");
-				}
-			} catch (DateTimeParseException | NumberFormatException e) {
-				throw new BadEntryException("Veuillez vérifier les informations fournies");
-			}
-		} catch(BadEntryException | RequestFailedException | ConnectionDBFailedException | UnvalidDtoException | RedirectionException e1) {
-			super.errorManager(e1, response);
-		}
-	}
-
 }

@@ -42,6 +42,7 @@ public class Page {
 	}
 
 	public void setCurrentPageAndUpdateOffset(int page) throws BadArgumentException {
+		System.out.println("page + " + page + " nbPages + " + nbPages);
 		if (page <= nbPages && page > 0) {
 			this.page = page;
 			offset = (page - 1) * limit;
@@ -68,7 +69,7 @@ public class Page {
 		} else throw new BadArgumentException("La taille d'une page ne peut que être comprise entre 10, 50 et 100");
 	}
 	
-	public void refreshNbPages() {
+	public void refreshNbPages() throws BadArgumentException {
 		setNbPages(nbComputers % limit == 0 ? nbComputers / limit : nbComputers / limit + 1);
 	}
 
@@ -100,9 +101,8 @@ public class Page {
 		return like;
 	}
 
-	public void setLikeAndResetCurrentPage(String like) throws BadArgumentException {
+	public void setLike(String like) throws BadArgumentException {
 		this.like = like;
-		setCurrentPageAndUpdateOffset(1);
 	}
 
 	public OrderBy getOrderBy() {

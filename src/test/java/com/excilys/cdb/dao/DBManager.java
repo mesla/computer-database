@@ -1,15 +1,5 @@
 package com.excilys.cdb.dao;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Scanner;
-import java.util.StringTokenizer;
-
-import com.excilys.cdb.exception.ConnectionDBFailedException;
-
 public class DBManager {
 //	private static DBManager instance = new DBManager();
 //
