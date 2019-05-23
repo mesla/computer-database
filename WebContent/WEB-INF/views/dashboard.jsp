@@ -5,7 +5,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
-<title>Computer Database</title>
+<title><spring:message code="lbl.title" text="Computer Database"></spring:message></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <!-- Bootstrap -->
@@ -18,8 +18,9 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="dashboard"><spring:message code="lbl.navbarBrand" text="Application -
-				Computer Database"></spring:message></a>
+			<a class="navbar-brand" href="dashboard">
+				<spring:message code="lbl.navbarBrand" text="Application - Computer Database"></spring:message>
+			</a>
 		</div>
 	</header>
 
@@ -29,11 +30,11 @@
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="dashboard?page=1" method="GET" class="form-inline">
-
-						<input type="search" id="searchbox" name="search"
-							class="form-control" placeholder="Search name" /> <input
-							type="submit" id="searchsubmit" value="Filter by name"
-							class="btn btn-primary" />
+						<spring:message code="lbl.searchBtn" var="searchText" text="Search name"/>
+							<input type="search" id="searchbox" name="search" class="form-control" placeholder="${searchText}" />
+						
+						<spring:message code="lbl.searchBtn" var="filterText" text="Filter by name"/>
+							<input type="submit" id="searchsubmit" value="${filterText}" class="btn btn-primary" />
 					</form>
 				</div>
 				<div class="pull-right">

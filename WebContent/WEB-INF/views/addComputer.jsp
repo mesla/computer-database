@@ -1,8 +1,11 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+ 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
-<title>Computer Database</title>
+<title><spring:message code="lbl.title" text="Computer Database"></spring:message></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <!-- Bootstrap -->
@@ -13,7 +16,9 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="dashboard"> Application - Computer Database </a>
+            <a class="navbar-brand" href="dashboard">
+            	<spring:message code="lbl.navbarBrand" text="Application - Computer Database"></spring:message>
+            </a>
         </div>
     </header>
 
@@ -21,23 +26,30 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
-                    <h1>Add Computer</h1>
+                    <h1><spring:message code="lbl.addBtn" text="Add Computer"></spring:message></h1>
                     <form action="addComputer" method="POST">
                         <fieldset>
                             <div class="form-group">
-                                <label for="computerName">Computer name</label>
-                                <input name="computerName" type="text" class="form-control" id="computerName" placeholder="Computer name">
+                                <label for="computerName">
+                                	<spring:message code="lbl.cptrName" text="Computer name"></spring:message>
+                                </label>
+                                <spring:message code="lbl.cptrName" var="cptrNameText" text="Computer name"/>
+                                	<input name="computerName" type="text" class="form-control" id="computerName" placeholder="${cptrNameText}">
                             </div>
                             <div class="form-group">
-                                <label for="introduced">Introduced date</label>
+                                <label for="introduced">
+                                	<spring:message code="lbl.cptrIntro" text="Introduced date"></spring:message>
+                                </label>
                                 <input name="introduced" type="date" class="form-control" id="introduced" placeholder="Introduced date" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">
                             </div>
                             <div class="form-group">
-                                <label for="discontinued">Discontinued date</label>
+                                <label for="discontinued">
+                                	<spring:message code="lbl.cptrDisco" text="Discontinued date"></spring:message>
+                                </label>
                                 <input name="discontinued" type="date" class="form-control" id="discontinued" placeholder="Discontinued date" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">
                             </div>
                             <div class="form-group">
-                                <label for="companyId">Company</label>
+                                <label for="companyId"><spring:message code="lbl.companyName" text="Company"></spring:message></label>
                                 <select name="companyId" class="form-control" id="companyId" >
                                     <option value="0">--</option>
 									<c:forEach var="company" items="${companyList}">
@@ -47,9 +59,12 @@
                             </div>                  
                         </fieldset>
                         <div class="actions pull-right">
-                            <input type="submit" value="Add" class="btn btn-primary">
-                            or
-                            <a href="dashboard?page=1" class="btn btn-default">Cancel</a>
+                        	<spring:message code="lbl.addBtn" var="addText" text="Add"/>
+                            	<input type="submit" value="${addText}" class="btn btn-primary">
+                            <spring:message code="lbl.or" text="or"></spring:message>
+                            <a href="dashboard?page=1" class="btn btn-default">
+                            	<spring:message code="lbl.cancel" text="Cancel"></spring:message>
+                            </a>
                         </div>
                     </form>
                 </div>
