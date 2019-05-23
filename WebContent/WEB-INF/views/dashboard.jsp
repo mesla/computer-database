@@ -1,5 +1,8 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+ 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
 <title>Computer Database</title>
@@ -15,14 +18,14 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="dashboard"> Application -
-				Computer Database </a>
+			<a class="navbar-brand" href="dashboard"><spring:message code="lbl.navbarBrand" text="Application -
+				Computer Database"></spring:message></a>
 		</div>
 	</header>
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle">${pageInstance.nbComputers} computer(s).</h1>
+			<h1 id="homeTitle">${pageInstance.nbComputers}<spring:message code="lbl.homeTitle" text=" Computer(s)."></spring:message></h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="dashboard?page=1" method="GET" class="form-inline">
@@ -34,9 +37,12 @@
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="addComputer">Add
-						Computer</a> <a class="btn btn-default" id="editComputer" href="#"
-						onclick="$.fn.toggleEditMode();">Edit</a>
+					<a class="btn btn-success" id="addComputer" href="addComputer">
+						<spring:message code="lbl.addBtn" text="Add Computer"></spring:message>
+					</a>
+					<a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">
+						<spring:message code="lbl.editBtn" text="Edit"></spring:message>
+					</a>
 				</div>
 			</div>
 		</div>
@@ -47,7 +53,7 @@
 
 		<div class="container" style="margin-top: 10px;">
 				<a href="dashboard?orderBy=ORDERBY_COMPUTER_ID_ASC" class="btn btn-default sort-default">
-					Reset order by
+					<spring:message code="lbl.resetOrderByBtn" text="Reset order by"></spring:message>
 				</a>
 			<table class="table table-striped table-bordered">
 				<thead>
@@ -62,7 +68,7 @@
 							</a>
 						</span></th>
 						
-						<th>Computer name
+						<th><spring:message code="lbl.cptrName" text="Computer name"></spring:message>
 							<a href="dashboard?orderBy=ORDERBY_COMPUTER_NAME_ASC">
 								<i class="fas fa-sort-up"></i>
 							</a>
@@ -71,7 +77,7 @@
 							</a>
 						</th>
 						
-						<th>Introduced date
+						<th><spring:message code="lbl.cptrIntro" text="Introduced date"></spring:message>
 							<a href="dashboard?orderBy=ORDERBY_INTRODUCED_ASC">
 								<i class="fas fa-sort-up"></i>
 							</a>
@@ -80,7 +86,7 @@
 							</a>
 						</th>
 							
-						<th>Discontinued date
+						<th><spring:message code="lbl.cptrDisco" text="Discontinued date"></spring:message>
 							<a href="dashboard?orderBy=ORDERBY_DISCONTINUED_ASC">
 								<i class="fas fa-sort-up"></i>
 							</a>
@@ -89,7 +95,7 @@
 							</a>
 						</th>
 						
-						<th>Company
+						<th><spring:message code="lbl.companyName" text="Company"></spring:message>
 							<a href="dashboard?orderBy=ORDERBY_COMPANY_NAME_ASC">
 								<i class="fas fa-sort-up"></i>
 							</a>
