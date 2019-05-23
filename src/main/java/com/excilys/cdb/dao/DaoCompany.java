@@ -32,7 +32,7 @@ public class DaoCompany {
 		this.mapperDaoCompany = mapperDaoCompany;
 		this.jdbcTemplate = dbConnector.getJdbcTemplate();
 	}
-	
+
 	public List<ModelCompany> listCompanies() throws RequestFailedException, ConnectionDBFailedException {
 		try {
 			List<ModelCompany> listOfCompanies = jdbcTemplate.query(SQL_GETLIST, mapperDaoCompany);
@@ -60,7 +60,7 @@ public class DaoCompany {
 		}
 	}
 	
-	@Transactional
+	@Transactional()
 	public void delete(int id) throws RequestFailedException, ConnectionDBFailedException {
 		try{
 			MapSqlParameterSource vParams = new MapSqlParameterSource();

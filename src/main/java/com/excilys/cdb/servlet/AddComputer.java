@@ -38,7 +38,7 @@ public class AddComputer {
 	@GetMapping( "/addComputer" )
 	public String doGet(Model model) throws ConnectionDBFailedException, RequestFailedException {
 		model.addAttribute("companyList", serviceCompany.listCompanies());
-		return "AddComputer";
+		return "addComputer";
 	}
 	
 	@PostMapping( "/addComputer" )

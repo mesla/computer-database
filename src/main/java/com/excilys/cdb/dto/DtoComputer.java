@@ -2,12 +2,23 @@ package com.excilys.cdb.dto;
 
 import java.time.LocalDate;
 
-public class DtoComputer{
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
+
+public class DtoComputer {
 	
+	@Min(1)
 	private Integer id;
+	@NonNull
+	@NotEmpty
 	private String name;
 	private LocalDate introduced;
 	private LocalDate discontinued;
+	@Nullable
+	@Min(1)
 	private Integer companyId;
 	private String companyName;
 	
