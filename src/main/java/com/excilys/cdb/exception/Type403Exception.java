@@ -1,6 +1,6 @@
 package com.excilys.cdb.exception;
 
-public class Type403Exception extends Exception {
+public class Type403Exception extends RuntimeException {
 
 	public Type403Exception(String str) {
 		super(str);

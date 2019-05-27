@@ -1,5 +1,9 @@
 package com.excilys.cdb.servlet;
 
+import java.util.Arrays;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +18,8 @@ import com.excilys.cdb.servlet.model.ErrorModel;
 @ControllerAdvice
 public class ExceptionResolver extends ExceptionHandlerExceptionResolver {
 	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	private final String ERROR_PAGE_NAME = "errorPage";
 	private final String ERROR_ATTRIBUTE_KEY = "error";
 	private final String DEFAULT_ERROR_MSG = "Something unexpected as happened";
@@ -26,11 +32,16 @@ public class ExceptionResolver extends ExceptionHandlerExceptionResolver {
 		if (e instanceof NoHandlerFoundException || e instanceof Type404Exception) {
 			error.setErrorCode(404);
 			error.setCustomMessage(e.getMessage());
+			logger.error(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
 		} else if (e instanceof Type403Exception) {
 			error.setErrorCode(403);
 			error.setCustomMessage(e.getMessage());
+			logger.warn(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
 		} else if(e instanceof Type500Exception) {
 			error.setErrorCode(500);
+			logger.error(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
+		} else {
+			logger.error("ERREUR NON GEREE \n" + e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
 		}
 		model.addAttribute(ERROR_ATTRIBUTE_KEY, error);
 		return ERROR_PAGE_NAME;

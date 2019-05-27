@@ -9,8 +9,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.excilys.cdb.exception.BadEntryException;
-import com.excilys.cdb.exception.ConnectionDBFailedException;
 import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.mapper.MapperDaoComputer;
 import com.excilys.cdb.model.ModelComputer;
@@ -28,6 +26,7 @@ public class DaoComputer {
 	private final String SQL_DELETE = "DELETE FROM computer WHERE id = :id;";
 	private final String SQL_UPDATE = "UPDATE computer SET name=:name, introduced=:introduced, discontinued=:discontinued, company_id=:company_id WHERE id=:id;";
 	private final String SQL_COUNT = "SELECT count(computer.id) as nbComputers FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE :sql_like OR company.name LIKE :sql_like;";
+	private static final String SQL_DELETE_COMPUTER_BY_COMPANY_ID = "DELETE FROM computer WHERE company_id= :id";
 	
 	private final DaoCompany daoCompany;
 	private final MapperDaoComputer mapperDaoComputer;
@@ -40,7 +39,7 @@ public class DaoComputer {
 		this.jdbcTemplate = dbConnector.getJdbcTemplate();
 	}
 
-	public List<ModelComputer> listComputer(Page page) throws RequestFailedException, ConnectionDBFailedException {
+	public List<ModelComputer> listComputer(Page page) {
 		String sql_like = page.getLike();
 		OrderBy orderBy = page.getOrderBy();
 		int limit = page.getLimit();
@@ -69,7 +68,7 @@ public class DaoComputer {
 		}
 	}
 	
-	public ModelComputer read(int id) throws ConnectionDBFailedException, RequestFailedException {
+	public ModelComputer read(int id) {
 		try {
 			MapSqlParameterSource vParams = new MapSqlParameterSource();
 
@@ -87,7 +86,7 @@ public class DaoComputer {
 		}
 	}
 	
-	public void create(ModelComputer modelComputer) throws RequestFailedException, BadEntryException, ConnectionDBFailedException {
+	public void create(ModelComputer modelComputer) {
 		try {
 			MapSqlParameterSource vParams = new MapSqlParameterSource();
 			
@@ -104,7 +103,7 @@ public class DaoComputer {
 		}
 	}
 	
-	public void delete(int id) throws RequestFailedException, ConnectionDBFailedException {
+	public void delete(int id) {
 		try {
 			MapSqlParameterSource vParams = new MapSqlParameterSource();
 			
@@ -120,7 +119,7 @@ public class DaoComputer {
 		}
 	}
 	
-	public void update(ModelComputer modelComputer) throws RequestFailedException, ConnectionDBFailedException, BadEntryException {
+	public void update(ModelComputer modelComputer) {
 		try {
 			Integer company_id = modelComputer.getCompanyId();
 			
@@ -142,7 +141,7 @@ public class DaoComputer {
 		}
 	}
 	
-	public int getNbComputers(String sql_like) throws ConnectionDBFailedException, RequestFailedException {
+	public int getNbComputers(String sql_like) {
 		try {
 			if(sql_like!=null && !sql_like.isEmpty())
 				sql_like = "%" + sql_like + "%";
@@ -160,5 +159,19 @@ public class DaoComputer {
 		} catch (DataAccessException  e){
 			throw new RequestFailedException("Request getNbComputers failed because of DataAccessException");
 		}
+	}
+
+	public void deleteByCompanyId(int id) {
+		MapSqlParameterSource vParams = new MapSqlParameterSource();
+		vParams.addValue("id", id);
+		
+		try {
+			if(jdbcTemplate.update(SQL_DELETE_COMPUTER_BY_COMPANY_ID, vParams) != 0)
+				logger.info("Ordinateurs supprimés");
+			
+		} catch(DataAccessException ex) {
+			throw new RequestFailedException("Request delete company - computers step - failed because of DataAccessException \n" + ex.getMessage());
+		}
+		
 	}
 }
