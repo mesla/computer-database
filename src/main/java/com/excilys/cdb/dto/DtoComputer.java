@@ -5,21 +5,24 @@ import java.time.LocalDate;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
-import org.springframework.lang.NonNull;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 
 public class DtoComputer {
 	
+	@Nullable
 	@Min(1)
 	private Integer id;
-	@NonNull
 	@NotEmpty
 	private String name;
+	@DateTimeFormat(pattern= "yyyy-mm-dd")
 	private LocalDate introduced;
+	@DateTimeFormat(pattern= "yyyy-mm-dd")
 	private LocalDate discontinued;
 	@Nullable
 	@Min(1)
 	private Integer companyId;
+	@Nullable
 	private String companyName;
 	
 	public DtoComputer(Integer pId, String pName, LocalDate pIntroduced, LocalDate pDiscontinued, Integer pCompanyId, String pCompanyName) {

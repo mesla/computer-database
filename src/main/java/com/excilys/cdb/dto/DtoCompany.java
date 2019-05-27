@@ -3,14 +3,12 @@ package com.excilys.cdb.dto;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
-import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public class DtoCompany {
 	@Nullable
 	@Min(1)
 	private Integer id;
-	@NonNull
 	@NotEmpty
 	private String name;
 	
