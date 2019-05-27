@@ -22,7 +22,13 @@ import com.excilys.cdb.servlet.ExceptionResolver;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = { "com.excilys.cdb" })
+@ComponentScan(basePackages = {
+		"com.excilys.cdb.dao",
+		"com.excilys.cdb.mapper",
+		"com.excilys.cdb.service",
+		"com.excilys.cdb.servlet",
+		"com.excilys.cdb.servlet.model",
+		"com.excilys.cdb.validator"})
 public class WebMvcConfig implements WebMvcConfigurer {
 
 	@Bean

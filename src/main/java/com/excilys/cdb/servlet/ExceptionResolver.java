@@ -12,7 +12,7 @@ import com.excilys.cdb.exception.Type500Exception;
 import com.excilys.cdb.servlet.model.ErrorModel;
 
 @ControllerAdvice
-public class ExceptionResolver extends ExceptionHandlerExceptionResolver  {
+public class ExceptionResolver extends ExceptionHandlerExceptionResolver {
 	
 	private final String ERROR_PAGE_NAME = "errorPage";
 	private final String ERROR_ATTRIBUTE_KEY = "error";
@@ -29,8 +29,9 @@ public class ExceptionResolver extends ExceptionHandlerExceptionResolver  {
 		} else if (e instanceof Type403Exception) {
 			error.setErrorCode(403);
 			error.setCustomMessage(e.getMessage());
-		} else if(e instanceof Type500Exception) 
+		} else if(e instanceof Type500Exception) {
 			error.setErrorCode(500);
+		}
 		model.addAttribute(ERROR_ATTRIBUTE_KEY, error);
 		return ERROR_PAGE_NAME;
 	}
