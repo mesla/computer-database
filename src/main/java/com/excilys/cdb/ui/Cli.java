@@ -11,9 +11,6 @@ public class Cli {
 
 	private final Controller controller = Controller.getInstance();
 	
-	public Cli() {
-		
-	}
 	
 	public void deleteCompany() {
 		System.out.println("Veuillez entrer l'id de l'entreprise à supprimer : ");

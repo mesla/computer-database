@@ -8,8 +8,6 @@ import com.excilys.cdb.model.ModelCompany;
 @Component
 public class MapperCompany {
 		
-	public MapperCompany() { }
-	
 	public ModelCompany toModel(DtoCompany t) {
 		return new ModelCompany(
 				t.getId(),

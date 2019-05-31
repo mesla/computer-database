@@ -25,10 +25,6 @@ public class DbConnector {
         dataSource = new HikariDataSource( config );
 	}
 	
-	public DbConnector() {
-
-	}
-	
 	public HikariDataSource getDataSource() {
 		return dataSource;
 	}

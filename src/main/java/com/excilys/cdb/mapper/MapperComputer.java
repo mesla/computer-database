@@ -11,8 +11,6 @@ import com.excilys.cdb.model.ModelComputer;
 @Component
 public class MapperComputer {
 
-	public MapperComputer () { }
-	
 	public ModelComputer toModel(DtoComputer t) {
 		
 		Timestamp dateIntro = t.getIntroduced() == null ? null : Timestamp.valueOf(t.getIntroduced() + " 13:00:01");

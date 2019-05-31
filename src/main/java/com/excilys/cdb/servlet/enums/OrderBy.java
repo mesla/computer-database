@@ -16,9 +16,9 @@ public enum OrderBy {
 	ORDERBY_COMPUTER_ID_ASC("computer", QModelComputer.modelComputer.id.asc());
 	
 	private String field;
-	private OrderSpecifier<?> orderSpecifier;
+	private OrderSpecifier<? extends Comparable<?>> orderSpecifier;
 	
-	OrderBy(String field, OrderSpecifier<?> orderSpecifier) {
+	OrderBy(String field, OrderSpecifier<? extends Comparable<?>> orderSpecifier) {
 		this.field = field;
 		this.orderSpecifier = orderSpecifier;
 	}
@@ -27,7 +27,7 @@ public enum OrderBy {
 		return field;
 	}
 	
-	public OrderSpecifier<?> getOrderSpecifier() {
+	public OrderSpecifier<? extends Comparable<?>> getOrderSpecifier() {
 		return orderSpecifier;
 	}
 		
