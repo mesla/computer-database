@@ -18,7 +18,7 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="dashboard">
+			<a class="navbar-brand" href="dashboard?reset=true">
 				<spring:message code="lbl.navbarBrand" text="Application - Computer Database"></spring:message>
 			</a>
 			<a href="dashboard?lang=fr" style="float:right; padding:15px;"><img src="pix/logo_fr.png" style="max-width: 20px;"/></a>

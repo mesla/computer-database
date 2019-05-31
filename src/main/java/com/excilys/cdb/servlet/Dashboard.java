@@ -35,10 +35,14 @@ public class Dashboard {
 			@RequestParam(value = "search", required=false) String searchReq,
 			@RequestParam(value = "size", required=false) String sizeReq,
 			@RequestParam(value = "orderBy", required=false) String orderByReq,
+			@RequestParam(value = "reset", required=false) String reset,
 			@ModelAttribute("pageInstance") Page pageInstance,
 			SessionStatus sessionStatus
 			) {
 		try {
+			if(reset != null && reset == "true") {
+				sessionStatus.setComplete();
+			}
 			
 			if(searchReq != null)
 				pageInstance.setLike(searchReq);
@@ -63,9 +67,7 @@ public class Dashboard {
 			pageInstance.setAvailablePages(pagination(pageInstance));
 			
 			model.addAttribute("computerList", serviceComputer.listComputer(pageInstance));
-			
-			System.out.println(pageInstance.toString());
-			
+						
 		} catch (NumberFormatException e) {
 			throw new BadEntryException("Veuillez vérifier la cohérence des informations fournies");
 		}

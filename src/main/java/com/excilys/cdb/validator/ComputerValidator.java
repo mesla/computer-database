@@ -31,27 +31,18 @@ public class ComputerValidator {
 		}
 	}
 	
-	private boolean checkNameIsNotEmptyOrNull(String name) {
-		if(name.isEmpty() || name ==null)
+	private void checkNameIsNotEmptyOrNull(String name) {
+		if (name ==null || name.isEmpty())
 			throw new BadEntryException("Le champ 'name' doit être spécifié");
-		else return true;
 	}
 	
-	private boolean checkDateIntroInfToDiscon(LocalDate intro, LocalDate discon)  {
-		if(intro==null || discon==null)
-			return true;
-		else if(intro.compareTo(discon) <= 0)
-			return true;
-		else
-			throw new BadEntryException("La date 'introduced' doit être inférieure à la date 'discontinued'");
+	private void checkDateIntroInfToDiscon(LocalDate intro, LocalDate discon)  {
+		if((intro!=null && discon!=null) && intro.compareTo(discon) > 0)
+			throw new BadEntryException("La date 'introduced' doit être inférieure à la date 'discontinued'");		
 	}
 	
-	private boolean checkCompanyIdExist(Long companyId) {
-		if(companyId == null)
-			return true;
-		else {
+	private void checkCompanyIdExist(Long companyId) {
+		if(companyId != null)
 			serviceComputer.getCompanyById(companyId);
-			return true;
-		}		
 	}
 }

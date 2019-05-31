@@ -18,7 +18,7 @@ import com.excilys.cdb.servlet.model.ErrorModel;
 @ControllerAdvice
 public class ExceptionResolver extends ExceptionHandlerExceptionResolver {
 	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger myLogger = LoggerFactory.getLogger(this.getClass());
 	
 	private final String ERROR_PAGE_NAME = "errorPage";
 	private final String ERROR_ATTRIBUTE_KEY = "error";
@@ -32,16 +32,16 @@ public class ExceptionResolver extends ExceptionHandlerExceptionResolver {
 		if (e instanceof NoHandlerFoundException || e instanceof Type404Exception) {
 			error.setErrorCode(404);
 			error.setCustomMessage(e.getMessage());
-			logger.error(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
+			myLogger.error(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
 		} else if (e instanceof Type403Exception) {
 			error.setErrorCode(403);
 			error.setCustomMessage(e.getMessage());
-			logger.warn(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
+			myLogger.warn(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
 		} else if(e instanceof Type500Exception) {
 			error.setErrorCode(500);
-			logger.error(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
+			myLogger.error(e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
 		} else {
-			logger.error("ERREUR NON GEREE \n" + e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
+			myLogger.error("ERREUR NON GEREE \n" + e.getMessage() + "\n" + Arrays.asList(e.getStackTrace()));
 		}
 		model.addAttribute(ERROR_ATTRIBUTE_KEY, error);
 		return ERROR_PAGE_NAME;

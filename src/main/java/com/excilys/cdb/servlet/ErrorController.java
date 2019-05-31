@@ -6,9 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class ErrorController {
-	
 	@GetMapping( "/errorPage" )
-	private String map(Model model) {
+	public String map(Model model) {
 		return "errorPage";
 	}
 }

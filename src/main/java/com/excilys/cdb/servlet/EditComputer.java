@@ -34,7 +34,7 @@ public class EditComputer {
 	}
 
 	@GetMapping( "/editComputer" )
-	protected String doGet(Model model, @RequestParam(value = "computerId", required=false) String computerIdReq) {
+	public String doGet(Model model, @RequestParam(value = "computerId", required=false) String computerIdReq) {
 		try {
 			if (computerIdReq != null) {
 				Long computerId = Long.valueOf(computerIdReq);
