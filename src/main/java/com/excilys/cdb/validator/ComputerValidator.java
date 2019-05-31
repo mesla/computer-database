@@ -6,8 +6,6 @@ import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.dto.DtoComputer;
 import com.excilys.cdb.exception.BadEntryException;
-import com.excilys.cdb.exception.ConnectionDBFailedException;
-import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.exception.UnvalidDtoException;
 import com.excilys.cdb.service.ServiceComputer;
 
@@ -20,7 +18,7 @@ public class ComputerValidator {
 		this.serviceComputer = serviceComputer;
 	}
 	
-	public DtoComputer checkIntegrity(DtoComputer dtoComputer) throws UnvalidDtoException, RequestFailedException, ConnectionDBFailedException {
+	public DtoComputer checkIntegrity(DtoComputer dtoComputer) {
 		try {
 			checkNameIsNotEmptyOrNull(dtoComputer.getName());
 			checkDateIntroInfToDiscon(dtoComputer.getIntroduced(), dtoComputer.getDiscontinued());
@@ -33,13 +31,13 @@ public class ComputerValidator {
 		}
 	}
 	
-	private boolean checkNameIsNotEmptyOrNull(String name) throws BadEntryException{
+	private boolean checkNameIsNotEmptyOrNull(String name) {
 		if(name.isEmpty() || name ==null)
 			throw new BadEntryException("Le champ 'name' doit être spécifié");
 		else return true;
 	}
 	
-	private boolean checkDateIntroInfToDiscon(LocalDate intro, LocalDate discon) throws BadEntryException {
+	private boolean checkDateIntroInfToDiscon(LocalDate intro, LocalDate discon)  {
 		if(intro==null || discon==null)
 			return true;
 		else if(intro.compareTo(discon) <= 0)
@@ -48,7 +46,7 @@ public class ComputerValidator {
 			throw new BadEntryException("La date 'introduced' doit être inférieure à la date 'discontinued'");
 	}
 	
-	private boolean checkCompanyIdExist(Integer companyId) throws RequestFailedException, ConnectionDBFailedException, BadEntryException {
+	private boolean checkCompanyIdExist(Long companyId) {
 		if(companyId == null)
 			return true;
 		else {

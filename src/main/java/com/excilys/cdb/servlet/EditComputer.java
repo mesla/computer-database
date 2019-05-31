@@ -13,9 +13,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.excilys.cdb.dto.DtoComputer;
 import com.excilys.cdb.exception.BadEntryException;
-import com.excilys.cdb.exception.ConnectionDBFailedException;
-import com.excilys.cdb.exception.RequestFailedException;
-import com.excilys.cdb.exception.UnvalidDtoException;
 import com.excilys.cdb.mapper.MapperComputer;
 import com.excilys.cdb.service.ServiceCompany;
 import com.excilys.cdb.service.ServiceComputer;
@@ -37,10 +34,10 @@ public class EditComputer {
 	}
 
 	@GetMapping( "/editComputer" )
-	protected String doGet(Model model, @RequestParam(value = "computerId", required=false) String computerIdReq) throws BadEntryException, ConnectionDBFailedException, RequestFailedException{
+	protected String doGet(Model model, @RequestParam(value = "computerId", required=false) String computerIdReq) {
 		try {
 			if (computerIdReq != null) {
-				Integer computerId = Integer.valueOf(computerIdReq);
+				Long computerId = Long.valueOf(computerIdReq);
 				model.addAttribute("computer", serviceComputer.read(computerId));
 			}
 			model.addAttribute("companyList", serviceCompany.listCompanies());
@@ -57,17 +54,17 @@ public class EditComputer {
 			@RequestParam(value="introduced", required=false) String introducedReq,
 			@RequestParam(value="discontinued", required=false) String discontinuedReq,
 			@RequestParam(value="companyId", defaultValue = "0") String companyIdReq
-			) throws RequestFailedException, BadEntryException, ConnectionDBFailedException, UnvalidDtoException {
+			) {
 		if (!computerNameReq.isEmpty()) {
 			try {
 				serviceComputer.update(
 					mapperComputer.toModel(
 						computerValidator.checkIntegrity(
-							new DtoComputer(Integer.valueOf(computerIdReq),
+							new DtoComputer(Long.valueOf(computerIdReq),
 									computerNameReq,
 									introducedReq.isEmpty() ? null : LocalDate.parse(introducedReq),
 									discontinuedReq.isEmpty() ? null : LocalDate.parse(discontinuedReq),
-									companyIdReq.equals("0") ? null : Integer.valueOf(companyIdReq),
+									companyIdReq.equals("0") ? null : Long.valueOf(companyIdReq),
 									null))));
 			} catch (DateTimeParseException e) {
 				throw new BadEntryException("La date entrée n'est pas au format YYYY-mm-DD");

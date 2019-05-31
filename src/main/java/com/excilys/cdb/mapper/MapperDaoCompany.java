@@ -14,7 +14,7 @@ public class MapperDaoCompany  implements RowMapper<ModelCompany>{
 	@Override
 	public ModelCompany mapRow(ResultSet rs, int rowNum) throws SQLException {
 		return new ModelCompany(
-				rs.getInt("company.id"),
+				rs.getLong("company.id"),
 				rs.getString("company.name"));
 	}
 }

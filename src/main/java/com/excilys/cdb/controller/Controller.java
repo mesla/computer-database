@@ -32,7 +32,7 @@ public class Controller {
 	
 	public void deleteCompany(String idStr) {
 		try {
-			int id = Integer.valueOf(idStr);
+			Long id = Long.valueOf(idStr);
 			serviceCompany.delete(id);
 		} catch (NumberFormatException e) {
 			logger.warn(new BadEntryException("Vous n'avez pas entré un entier ").getMessage());

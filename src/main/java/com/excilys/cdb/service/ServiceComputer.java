@@ -3,19 +3,18 @@ package com.excilys.cdb.service;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.cdb.dao.DaoCompany;
 import com.excilys.cdb.dao.DaoComputer;
 import com.excilys.cdb.dto.DtoComputer;
-import com.excilys.cdb.exception.BadEntryException;
-import com.excilys.cdb.exception.ConnectionDBFailedException;
-import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.mapper.MapperComputer;
 import com.excilys.cdb.model.ModelCompany;
 import com.excilys.cdb.model.ModelComputer;
 import com.excilys.cdb.servlet.model.Page;
 
 @Service
+@Transactional
 public class ServiceComputer {
 		
 	private final DaoComputer daoComputer;
@@ -28,7 +27,7 @@ public class ServiceComputer {
 		this.mapperComputer = mapperComputer;
 	}
 	
-	public ArrayList<DtoComputer> listComputer(Page page) throws RequestFailedException, ConnectionDBFailedException {
+	public ArrayList<DtoComputer> listComputer(Page page){
 		
 		ArrayList<DtoComputer> dtoComputerList = new ArrayList<DtoComputer>();
 
@@ -39,27 +38,27 @@ public class ServiceComputer {
 		return dtoComputerList;
 	}
 		
-	public ModelComputer read(int id) throws ConnectionDBFailedException, RequestFailedException {
+	public ModelComputer read(Long id) {
 		return daoComputer.read(id);
 	}
 	
-	public void delete(int id) throws ConnectionDBFailedException, RequestFailedException {
+	public void delete(Long id) {
 		daoComputer.delete(id);
 	}
 	
-	public void update(ModelComputer modelComputer) throws RequestFailedException, BadEntryException, ConnectionDBFailedException {
+	public void update(ModelComputer modelComputer) {
 		daoComputer.update(modelComputer);
 	}
 	
-	public void create(ModelComputer modelComputer) throws BadEntryException, RequestFailedException, ConnectionDBFailedException {
+	public void create(ModelComputer modelComputer) {
 		daoComputer.create(modelComputer);
 	}
 	
-	public int getNbComputers(String sql_like) throws ConnectionDBFailedException, RequestFailedException {
+	public long getNbComputers(String sql_like) {
 		return daoComputer.getNbComputers(sql_like);
 	}
 	
-	public ModelCompany getCompanyById(int companyId) throws RequestFailedException, ConnectionDBFailedException, BadEntryException {
+	public ModelCompany getCompanyById(Long companyId) {
 		return daoCompany.getCompany(companyId);
 	}
 

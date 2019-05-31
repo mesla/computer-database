@@ -12,9 +12,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.excilys.cdb.dto.DtoComputer;
 import com.excilys.cdb.exception.BadEntryException;
-import com.excilys.cdb.exception.ConnectionDBFailedException;
-import com.excilys.cdb.exception.RequestFailedException;
-import com.excilys.cdb.exception.UnvalidDtoException;
 import com.excilys.cdb.mapper.MapperComputer;
 import com.excilys.cdb.service.ServiceCompany;
 import com.excilys.cdb.service.ServiceComputer;
@@ -36,7 +33,7 @@ public class AddComputer {
 	}
 	
 	@GetMapping( "/addComputer" )
-	public String doGet(Model model) throws ConnectionDBFailedException, RequestFailedException {
+	public String doGet(Model model) {
 		model.addAttribute("companyList", serviceCompany.listCompanies());
 		return "addComputer";
 	}
@@ -47,7 +44,7 @@ public class AddComputer {
 			@RequestParam(value = "introduced", required=false) String introducedReq,
 			@RequestParam(value = "discontinued", required=false) String discontinuedReq,
 			@RequestParam(value = "companyId", defaultValue = "0") String companyIdReq
-			) throws BadEntryException, RequestFailedException, ConnectionDBFailedException, UnvalidDtoException {
+			) {
 		try {
 			if(!computerNameReq.isEmpty()) {
 				serviceComputer.create(
@@ -57,7 +54,7 @@ public class AddComputer {
 											computerNameReq, 
 											introducedReq.isEmpty() ? null : LocalDate.parse(introducedReq), 
 											discontinuedReq.isEmpty() ? null : LocalDate.parse(discontinuedReq), 
-											companyIdReq.equals("0") ? null : Integer.valueOf(companyIdReq),
+											companyIdReq.equals("0") ? null : Long.valueOf(companyIdReq),
 											null)
 				)));
 			}

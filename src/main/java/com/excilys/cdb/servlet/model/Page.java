@@ -9,9 +9,9 @@ public class Page {
 	private int page;
 	private int offset;
 	private int limit;
-	private int nbComputers;
-	private int nbPages;
-	private ArrayList<Integer> availablePages;
+	private long nbComputers;
+	private long nbPages;
+	private ArrayList<Long> availablePages;
 	private String like;
 	
 	private OrderBy orderBy;
@@ -33,7 +33,7 @@ public class Page {
 		return page;
 	}
 
-	public void setCurrentPageAndUpdateOffset(int page) throws BadArgumentException {
+	public void setCurrentPageAndUpdateOffset(int page){
 		if (page <= nbPages && page > 0) {
 			this.page = page;
 			offset = (page - 1) * limit;
@@ -45,7 +45,7 @@ public class Page {
 		return offset;
 	}
 
-	public void setOffset(int offset) throws BadArgumentException {
+	public void setOffset(int offset) {
 		if(offset>0) this.offset = offset;
 		else throw new BadArgumentException("l'offset doit être supérieur à 0");
 	}
@@ -54,45 +54,45 @@ public class Page {
 		return limit;
 	}
 
-	public void setLimit(int limit) throws BadArgumentException {
+	public void setLimit(int limit) {
 		if(limit == 10 || limit == 50 || limit == 100) {
 			this.limit = limit;
 		} else throw new BadArgumentException("La taille d'une page ne peut que être comprise entre 10, 50 et 100");
 	}
 	
-	public void refreshNbPages() throws BadArgumentException {
+	public void refreshNbPages() {
 		setNbPages(nbComputers % limit == 0 ? nbComputers / limit : nbComputers / limit + 1);
 	}
 
-	public int getNbComputers() {
+	public long getNbComputers() {
 		return nbComputers;
 	}
 
-	public void setNbComputers(int nbComputers) {
-		this.nbComputers = nbComputers;
+	public void setNbComputers(long l) {
+		this.nbComputers = l;
 	}
 
-	public int getNbPages() {
+	public long getNbPages() {
 		return nbPages;
 	}
 
-	public void setNbPages(int nbPages) {
-		this.nbPages = nbPages;
+	public void setNbPages(long l) {
+		this.nbPages = l;
 	}
 
-	public ArrayList<Integer> getAvailablePages() {
+	public ArrayList<Long> getAvailablePages() {
 		return availablePages;
 	}
 
-	public void setAvailablePages(ArrayList<Integer> availablePages) {
-		this.availablePages = availablePages;
+	public void setAvailablePages(ArrayList<Long> arrayList) {
+		this.availablePages = arrayList;
 	}
 
 	public String getLike() {
 		return like;
 	}
 
-	public void setLike(String like) throws BadArgumentException {
+	public void setLike(String like) {
 		this.like = like;
 	}
 
@@ -100,7 +100,7 @@ public class Page {
 		return orderBy;
 	}
 
-	public void setOrderbyAndResetCurrentPage(OrderBy orderBy) throws BadArgumentException {
+	public void setOrderbyAndResetCurrentPage(OrderBy orderBy) {
 		this.orderBy = orderBy;
 		setCurrentPageAndUpdateOffset(1);
 	}

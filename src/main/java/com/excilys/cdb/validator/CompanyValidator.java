@@ -10,14 +10,14 @@ public class CompanyValidator {
 	
 	public CompanyValidator () { }
 	
-	public boolean checkIntegrity(DtoCompany dtoCompany) throws BadEntryException{
+	public boolean checkIntegrity(DtoCompany dtoCompany) {
 		if(checkNameIsNotEmptyOrNull(dtoCompany.getName()))
 			return true;
 		else
 			return false;
 	}
 	
-	private boolean checkNameIsNotEmptyOrNull(String name) throws BadEntryException{
+	private boolean checkNameIsNotEmptyOrNull(String name) {
 		if(name == null || name.isEmpty()) throw new BadEntryException("Le champ 'name' doit être spécifié");
 		else return true;
 

@@ -12,7 +12,7 @@ public class DtoComputer {
 	
 	@Nullable
 	@Min(1)
-	private Integer id;
+	private Long id;
 	@NotEmpty
 	private String name;
 	@DateTimeFormat(pattern= "yyyy-mm-dd")
@@ -21,11 +21,11 @@ public class DtoComputer {
 	private LocalDate discontinued;
 	@Nullable
 	@Min(1)
-	private Integer companyId;
+	private Long companyId;
 	@Nullable
 	private String companyName;
 	
-	public DtoComputer(Integer pId, String pName, LocalDate pIntroduced, LocalDate pDiscontinued, Integer pCompanyId, String pCompanyName) {
+	public DtoComputer(Long pId, String pName, LocalDate pIntroduced, LocalDate pDiscontinued, Long pCompanyId, String pCompanyName) {
 		this.id =  pId;
 		this.name = pName;
 		this.introduced = pIntroduced;
@@ -34,7 +34,7 @@ public class DtoComputer {
 		this.companyName = pCompanyName;
 	}
 	
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -50,7 +50,7 @@ public class DtoComputer {
 		return discontinued;
 	}
 
-	public Integer getCompanyId() {
+	public Long getCompanyId() {
 		return companyId;
 	}
 	

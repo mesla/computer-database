@@ -15,12 +15,12 @@ public class MapperDaoComputer implements RowMapper<ModelComputer>{
 	@Override
 	public ModelComputer mapRow(ResultSet rs, int rowNum) throws SQLException {
 		return new ModelComputer(
-				rs.getInt("computer.id"),
+				rs.getLong("computer.id"),
 				rs.getString("computer.name"),
 				rs.getTimestamp("computer.introduced"),
 				rs.getTimestamp("computer.discontinued"),
 				new ModelCompany(
-						rs.getInt("company.id") == 0 ? null : rs.getInt("company.id"),
+						rs.getLong("company.id") == 0 ? null : rs.getLong("company.id"),
 						rs.getString("company.name")));
 	}
 

@@ -8,16 +8,16 @@ import org.springframework.lang.Nullable;
 public class DtoCompany {
 	@Nullable
 	@Min(1)
-	private Integer id;
+	private Long id;
 	@NotEmpty
 	private String name;
 	
-	public DtoCompany(Integer id, String name) {
+	public DtoCompany(Long id, String name) {
 		this.id = id;
 		this.name = name;
 	}
 	
-	public Integer getId() {
+	public Long getId() {
 		return this.id;
 	}
 	

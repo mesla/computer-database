@@ -9,12 +9,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.excilys.cdb.exception.BadArgumentException;
 import com.excilys.cdb.exception.BadEntryException;
-import com.excilys.cdb.exception.ConnectionDBFailedException;
-import com.excilys.cdb.exception.RequestFailedException;
 import com.excilys.cdb.service.ServiceComputer;
 import com.excilys.cdb.servlet.enums.OrderBy;
 import com.excilys.cdb.servlet.model.Page;
@@ -37,10 +35,11 @@ public class Dashboard {
 			@RequestParam(value = "search", required=false) String searchReq,
 			@RequestParam(value = "size", required=false) String sizeReq,
 			@RequestParam(value = "orderBy", required=false) String orderByReq,
-			@ModelAttribute("pageInstance") Page pageInstance
-			) throws RequestFailedException, ConnectionDBFailedException, BadEntryException, BadArgumentException
-	{
+			@ModelAttribute("pageInstance") Page pageInstance,
+			SessionStatus sessionStatus
+			) {
 		try {
+			
 			if(searchReq != null)
 				pageInstance.setLike(searchReq);
 
@@ -79,12 +78,12 @@ public class Dashboard {
 	}
 
 	@PostMapping(value = { "/", "/dashboard" })
-	public RedirectView doPost(@RequestParam(value = "selection", required=false) String selectionReq) throws BadEntryException, ConnectionDBFailedException, RequestFailedException {
+	public RedirectView doPost(@RequestParam(value = "selection", required=false) String selectionReq) {
 		if (!selectionReq.isEmpty()) {
 			String listId[] = selectionReq.split(",");
 			try {
 				for (String id : listId)
-					serviceComputer.delete(Integer.valueOf(id));
+					serviceComputer.delete(Long.valueOf(id));
 			} catch (NumberFormatException e1) {
 				throw new BadEntryException("Veuillez entrer un id valide");
 			}
@@ -92,13 +91,13 @@ public class Dashboard {
 		return new RedirectView("dashboard");
 	}
 	
-	private ArrayList<Integer> pagination(Page pageInstance) {
-		ArrayList<Integer> availablePages = new ArrayList<Integer>();
+	private ArrayList<Long> pagination(Page pageInstance) {
+		ArrayList<Long> availablePages = new ArrayList<Long>();
 		int currentPage = pageInstance.getPage();
-		int nbPages = pageInstance.getNbPages();
+		long nbPages = pageInstance.getNbPages();
 		
-		int p = Math.max(3, Math.min (currentPage, nbPages-2));
-		  for (int i = p-2 ; i <= p+2 ; i++) {
+		long p = Math.max(3, Math.min (currentPage, nbPages-2));
+		  for (long i = p-2 ; i <= p+2 ; i++) {
 			  if (i > 0 && i <= nbPages)
 		    	 availablePages.add(i);
 		  }

@@ -11,6 +11,7 @@ import com.excilys.cdb.dto.DtoCompany;
 import com.excilys.cdb.mapper.MapperCompany;
 
 @Service
+@Transactional
 public class ServiceCompany {
 		
 	private final DaoCompany daoCompany;
@@ -35,7 +36,7 @@ public class ServiceCompany {
 	}
 	
 	@Transactional
-	public void delete(int id) {
+	public void delete(Long id) {
 		daoComputer.deleteByCompanyId(id);
 		daoCompany.delete(id);
 	}

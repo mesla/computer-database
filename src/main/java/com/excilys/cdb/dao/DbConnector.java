@@ -2,7 +2,6 @@ package com.excilys.cdb.dao;
 
 import java.util.ResourceBundle;
 
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -25,13 +24,13 @@ public class DbConnector {
         config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
         dataSource = new HikariDataSource( config );
 	}
-	private final NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 	
 	public DbConnector() {
 
 	}
-
-	public NamedParameterJdbcTemplate getJdbcTemplate() {
-		return jdbcTemplate;
+	
+	public HikariDataSource getDataSource() {
+		return dataSource;
 	}
+
 }

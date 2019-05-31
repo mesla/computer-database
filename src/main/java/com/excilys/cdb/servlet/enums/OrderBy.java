@@ -1,31 +1,34 @@
 package com.excilys.cdb.servlet.enums;
 
+import com.excilys.cdb.model.QModelCompany;
+import com.excilys.cdb.model.QModelComputer;
+import com.querydsl.core.types.OrderSpecifier;
+
 public enum OrderBy {
-	
-	ORDERBY_COMPUTER_NAME_ASC("computer.name", "ASC"),
-	ORDERBY_COMPUTER_NAME_DESC("computer.name", "DESC"),
-	ORDERBY_INTRODUCED_ASC("computer.introduced", "ASC"),
-	ORDERBY_INTRODUCED_DESC("computer.introduced", "DESC"),
-	ORDERBY_DISCONTINUED_ASC("computer.discontinued", "ASC"),
-	ORDERBY_DISCONTINUED_DESC("computer.discontinued", "DESC"),
-	ORDERBY_COMPANY_NAME_ASC("company.name", "ASC"),
-	ORDERBY_COMPANY_NAME_DESC("company.name", "DESC"),
-	ORDERBY_COMPUTER_ID_ASC("computer.id", "ASC");
+	ORDERBY_COMPUTER_NAME_ASC("computer", QModelComputer.modelComputer.name.asc()),
+	ORDERBY_COMPUTER_NAME_DESC("computer", QModelComputer.modelComputer.name.desc()),
+	ORDERBY_INTRODUCED_ASC("computer", QModelComputer.modelComputer.introduced.asc()),
+	ORDERBY_INTRODUCED_DESC("computer", QModelComputer.modelComputer.introduced.desc()),
+	ORDERBY_DISCONTINUED_ASC("computer", QModelComputer.modelComputer.discontinued.asc()),
+	ORDERBY_DISCONTINUED_DESC("computer", QModelComputer.modelComputer.discontinued.desc()),
+	ORDERBY_COMPANY_NAME_ASC("company", QModelCompany.modelCompany.name.desc()),
+	ORDERBY_COMPANY_NAME_DESC("company", QModelCompany.modelCompany.name.desc()),
+	ORDERBY_COMPUTER_ID_ASC("computer", QModelComputer.modelComputer.id.asc());
 	
 	private String field;
-	private String direction;
+	private OrderSpecifier<?> orderSpecifier;
 	
-	OrderBy(String field, String direction) {
+	OrderBy(String field, OrderSpecifier<?> orderSpecifier) {
 		this.field = field;
-		this.direction = direction;
+		this.orderSpecifier = orderSpecifier;
 	}
 	
 	public String getField() {
 		return field;
 	}
 	
-	public String getDirection() {
-		return direction;
+	public OrderSpecifier<?> getOrderSpecifier() {
+		return orderSpecifier;
 	}
 		
 }
