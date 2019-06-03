@@ -37,6 +37,7 @@ public class DaoComputer {
 	}
 
 	public List<ModelComputer> listComputer(Page page) {
+		
 		String sql_like = page.getLike();
 
 		List<ModelComputer> listOfComputers = queryFactory

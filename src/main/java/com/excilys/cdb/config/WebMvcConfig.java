@@ -65,6 +65,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
 		HibernateTransactionManager txManager = new HibernateTransactionManager();
 		txManager.setSessionFactory(sessionFactory);
+		txManager.setNestedTransactionAllowed(true);
 
 		return txManager;
 	}

@@ -40,7 +40,7 @@ public class Dashboard {
 			SessionStatus sessionStatus
 			) {
 		try {
-			if(reset != null && reset == "true") {
+			if(reset != null && reset.equals("true")) {
 				sessionStatus.setComplete();
 			}
 			
