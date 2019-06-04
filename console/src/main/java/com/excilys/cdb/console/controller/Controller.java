@@ -1,4 +1,4 @@
-package com.excilys.cdb.controller;
+package com.excilys.cdb.console.controller;
 
 import java.util.Arrays;
 
@@ -7,19 +7,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import com.excilys.cdb.console.config.AppConfig;
+import com.excilys.cdb.core.exception.BadEntryException;
+import com.excilys.cdb.core.exception.ConnectionDBFailedException;
+import com.excilys.cdb.core.exception.RequestFailedException;
 import com.excilys.cdb.service.ServiceCompany;
-import com.excilys.cdb.service.ServiceComputer;
-import com.excilys.cdb.config.AppConfig;
-import com.excilys.cdb.exception.BadEntryException;
-import com.excilys.cdb.exception.ConnectionDBFailedException;
-import com.excilys.cdb.exception.RequestFailedException;
 
 public class Controller {
 	private static Controller INSTANCE = null;
 	private static Logger logger = LoggerFactory.getLogger(Controller.class);
-	protected final ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-	protected final ServiceComputer serviceComputer = context.getBean(ServiceComputer.class);
-	protected final ServiceCompany serviceCompany = context.getBean(ServiceCompany.class);
+	private final ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+	private final ServiceCompany serviceCompany = context.getBean(ServiceCompany.class);
 	
 	private Controller() { }
 	

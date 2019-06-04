@@ -1,9 +1,10 @@
-package com.excilys.cdb.servlet.model;
+package com.excilys.cdb.core.model;
 
 import java.util.ArrayList;
 
-import com.excilys.cdb.exception.BadArgumentException;
-import com.excilys.cdb.servlet.enums.OrderBy;
+import com.excilys.cdb.core.exception.BadArgumentException;
+import com.excilys.cdb.enums.OrderBy;
+
 
 public class Page {
 	private int page;
@@ -15,7 +16,6 @@ public class Page {
 	private String like;
 	
 	private OrderBy orderBy;
-
 
 	public Page() {
 		this.setDefault();

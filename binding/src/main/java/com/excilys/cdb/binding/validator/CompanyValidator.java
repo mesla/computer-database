@@ -1,10 +1,10 @@
-package com.excilys.cdb.validator;
+package com.excilys.cdb.binding.validator;
 
 import org.springframework.stereotype.Component;
 
-import com.excilys.cdb.dto.DtoCompany;
-import com.excilys.cdb.exception.BadEntryException;
-import com.excilys.cdb.exception.UnvalidDtoException;
+import com.excilys.cdb.binding.dto.DtoCompany;
+import com.excilys.cdb.core.exception.BadEntryException;
+import com.excilys.cdb.core.exception.UnvalidDtoException;
 import com.excilys.cdb.service.ServiceComputer;
 
 @Component

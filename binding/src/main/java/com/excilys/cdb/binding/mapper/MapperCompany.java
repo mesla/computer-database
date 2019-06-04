@@ -1,9 +1,9 @@
-package com.excilys.cdb.mapper;
+package com.excilys.cdb.binding.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.excilys.cdb.dto.DtoCompany;
-import com.excilys.cdb.model.ModelCompany;
+import com.excilys.cdb.binding.dto.DtoCompany;
+import com.excilys.cdb.core.model.ModelCompany;
 
 @Component
 public class MapperCompany {

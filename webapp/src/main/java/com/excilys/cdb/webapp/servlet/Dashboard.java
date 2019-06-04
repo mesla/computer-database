@@ -1,4 +1,4 @@
-package com.excilys.cdb.servlet;
+package com.excilys.cdb.webapp.servlet;
 
 import java.util.ArrayList;
 
@@ -12,20 +12,23 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.excilys.cdb.exception.BadEntryException;
+import com.excilys.cdb.binding.dto.DtoComputer;
+import com.excilys.cdb.binding.mapper.MapperComputer;
+import com.excilys.cdb.core.exception.BadEntryException;
+import com.excilys.cdb.core.model.Page;
+import com.excilys.cdb.enums.OrderBy;
 import com.excilys.cdb.service.ServiceComputer;
-import com.excilys.cdb.servlet.enums.OrderBy;
-import com.excilys.cdb.servlet.model.Page;
-
 
 @Controller
 @SessionAttributes("pageInstance")
 public class Dashboard {
 
 	private final ServiceComputer serviceComputer;
+	private final MapperComputer mapperComputer;
 	
-	public Dashboard(ServiceComputer serviceComputer) {
+	public Dashboard(ServiceComputer serviceComputer, MapperComputer mapperComputer) {
 		this.serviceComputer = serviceComputer;
+		this.mapperComputer = mapperComputer;
 	}
 
 	@GetMapping(value = { "/", "/dashboard" })
@@ -66,7 +69,11 @@ public class Dashboard {
 			pageInstance.refreshNbPages();
 			pageInstance.setAvailablePages(pagination(pageInstance));
 			
-			model.addAttribute("computerList", serviceComputer.listComputer(pageInstance));
+			ArrayList<DtoComputer> dtoComputerList = new ArrayList<DtoComputer>();
+			serviceComputer.listComputer(pageInstance).stream()
+				.map(x -> mapperComputer.toDto(x))
+				.forEach(dtoComputerList::add);
+			model.addAttribute("computerList", dtoComputerList);
 						
 		} catch (NumberFormatException e) {
 			throw new BadEntryException("Veuillez vérifier la cohérence des informations fournies");

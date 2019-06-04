@@ -1,4 +1,4 @@
-package com.excilys.cdb.config;
+package com.excilys.cdb.webapp.config;
 
 import java.util.List;
 import java.util.Properties;
@@ -29,16 +29,16 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
-import com.excilys.cdb.dao.DbConnector;
-import com.excilys.cdb.servlet.ExceptionResolver;
+import com.excilys.cdb.persistence.DbConnector;
+import com.excilys.cdb.webapp.servlet.ExceptionResolver;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
 @PropertySource({ "classpath:config.properties" })
-@ComponentScan(basePackages = { "com.excilys.cdb.dao", "com.excilys.cdb.mapper", "com.excilys.cdb.service",
-		"com.excilys.cdb.servlet", "com.excilys.cdb.servlet.model", "com.excilys.cdb.validator" })
+@ComponentScan(basePackages = { "com.excilys.cdb.persistence", "com.excilys.cdb.binding.mapper", "com.excilys.cdb.service",
+		"com.excilys.cdb.webapp.servlet", "com.excilys.cdb.core.model", "com.excilys.cdb.binding.validator" })
 public class WebMvcConfig implements WebMvcConfigurer {
 
 	@PersistenceContext
@@ -54,7 +54,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	public LocalSessionFactoryBean sessionFactory(DbConnector dbConnector) {
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
 		sessionFactory.setDataSource(dbConnector.getDataSource());
-		sessionFactory.setPackagesToScan(new String[] { "com.excilys.cdb.model" });
+		sessionFactory.setPackagesToScan(new String[] { "com.excilys.cdb.core.model" });
 		sessionFactory.setHibernateProperties(hibernateProperties());
 
 		return sessionFactory;

@@ -1,4 +1,4 @@
-package com.excilys.cdb.exception;
+package com.excilys.cdb.core.exception;
 
 public abstract class Type404Exception extends RuntimeException {
 	

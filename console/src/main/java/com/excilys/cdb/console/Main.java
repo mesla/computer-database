@@ -1,6 +1,6 @@
-package com.excilys.cdb.main;
+package com.excilys.cdb.console;
 
-import com.excilys.cdb.ui.Cli;
+import com.excilys.cdb.console.cli.Cli;
 
 public class Main {
 	public static void main(String[] args){

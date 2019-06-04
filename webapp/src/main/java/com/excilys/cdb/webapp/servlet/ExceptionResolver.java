@@ -1,4 +1,4 @@
-package com.excilys.cdb.servlet;
+package com.excilys.cdb.webapp.servlet;
 
 import java.util.Arrays;
 
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import com.excilys.cdb.exception.Type403Exception;
-import com.excilys.cdb.exception.Type404Exception;
-import com.excilys.cdb.exception.Type500Exception;
-import com.excilys.cdb.servlet.model.ErrorModel;
+import com.excilys.cdb.core.exception.Type403Exception;
+import com.excilys.cdb.core.exception.Type404Exception;
+import com.excilys.cdb.core.exception.Type500Exception;
+import com.excilys.cdb.core.model.ErrorModel;
 
 @ControllerAdvice
 public class ExceptionResolver extends ExceptionHandlerExceptionResolver {

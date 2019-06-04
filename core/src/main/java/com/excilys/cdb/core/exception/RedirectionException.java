@@ -1,4 +1,4 @@
-package com.excilys.cdb.exception;
+package com.excilys.cdb.core.exception;
 
 public class RedirectionException extends Type500Exception {
 

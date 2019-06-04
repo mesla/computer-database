@@ -1,8 +1,8 @@
-package com.excilys.cdb.servlet;
+package com.excilys.cdb.webapp.servlet;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,25 +11,36 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.excilys.cdb.dto.DtoComputer;
-import com.excilys.cdb.exception.BadEntryException;
-import com.excilys.cdb.mapper.MapperComputer;
+import com.excilys.cdb.binding.dto.DtoCompany;
+import com.excilys.cdb.binding.dto.DtoComputer;
+import com.excilys.cdb.binding.mapper.MapperCompany;
+import com.excilys.cdb.binding.mapper.MapperComputer;
+import com.excilys.cdb.binding.validator.ComputerValidator;
+import com.excilys.cdb.core.exception.BadEntryException;
 import com.excilys.cdb.service.ServiceCompany;
 import com.excilys.cdb.service.ServiceComputer;
-import com.excilys.cdb.validator.ComputerValidator;
 
 @Controller
 public class EditComputer {
 
 	private final ServiceComputer serviceComputer;
 	private final ServiceCompany serviceCompany;
-	MapperComputer mapperComputer;
-	ComputerValidator computerValidator;
+	private final MapperComputer mapperComputer;
+	private final MapperCompany mapperCompany;
+	private final ComputerValidator computerValidator;
 	
-	public EditComputer(ServiceComputer serviceComputer, ServiceCompany serviceCompany, MapperComputer mapperComputer,ComputerValidator computerValidator) {
+	public EditComputer(
+			ServiceComputer serviceComputer,
+			ServiceCompany serviceCompany,
+			MapperComputer mapperComputer,
+			MapperCompany mapperCompany,
+			ComputerValidator computerValidator
+	) {
+		
 		this.serviceComputer = serviceComputer;
 		this.serviceCompany = serviceCompany;
 		this.mapperComputer = mapperComputer;
+		this.mapperCompany = mapperCompany;
 		this.computerValidator = computerValidator;
 	}
 
@@ -40,7 +51,14 @@ public class EditComputer {
 				Long computerId = Long.valueOf(computerIdReq);
 				model.addAttribute("computer", serviceComputer.read(computerId));
 			}
-			model.addAttribute("companyList", serviceCompany.listCompanies());
+			
+			ArrayList<DtoCompany> dtoCompanyList = new ArrayList<DtoCompany>();
+			serviceCompany.listCompanies().stream()
+				.map(x -> mapperCompany.toDto(x))
+				.forEach(dtoCompanyList::add);
+			model.addAttribute("companyList", dtoCompanyList);
+			
+			model.addAttribute("companyList", dtoCompanyList);
 		} catch (NumberFormatException e) {
 			throw new BadEntryException("L'ID renseigné n'est pas un entier");
 		}

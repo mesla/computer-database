@@ -1,4 +1,4 @@
-package com.excilys.cdb.dto;
+package com.excilys.cdb.binding.dto;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;

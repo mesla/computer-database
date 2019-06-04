@@ -9,9 +9,12 @@
 		<artifactId>cdb</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-
+	
+	<properties>
+		<module.version>0.0.1-SNAPSHOT</module.version>
+	</properties>
+	
 	<artifactId>core</artifactId>
-	<version>${module.version}</version>
 	<packaging>jar</packaging>
 	<modelVersion>4.0.0</modelVersion>
 

@@ -1,12 +1,12 @@
-package com.excilys.cdb.mapper;
+package com.excilys.cdb.binding.mapper;
 
 import java.sql.Timestamp;
 
 import org.springframework.stereotype.Component;
 
-import com.excilys.cdb.dto.DtoComputer;
-import com.excilys.cdb.model.ModelCompany;
-import com.excilys.cdb.model.ModelComputer;
+import com.excilys.cdb.binding.dto.DtoComputer;
+import com.excilys.cdb.core.model.ModelCompany;
+import com.excilys.cdb.core.model.ModelComputer;
 
 @Component
 public class MapperComputer {

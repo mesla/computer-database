@@ -1,7 +1,8 @@
-package com.excilys.cdb.servlet;
+package com.excilys.cdb.webapp.servlet;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,37 +11,54 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.excilys.cdb.dto.DtoComputer;
-import com.excilys.cdb.exception.BadEntryException;
-import com.excilys.cdb.mapper.MapperComputer;
+import com.excilys.cdb.binding.dto.DtoCompany;
+import com.excilys.cdb.binding.dto.DtoComputer;
+import com.excilys.cdb.binding.mapper.MapperCompany;
+import com.excilys.cdb.binding.mapper.MapperComputer;
+import com.excilys.cdb.binding.validator.ComputerValidator;
+import com.excilys.cdb.core.exception.BadEntryException;
 import com.excilys.cdb.service.ServiceCompany;
 import com.excilys.cdb.service.ServiceComputer;
-import com.excilys.cdb.validator.ComputerValidator;
 
 @Controller
 public class AddComputer {
-	ServiceComputer serviceComputer;
-	ServiceCompany serviceCompany;
-	MapperComputer mapperComputer;
-	ComputerValidator computerValidator;
+	private final ServiceComputer serviceComputer;
+	private final ServiceCompany serviceCompany;
+	private final MapperComputer mapperComputer;
+	private final MapperCompany mapperCompany;
+	private final ComputerValidator computerValidator;
 	
 	
-	public AddComputer(ServiceComputer serviceComputer, ServiceCompany serviceCompany, MapperComputer mapperComputer, ComputerValidator computerValidator) {
+	public AddComputer(
+			ServiceComputer serviceComputer,
+			ServiceCompany serviceCompany,
+			MapperComputer mapperComputer,
+			MapperCompany mapperCompany,
+			ComputerValidator computerValidator
+	) {
+		
 		this.serviceComputer = serviceComputer;
 		this.serviceCompany = serviceCompany;
 		this.mapperComputer = mapperComputer;
+		this.mapperCompany = mapperCompany;
 		this.computerValidator = computerValidator;
 	}
 	
 	@GetMapping( "/addComputer" )
 	public String doGet(Model model) {
-		model.addAttribute("companyList", serviceCompany.listCompanies());
+		
+		ArrayList<DtoCompany> dtoCompanyList = new ArrayList<DtoCompany>();
+		serviceCompany.listCompanies().stream()
+			.map(x -> mapperCompany.toDto(x))
+			.forEach(dtoCompanyList::add);
+		model.addAttribute("companyList", dtoCompanyList);
+
 		return "addComputer";
 	}
 	
 	@PostMapping( "/addComputer" )
 	public RedirectView doPost(
-			@RequestParam(value = "computerName", required=false) String computerNameReq,
+			@RequestParam(value = "computerName") String computerNameReq,
 			@RequestParam(value = "introduced", required=false) String introducedReq,
 			@RequestParam(value = "discontinued", required=false) String discontinuedReq,
 			@RequestParam(value = "companyId", defaultValue = "0") String companyIdReq

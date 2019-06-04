@@ -1,7 +1,7 @@
-package com.excilys.cdb.servlet.enums;
+package com.excilys.cdb.enums;
 
-import com.excilys.cdb.model.QModelCompany;
-import com.excilys.cdb.model.QModelComputer;
+import com.excilys.cdb.core.model.QModelCompany;
+import com.excilys.cdb.core.model.QModelComputer;
 import com.querydsl.core.types.OrderSpecifier;
 
 public enum OrderBy {

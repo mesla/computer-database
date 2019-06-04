@@ -1,4 +1,4 @@
-package com.excilys.cdb.dao;
+package com.excilys.cdb.persistence;
 
 import java.util.List;
 
@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.excilys.cdb.exception.RequestFailedException;
-import com.excilys.cdb.model.ModelCompany;
-import com.excilys.cdb.model.QModelCompany;
-import com.excilys.cdb.model.QModelComputer;
+import com.excilys.cdb.core.exception.RequestFailedException;
+import com.excilys.cdb.core.model.QModelCompany;
+import com.excilys.cdb.core.model.QModelComputer;
+import com.excilys.cdb.core.model.ModelCompany;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Repository

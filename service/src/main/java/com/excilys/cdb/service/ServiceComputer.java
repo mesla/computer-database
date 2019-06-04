@@ -1,17 +1,15 @@
 package com.excilys.cdb.service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.excilys.cdb.dao.DaoCompany;
-import com.excilys.cdb.dao.DaoComputer;
-import com.excilys.cdb.dto.DtoComputer;
-import com.excilys.cdb.mapper.MapperComputer;
-import com.excilys.cdb.model.ModelCompany;
-import com.excilys.cdb.model.ModelComputer;
-import com.excilys.cdb.servlet.model.Page;
+import com.excilys.cdb.persistence.DaoCompany;
+import com.excilys.cdb.persistence.DaoComputer;
+import com.excilys.cdb.core.model.ModelCompany;
+import com.excilys.cdb.core.model.ModelComputer;
+import com.excilys.cdb.core.model.Page;
 
 @Service
 @Transactional
@@ -19,23 +17,14 @@ public class ServiceComputer {
 		
 	private final DaoComputer daoComputer;
 	private final DaoCompany daoCompany;
-	private final MapperComputer mapperComputer;
 	
-	public ServiceComputer (DaoCompany daoCompany, DaoComputer daoComputer, MapperComputer mapperComputer) {
+	public ServiceComputer (DaoCompany daoCompany, DaoComputer daoComputer) {
 		this.daoCompany = daoCompany;
 		this.daoComputer = daoComputer;
-		this.mapperComputer = mapperComputer;
 	}
 	
-	public ArrayList<DtoComputer> listComputer(Page page){
-		
-		ArrayList<DtoComputer> dtoComputerList = new ArrayList<DtoComputer>();
-
-		daoComputer.listComputer(page).stream()
-			.map(x -> mapperComputer.toDto(x))
-			.forEach(dtoComputerList::add);
-		
-		return dtoComputerList;
+	public List<ModelComputer> listComputer(Page page){
+		return daoComputer.listComputer(page);
 	}
 		
 	public ModelComputer read(Long id) {

@@ -1,4 +1,4 @@
-package com.excilys.cdb.dao;
+package com.excilys.cdb.persistence;
 
 import java.util.ResourceBundle;
 

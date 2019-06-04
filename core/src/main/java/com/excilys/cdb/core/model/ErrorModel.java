@@ -1,4 +1,4 @@
-package com.excilys.cdb.servlet.model;
+package com.excilys.cdb.core.model;
 
 public class ErrorModel {
 	private int errorCode;

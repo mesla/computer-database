@@ -1,38 +1,28 @@
 package com.excilys.cdb.service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.excilys.cdb.dao.DaoCompany;
-import com.excilys.cdb.dao.DaoComputer;
-import com.excilys.cdb.dto.DtoCompany;
-import com.excilys.cdb.mapper.MapperCompany;
+import com.excilys.cdb.persistence.DaoCompany;
+import com.excilys.cdb.persistence.DaoComputer;
+import com.excilys.cdb.core.model.ModelCompany;
 
 @Service
 @Transactional
 public class ServiceCompany {
 		
 	private final DaoCompany daoCompany;
-	private final MapperCompany mapperCompany;
 	private final DaoComputer daoComputer;
 	
-	public ServiceCompany (DaoCompany daoCompany, MapperCompany mapperCompany, DaoComputer daoComputer) {
+	public ServiceCompany (DaoCompany daoCompany, DaoComputer daoComputer) {
 		this.daoCompany = daoCompany;
-		this.mapperCompany = mapperCompany;
 		this.daoComputer = daoComputer;
 	}
 
-	public ArrayList<DtoCompany> listCompanies() {
-		
-		ArrayList<DtoCompany> dtoCompanyList = new ArrayList<DtoCompany>();
-		
-		daoCompany.listCompanies().stream()
-		.map(x -> mapperCompany.toDto(x))
-		.forEach(dtoCompanyList::add);
-		
-		return dtoCompanyList;
+	public List<ModelCompany> listCompanies() {
+		return daoCompany.listCompanies();
 	}
 	
 	@Transactional

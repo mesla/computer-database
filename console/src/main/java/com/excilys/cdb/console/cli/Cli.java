@@ -1,9 +1,8 @@
-package com.excilys.cdb.ui;
+package com.excilys.cdb.console.cli;
 
 import java.util.Scanner;
 
-import com.excilys.cdb.controller.Controller;
-
+import com.excilys.cdb.console.controller.Controller;
 
 public class Cli {
 

@@ -1,4 +1,4 @@
-package com.excilys.cdb.servlet;
+package com.excilys.cdb.webapp.servlet;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
