@@ -16,7 +16,7 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="dashboard?reset=true">
+            <a class="navbar-brand" href="closeSession">
             	<spring:message code="lbl.navbarBrand" text="Application - Computer Database"></spring:message>
             </a>
         </div>

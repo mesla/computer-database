@@ -19,11 +19,17 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<dependencies>
-	<dependency>
-		<groupId>com.excilys.cdb</groupId>
-		<artifactId>service</artifactId>
-		<version>${module.version}</version>
-	</dependency>
+		<dependency>
+			<groupId>com.excilys.cdb</groupId>
+			<artifactId>service</artifactId>
+			<version>${module.version}</version>
+		</dependency>
+	
+		<dependency>
+		    <groupId>javax.validation</groupId>
+		    <artifactId>validation-api</artifactId>
+		    <version>${javax.validation-api.version}</version>
+		</dependency>
 
 	</dependencies>
 

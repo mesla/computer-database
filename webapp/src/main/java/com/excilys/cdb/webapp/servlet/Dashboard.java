@@ -43,9 +43,6 @@ public class Dashboard {
 			SessionStatus sessionStatus
 			) {
 		try {
-			if(reset != null && reset.equals("true")) {
-				sessionStatus.setComplete();
-			}
 			
 			if(searchReq != null)
 				pageInstance.setLike(searchReq);
@@ -111,5 +108,11 @@ public class Dashboard {
 		    	 availablePages.add(i);
 		  }
 		return availablePages;
+	}
+	
+	@GetMapping(value = "/closeSession")
+	public RedirectView closeSession (SessionStatus sessionStatus) {
+		sessionStatus.setComplete();
+		return new RedirectView("dashboard");
 	}
 }
