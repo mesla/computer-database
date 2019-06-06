@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,13 +22,13 @@ import com.excilys.cdb.service.ServiceCompany;
 import com.excilys.cdb.service.ServiceComputer;
 
 @Controller
+@Secured("ROLE_ADMIN")
 public class AddComputer {
 	private final ServiceComputer serviceComputer;
 	private final ServiceCompany serviceCompany;
 	private final MapperComputer mapperComputer;
 	private final MapperCompany mapperCompany;
 	private final ComputerValidator computerValidator;
-	
 	
 	public AddComputer(
 			ServiceComputer serviceComputer,
