@@ -1,5 +1,10 @@
 package com.excilys.cdb.persistence;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +18,12 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 @Transactional(propagation = Propagation.NESTED)
 public class DaoUser {
 	
+	@PersistenceContext
+	EntityManager entityManager;
 	JPAQueryFactory queryFactory;
 	
-	QModelUser qModelUser = QModelUser.modelUser;
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final QModelUser qModelUser = QModelUser.modelUser;
 
 	public DaoUser(JPAQueryFactory queryFactory) {
 		this.queryFactory = queryFactory;
@@ -30,6 +38,12 @@ public class DaoUser {
 			return result;
 		else
 			throw new RequestFailedException("Aucun utilisateur ayant le nom d'utilisateur " + username);
+	}
+
+	public void insertUser(ModelUser modelUser) {
+		entityManager.persist(modelUser);
+		logger.info("User correctement inséré");
+		
 	}
 
 }

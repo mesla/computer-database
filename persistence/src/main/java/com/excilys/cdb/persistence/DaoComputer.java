@@ -22,7 +22,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 @Transactional(propagation = Propagation.NESTED)
 public class DaoComputer {
 	
-	private final Logger logger = LoggerFactory.getLogger(DaoComputer.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	QModelComputer qModelComputer = QModelComputer.modelComputer;
 	QModelCompany qModelCompany = QModelCompany.modelCompany;
